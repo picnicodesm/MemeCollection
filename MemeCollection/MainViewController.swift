@@ -9,12 +9,11 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    var testLabel: UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         configureView()
+        configureNavigationBarItem()
+        configureToolbar()
     }
 
 
@@ -22,14 +21,33 @@ class MainViewController: UIViewController {
 
 extension MainViewController {
     private func configureView() {
-        testLabel = UILabel()
-        testLabel.text = "Hello World!"
-        testLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(testLabel)
+        view.backgroundColor = .white
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.title = "MemeCollection"
+    }
+    
+    private func configureNavigationBarItem() {
+        let rightBarButtonItem = editButtonItem
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+    
+    private func configureToolbar() {
+        self.navigationController?.isToolbarHidden = false
         
-        NSLayoutConstraint.activate([
-            testLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            testLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-        ])
+        let newCategoryButton = UIButton(type: .system)
+        var newCategoryButtonnConfig = UIButton.Configuration.plain()
+        newCategoryButtonnConfig.title = "New Category"
+        newCategoryButtonnConfig.image = UIImage(systemName: "plus.circle.fill")
+        newCategoryButtonnConfig.imagePadding = 10
+        newCategoryButtonnConfig.imagePlacement = NSDirectionalRectEdge.leading
+        newCategoryButtonnConfig.contentInsets = .zero
+        newCategoryButton.configuration = newCategoryButtonnConfig
+        
+        let newReminderBarButtonItem = UIBarButtonItem(customView: newCategoryButton)
+        let addListBarButtonItem = UIBarButtonItem(title: "New Video", style: .plain, target: nil, action: nil)
+        let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
+        
+        self.toolbarItems = [newReminderBarButtonItem, flexibleSpaceBarButtonItem, addListBarButtonItem]
+
     }
 }
