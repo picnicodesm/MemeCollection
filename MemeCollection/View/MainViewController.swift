@@ -56,11 +56,12 @@ extension MainViewController {
         dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             if let updatedBackingStore = self?.categories.applying(transaction.difference) {
                 self?.categories = updatedBackingStore
-               }
+            }
         }
     }
 }
 
+// MARK: - Actions
 extension MainViewController {
     private func swipeAction(_ indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] deleteAction, view, completion in
@@ -71,6 +72,7 @@ extension MainViewController {
         deleteAction.image = UIImage(systemName: "trash.fill")
         
         let editAction = UIContextualAction(style: .normal, title: "") { (action, view, completion) in
+            print("editAction!")
             completion(true)
         }
         editAction.image = UIImage(systemName: "info.circle.fill")
@@ -85,6 +87,12 @@ extension MainViewController {
             snapshot.deleteItems([item])
             dataSource.apply(snapshot, animatingDifferences: true)
         }
+    }
+    
+    @objc private func openNewCategoryView() {
+        let newCategoryView = AddCategoryViewController()
+        let navigationViewController = UINavigationController(rootViewController: newCategoryView)
+        self.present(navigationViewController, animated: true)
     }
     
 }
@@ -121,19 +129,22 @@ extension MainViewController {
     private func configureToolbar() {
         self.navigationController?.isToolbarHidden = false
         
-        let newCategoryButton = UIButton(type: .system)
-        var newCategoryButtonnConfig = UIButton.Configuration.plain()
-        newCategoryButtonnConfig.title = "New Category"
-        newCategoryButtonnConfig.image = UIImage(systemName: "plus.circle.fill")
-        newCategoryButtonnConfig.imagePadding = 10
-        newCategoryButtonnConfig.imagePlacement = NSDirectionalRectEdge.leading
-        newCategoryButtonnConfig.contentInsets = .zero
-        newCategoryButton.configuration = newCategoryButtonnConfig
+        let leftToolbarButton = UIButton(type: .system)
+        var leftToolbarButtonConfig = UIButton.Configuration.plain()
+        leftToolbarButtonConfig.title = "Add Video"
+        leftToolbarButtonConfig.image = UIImage(systemName: "plus.circle.fill")
+        leftToolbarButtonConfig.imagePadding = 10
+        leftToolbarButtonConfig.imagePlacement = NSDirectionalRectEdge.leading
+        leftToolbarButtonConfig.contentInsets = .zero
+        leftToolbarButton.configuration = leftToolbarButtonConfig
         
-        let newReminderBarButtonItem = UIBarButtonItem(customView: newCategoryButton)
-        let addListBarButtonItem = UIBarButtonItem(title: "New Video", style: .plain, target: nil, action: nil)
+        
+        let leftToolbarButtonItem = UIBarButtonItem(customView: leftToolbarButton)
+        let rightToolbarButtonItem = UIBarButtonItem(title: "New Category", style: .plain, target: self, action: #selector(openNewCategoryView))
         let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
         
-        self.toolbarItems = [newReminderBarButtonItem, flexibleSpaceBarButtonItem, addListBarButtonItem]
+        self.toolbarItems = [leftToolbarButtonItem, flexibleSpaceBarButtonItem, rightToolbarButtonItem]
     }
 }
+
+
