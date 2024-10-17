@@ -63,7 +63,14 @@ extension MainViewController {
             var config = cell.defaultContentConfiguration()
             config.text = item.getName()
             cell.contentConfiguration = config
-            cell.accessories = [.delete(displayed: .whenEditing), .reorder(displayed: .whenEditing), .detail(displayed: .whenEditing), .disclosureIndicator(displayed: .whenNotEditing)]
+            cell.accessories = [
+                .delete(displayed: .whenEditing),
+                .reorder(displayed: .whenEditing),
+                .detail(displayed: .whenEditing),
+                .disclosureIndicator(displayed: .whenNotEditing),
+                .label(text: "\(item.getVideoNumbers())")
+            ]
+            
             return cell
         })
         
