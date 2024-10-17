@@ -13,7 +13,11 @@ class MainViewController: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     let viewModel = MainViewModel()
+    let deleteItem = PassthroughSubject<IndexPath, Never>()
+    
+    
     var subscriptions = Set<AnyCancellable>()
+    
     
     typealias Item = Category
     enum Section {
@@ -33,13 +37,22 @@ class MainViewController: UIViewController {
     }
     
     func bind() {
-        viewModel.$categories.sink { [weak self] categories in
-            self?.updateSnapshot(categories)
+        viewModel.$categories
+            .receive(on: RunLoop.main)
+            .sink { [unowned self] categories in
+            self.updateSnapshot(categories)
+        }
+        .store(in: &subscriptions)
+        
+        deleteItem.sink { [unowned self] indexPath in
+            let deleteItem = viewModel.categories[indexPath.item]
+            viewModel.deleteCategory(deleteItem)
         }
         .store(in: &subscriptions)
     }
 }
 
+// MARK: - DataSource
 extension MainViewController {
     private func configureDataSource() {
         collectionView.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: "CollectionViewListCell")
@@ -60,7 +73,7 @@ extension MainViewController {
         
         dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
             if let updatedBackingStore = self?.viewModel.categories.applying(transaction.difference) {
-                self?.viewModel.categories = updatedBackingStore
+                self?.viewModel.updateCategoryOrder(to: updatedBackingStore)
             }
         }
     }
@@ -78,7 +91,7 @@ extension MainViewController {
     private func swipeAction(_ indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] deleteAction, view, completion in
             guard let self = self else { return }
-            self.deleteItem(at: indexPath)
+            self.deleteItem.send(indexPath)
             completion(true)
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
@@ -129,14 +142,20 @@ extension MainViewController {
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.dataSource = dataSource
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(collectionView)
     }
     
     private func configureNavigationBarItem() {
         self.navigationItem.rightBarButtonItem = editButtonItem
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Order", style: .plain, target: self, action: #selector(testOrder))
+    }
+    
+    @objc func testOrder() {
+        for item in viewModel.categories {
+            print(item.getName())
+        }
     }
     
     private func configureToolbar() {
@@ -150,7 +169,6 @@ extension MainViewController {
         leftToolbarButtonConfig.imagePlacement = NSDirectionalRectEdge.leading
         leftToolbarButtonConfig.contentInsets = .zero
         leftToolbarButton.configuration = leftToolbarButtonConfig
-        
         
         let leftToolbarButtonItem = UIBarButtonItem(customView: leftToolbarButton)
         let rightToolbarButtonItem = UIBarButtonItem(title: "New Category", style: .plain, target: self, action: #selector(openNewCategoryView))

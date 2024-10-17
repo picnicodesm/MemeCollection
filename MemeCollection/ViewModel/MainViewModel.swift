@@ -15,5 +15,13 @@ class MainViewModel: CategoryViewModel {
         categories.append(newCategory)
     }
         
+    func deleteCategory(_ deleteItem: Category) {
+        if let deleteIndex = categories.firstIndex(of: deleteItem) {
+            categories.remove(at: deleteIndex)
+        }
+    }
     
+    func updateCategoryOrder(to orderedCategory: [Category]) {
+        categories = orderedCategory
+    }
 }

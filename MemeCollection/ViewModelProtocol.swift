@@ -9,4 +9,8 @@ import Foundation
 
 protocol CategoryViewModel {
     func addCategory(_ newCategory: Category)
+    
+    func deleteCategory(_ deleteItem: Category)
+    
+    func updateCategoryOrder(to orderedCategory: [Category])
 }
