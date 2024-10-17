@@ -10,6 +10,7 @@ import UIKit
 class AddCategoryViewController: UIViewController {
     
     private var textField: UITextField!
+    var viewModel: CategoryViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +21,20 @@ class AddCategoryViewController: UIViewController {
 
 }
 
+// MARK: - Actions
+extension AddCategoryViewController {
+    @objc func doneTapped() {
+        let newCategory = Category(name: textField.text!)
+        viewModel?.addCategory(newCategory)
+        self.dismiss(animated: true)
+    }
+    
+    @objc func cancelTapped() {
+        self.dismiss(animated: true)
+    }
+}
+
+// MARK: - View
 extension AddCategoryViewController {
     private func configureView() {
         view.backgroundColor = .systemGray6
@@ -29,8 +44,8 @@ extension AddCategoryViewController {
     }
     
     private func configreNavBarItem() {
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: nil)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
     }
     
     private func configureTextField() {
@@ -62,7 +77,7 @@ extension AddCategoryViewController {
 
 extension AddCategoryViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(textField.text)
+//        print(textField.text)
         return true
     }
 }

@@ -8,11 +8,11 @@
 import Foundation
 import Combine
 
-class MainViewModel {
-    @Published private var categories: [Category] = []
+class MainViewModel: CategoryViewModel {
+    @Published var categories: [Category] = Category.mock
     
-    func addCategory(_ category: Category) {
-        categories.append(category)
+    func addCategory(_ newCategory: Category) {
+        categories.append(newCategory)
     }
         
     

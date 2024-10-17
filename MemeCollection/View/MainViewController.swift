@@ -6,14 +6,16 @@
 //
 
 import UIKit
+import Combine
 
 class MainViewController: UIViewController {
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    var categories = ["Favorites", "Category 1", "Category 2", "Category 3"]
+    let viewModel = MainViewModel()
+    var subscriptions = Set<AnyCancellable>()
     
-    typealias Item = String
+    typealias Item = Category
     enum Section {
         case main
     }
@@ -22,11 +24,19 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         configureView()
         configureDataSource()
+        bind()
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         collectionView.isEditing = editing
+    }
+    
+    func bind() {
+        viewModel.$categories.sink { [weak self] categories in
+            self?.updateSnapshot(categories)
+        }
+        .store(in: &subscriptions)
     }
 }
 
@@ -38,26 +48,28 @@ extension MainViewController {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewListCell", for: indexPath) as? UICollectionViewListCell else { return UICollectionViewCell() }
             
             var config = cell.defaultContentConfiguration()
-            config.text = item
+            config.text = item.getName()
             cell.contentConfiguration = config
             cell.accessories = [.delete(displayed: .whenEditing), .reorder(displayed: .whenEditing), .detail(displayed: .whenEditing), .disclosureIndicator(displayed: .whenNotEditing)]
             return cell
         })
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(categories)
-        dataSource.apply(snapshot)
         
         dataSource.reorderingHandlers.canReorderItem = { item in
             return true
         }
         
         dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
-            if let updatedBackingStore = self?.categories.applying(transaction.difference) {
-                self?.categories = updatedBackingStore
+            if let updatedBackingStore = self?.viewModel.categories.applying(transaction.difference) {
+                self?.viewModel.categories = updatedBackingStore
             }
         }
+    }
+    
+    private func updateSnapshot(_ items: [Category]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(items)
+        dataSource.apply(snapshot)
     }
 }
 
@@ -91,6 +103,7 @@ extension MainViewController {
     
     @objc private func openNewCategoryView() {
         let newCategoryView = AddCategoryViewController()
+        newCategoryView.viewModel = self.viewModel
         let navigationViewController = UINavigationController(rootViewController: newCategoryView)
         self.present(navigationViewController, animated: true)
     }
