@@ -25,5 +25,5 @@ struct Category: Hashable {
 }
 
 extension Category {
-    static var mock: [Category] = [Category(name: "Favorites"), Category(name: "Category 1"), Category(name: "Category 2"), Category(name: "Category 3")]
+    static var mock: [Category] = [Category(name: "Favorites"), Category(name: "Category 1"), Category(name: "Category 2"), Category(name: "Category 3"), Category(name: "Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title")]
 }

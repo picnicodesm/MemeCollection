@@ -8,13 +8,20 @@
 import UIKit
 import Combine
 
+/*
+ TODO: 1. Make CategoryView(collectionView)
+ TODO: 2. Make edit logic
+ TODO: 3. Make Add Video
+ */
+
 class MainViewController: UIViewController {
     
-    var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    let viewModel = MainViewModel()
-    let deleteItem = PassthroughSubject<IndexPath, Never>()
-    
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private let viewModel = MainViewModel()
+    private let deleteItem = PassthroughSubject<IndexPath, Never>()
+    private let cellSelectEvent = PassthroughSubject<String, Never>()
+    private let cellIdentifier = "CollectionViewListCell"
     
     var subscriptions = Set<AnyCancellable>()
     
@@ -49,14 +56,21 @@ class MainViewController: UIViewController {
             viewModel.deleteCategory(deleteItem)
         }
         .store(in: &subscriptions)
+        
+        cellSelectEvent
+            .receive(on: RunLoop.main)
+            .sink { [unowned self] category in
+                let destination = MemesViewController()
+                destination.categoryTitle = category
+                navigationController?.pushViewController(destination, animated: true)
+            }
+            .store(in: &subscriptions)
     }
 }
 
 // MARK: - DataSource
 extension MainViewController {
     private func configureDataSource() {
-        collectionView.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: "CollectionViewListCell")
-        
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewListCell", for: indexPath) as? UICollectionViewListCell else { return UICollectionViewCell() }
             
@@ -134,8 +148,6 @@ extension MainViewController {
 extension MainViewController {
     private func configureView() {
         view.backgroundColor = .white
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationItem.title = "MemeCollection"
         
         configureCollectionView()
         configureNavigationBarItem()
@@ -150,11 +162,15 @@ extension MainViewController {
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-
+        collectionView.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        collectionView.delegate = self
+        
         view.addSubview(collectionView)
     }
     
     private func configureNavigationBarItem() {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.title = "MemeCollection"
         self.navigationItem.rightBarButtonItem = editButtonItem
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Order", style: .plain, target: self, action: #selector(testOrder))
     }
@@ -186,3 +202,11 @@ extension MainViewController {
 }
 
 
+
+// MARK: - Delegate
+extension MainViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let categoryTitle = viewModel.categories[indexPath.item].getName()
+        cellSelectEvent.send(categoryTitle)
+    }
+}
