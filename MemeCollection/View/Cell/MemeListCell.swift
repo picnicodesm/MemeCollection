@@ -58,7 +58,12 @@ extension MemeListCell {
     }
     
     private func configureViews() {
-        contentView.backgroundColor = .white
+        var backgroundConfig = self.defaultBackgroundConfiguration()
+        backgroundConfig.backgroundColor = .green
+        backgroundConfig.cornerRadius = 10
+        self.backgroundConfiguration = backgroundConfig
+        
+        
         
         let thumbnailImageView = UIImageView()
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false

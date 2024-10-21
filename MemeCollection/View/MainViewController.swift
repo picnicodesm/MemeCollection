@@ -206,6 +206,7 @@ extension MainViewController {
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let categoryTitle = viewModel.categories[indexPath.item].getName()
+        self.collectionView.deselectItem(at: indexPath, animated: false)
         cellSelectEvent.send(categoryTitle)
     }
 }

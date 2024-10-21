@@ -146,6 +146,7 @@ extension MemesViewController {
         collectionView.register(MemeListCell.self, forCellWithReuseIdentifier: MemeListCell.identifier)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .systemGroupedBackground
+        collectionView.delegate = self
         
         view.addSubview(collectionView)
         
@@ -247,3 +248,9 @@ extension MemesViewController {
     }
 }
 
+
+extension MemesViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.collectionView.deselectItem(at: indexPath, animated: false)
+    }
+}
