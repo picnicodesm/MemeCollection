@@ -7,8 +7,8 @@
 
 import UIKit
 
-class MemeCell: UICollectionViewCell {
-    static let identifier = "MemeCell"
+class MemeGridCell: UICollectionViewListCell, MemeCell {
+    static let identifier = "MemeGridCell"
     private var thumbnailImageView: UIImageView!
     private var titleLabel: UILabel!
     private var activityIndicator: UIActivityIndicatorView!
@@ -16,8 +16,8 @@ class MemeCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super .init(frame: frame)
         configureViews()
-        configureLayout()
         configureIndicator()
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -35,9 +35,15 @@ class MemeCell: UICollectionViewCell {
         thumbnailImageView.isHidden = false
         activityIndicator.stopAnimating()
     }
+    
+    func startIndicatorAnimation() {
+        activityIndicator.startAnimating()
+    }
+    
+    
 }
 
-extension MemeCell {
+extension MemeGridCell {
     private func configureIndicator() {
         let activityIndicator = UIActivityIndicatorView()
         
@@ -48,12 +54,12 @@ extension MemeCell {
         contentView.addSubview(activityIndicator)
         
         NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            activityIndicator.centerXAnchor.constraint(equalTo: thumbnailImageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor)
         ])
     }
     
-    private func configureViews() {
+    private func configureViews() {        
         let thumbnailImageView = UIImageView()
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailImageView.isHidden = true
@@ -81,7 +87,9 @@ extension MemeCell {
             
             titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor, constant: 5),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
+        
     }
 }
+

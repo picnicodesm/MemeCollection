@@ -8,12 +8,6 @@
 import UIKit
 import Combine
 
-/*
- TODO: 1. Make CategoryView(collectionView)
- TODO: 2. Make edit logic
- TODO: 3. Make Add Video
- */
-
 class MainViewController: UIViewController {
     
     private var collectionView: UICollectionView!
@@ -123,6 +117,11 @@ extension MainViewController {
         }
         editAction.image = UIImage(systemName: "info.circle.fill")
         editAction.backgroundColor = .lightGray
+        
+        if collectionView.isEditing == true {
+            print("wow")
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        }
         
         return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }
