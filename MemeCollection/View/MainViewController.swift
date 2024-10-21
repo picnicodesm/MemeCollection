@@ -19,7 +19,6 @@ class MainViewController: UIViewController {
     
     var subscriptions = Set<AnyCancellable>()
     
-    
     typealias Item = Category
     enum Section {
         case main
@@ -46,8 +45,8 @@ class MainViewController: UIViewController {
         .store(in: &subscriptions)
         
         deleteItem.sink { [unowned self] indexPath in
-            let deleteItem = viewModel.categories[indexPath.item]
-            viewModel.deleteCategory(deleteItem)
+            let deleteItem = self.viewModel.categories[indexPath.item]
+            self.viewModel.deleteCategory(deleteItem)
         }
         .store(in: &subscriptions)
         
@@ -145,9 +144,7 @@ extension MainViewController {
 
 // MARK: - Configure View
 extension MainViewController {
-    private func configureView() {
-        view.backgroundColor = .white
-        
+    private func configureView() {        
         configureCollectionView()
         configureNavigationBarItem()
         configureToolbar()

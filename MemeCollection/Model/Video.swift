@@ -19,9 +19,9 @@ struct Video {
     var isFavorite: Bool
     var startTime: String?
     var filePath: String
-    var category: Category
+    var category: String
     
-    init(name: String, urlString: String, type: VideoType, isFavorite: Bool, startTime: String? = nil, filePath: String, category: Category) {
+    init(name: String, urlString: String, type: VideoType, isFavorite: Bool, startTime: String? = nil, filePath: String, category: String) {
         self.name = name
         self.urlString = urlString
         self.type = type
@@ -34,6 +34,6 @@ struct Video {
 
 extension Video {
     static var mock: [Video] = [
-//        Video(name: "Fㅏ니", urlString: "https://www.youtube.com/shorts/cxo-IeAG2T4", type: .shorts, isFavorite: false, filePath: "")
+        Video(name: "Fㅏ니", urlString: "https://www.youtube.com/shorts/cxo-IeAG2T4", type: .shorts, isFavorite: false, filePath: "", category: "")
     ]
 }

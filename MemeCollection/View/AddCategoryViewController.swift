@@ -51,17 +51,13 @@ extension AddCategoryViewController {
     private func configureTextField() {
         textField = UITextField()
         let textFieldFont = UIFont.systemFont(ofSize: 24, weight: .semibold)
-        let textFieldAttributes: [NSAttributedString.Key: Any] = [.font: textFieldFont]
-        let placeholderString = NSAttributedString(string: "Category Name", attributes: textFieldAttributes)
-        
         textField.borderStyle = .roundedRect
         textField.backgroundColor = .systemGray5
         textField.textAlignment = .center
-        textField.attributedPlaceholder = placeholderString
+        textField.placeholder = "Category Name"
         textField.font = textFieldFont
         textField.clearButtonMode = .whileEditing
         textField.delegate = self
-        
         textField.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(textField)

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// TODO: - 모델 적용!!
+
 enum CellMode {
     case grid
     case editList
@@ -14,17 +16,16 @@ enum CellMode {
 }
 
 class MemesViewController: UIViewController {
-    
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    
+    var categoryTitle: String?
     var cellMode: CellMode = .grid {
         didSet {
             updateCollectionView()
         }
     }
-    var categoryTitle: String?
-    var mock = ["Meme 1", "Meme 2", "Meme 3", "Meme 4", "Meme 5", "Meme 6", "MEMEMEMEMMEMEMEMEEMEMEMEME"]
+    
+    var mock: [String] = []
     
     typealias Item = String
     enum Section {
@@ -72,8 +73,15 @@ extension MemesViewController {
         
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
+    
+    private func openAddVideoPage() -> UIAction {
+        return UIAction { [weak self] _ in
+            let destination = AddVideoViewController()
+            let navigationVC = UINavigationController(rootViewController: destination)
+            self?.present(navigationVC, animated: true)
+        }
+    }
 }
-
 
 // MARK: - DataSource
 extension MemesViewController {
@@ -183,6 +191,7 @@ extension MemesViewController {
         leftToolbarButtonConfig.imagePlacement = NSDirectionalRectEdge.leading
         leftToolbarButtonConfig.contentInsets = .zero
         leftToolbarButton.configuration = leftToolbarButtonConfig
+        leftToolbarButton.addAction(openAddVideoPage(), for: .touchUpInside)
         
         let rightToolbarButton = UIBarButtonItem(title: "View as")
         
