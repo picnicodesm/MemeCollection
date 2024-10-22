@@ -7,8 +7,6 @@
 
 import Foundation
 
-// TODO: - Link Logic 수정해야 함.
-
 enum LinkError: String {
     case linkTypeError = "Link isn't matched with correct type."
     case videoTypeError = "Link isn't matched with correct video type."
@@ -21,9 +19,10 @@ class AddVideoViewModel {
 
     @Published var thumbnailData: Data?
     
+    /// Test the given link whether it is correct youtube link.
+    /// - Parameter link: The link for test
+    /// - Returns: if test is succeed, return (true, nil, videoType, LinkType, key). if failed, return (false, error, nil, nil, nil)
     func testLink(with link: String) -> LinkTestResult {
-        // if test is succeed, return (true, nil, videoType, LinkType, key)
-        // if failed, return (false, error, nil, nil, nil)
         
         guard let linkType = getLinkType(of: link) else {
             return (false, LinkError.linkTypeError , nil, nil, nil)
@@ -74,11 +73,11 @@ class AddVideoViewModel {
 
 extension AddVideoViewModel {
     private func getLinkType(of urlString: String) -> LinkType? {
-        if urlString.contains("www.youtube.com") {
+        if urlString.contains("https://www.youtube.com") {
             return .web
-        } else if urlString.contains("m.youtube.com") {
+        } else if urlString.contains("https://m.youtube.com") {
             return .mobile
-        } else if urlString.contains("https://youtube.com") || urlString.contains("youtu.be") {
+        } else if urlString.contains("https://youtube.com") || urlString.contains("https://youtu.be") {
             return .share
         } else {
             return nil
@@ -86,6 +85,8 @@ extension AddVideoViewModel {
     }
     
     private func getVideoType(of urlString: String) -> VideoType? {
+        // This function must use after getLinkType(of:).
+        // Because It doesn't ensure video's type without getLinkType(of:).
         if urlString.contains("shorts/") { return .shorts }
         if urlString.contains("watch?v=") || urlString.contains("youtu.be") { return .video }
         return nil
