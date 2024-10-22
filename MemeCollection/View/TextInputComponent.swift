@@ -41,18 +41,16 @@ class TextInputComponent: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setDelegate(_ delegate: UITextFieldDelegate) {
-        textField.delegate = delegate
-    }
-    
     func enableTextField() {
+        textField.backgroundColor = .white
         textField.isEnabled = true
         textField.placeholder = placeholder
     }
     
     func disableTextField() {
+        textField.backgroundColor = .systemGray5
         textField.isEnabled = false
-        textField.placeholder = "This is opened when the link is video"
+        textField.placeholder = "This will be opened when the link is video"
     }
     
     func setErrorUI(message: String) {

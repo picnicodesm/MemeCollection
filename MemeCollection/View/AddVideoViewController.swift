@@ -58,7 +58,6 @@ class AddVideoViewController: UIViewController {
                     self.thumbnailImageView.image = UIImage(data: thumbnailData)
                 }
             }.store(in: &subscriptions)
-
     }
     
     private struct Constants {
@@ -66,7 +65,6 @@ class AddVideoViewController: UIViewController {
         static let topInsets: CGFloat = 16
         static let stackSpacing: CGFloat = 16
     }
-
 }
 
 // MARK: - Actions
@@ -81,7 +79,7 @@ extension AddVideoViewController {
     
     private func testLink(_ link: String) -> Bool {
         if !link.isEmpty {
-            let (isSuccess, error, videoType, linkType, key) = viewModel.testLink(with: link)
+            let (isSuccess, error, _, _, key) = viewModel.testLink(with: link)
             
             if isSuccess {
                 linkField.removeErrorUI()
@@ -174,8 +172,8 @@ extension AddVideoViewController {
     
     private func configureThumbnailImageView() {
         thumbnailImageView = UIImageView()
-        thumbnailImageView.image = UIImage(systemName: "apple.logo")
-        thumbnailImageView.backgroundColor = .gray
+        thumbnailImageView.image = nil
+        thumbnailImageView.backgroundColor = .lightGray
         thumbnailImageView.layer.cornerRadius = 20
         thumbnailImageView.clipsToBounds = true
     }
