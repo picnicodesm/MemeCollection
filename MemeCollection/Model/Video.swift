@@ -7,9 +7,15 @@
 
 import Foundation
 
+enum LinkType {
+    case web
+    case mobile
+    case share
+}
+
 enum VideoType {
-    case video
     case shorts
+    case video
 }
 
 struct Video: Hashable {

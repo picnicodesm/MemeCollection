@@ -8,24 +8,27 @@
 import Foundation
 import UIKit
 
-enum InputType {
-    case title, link, startTime
-    
-    var textFont: UIFont {
-        switch self {
-        case .title:
-            return UIFont.systemFont(ofSize: 24, weight: .bold)
-        default:
-            return UIFont.systemFont(ofSize: 16, weight: .medium)
-        }
-    }
-}
+
 
 class TextInputComponent: UIStackView {
+    enum InputType {
+        case title, link, startTime
+        
+        var textFont: UIFont {
+            switch self {
+            case .title:
+                return UIFont.systemFont(ofSize: 24, weight: .bold)
+            default:
+                return UIFont.systemFont(ofSize: 16, weight: .medium)
+            }
+        }
+    }
+    
     var titleLabel: UILabel!
     var textField: UITextField!
     var title: String
     var placeholder: String
+    let errorLabel = UILabel()
     
     init(title: String, placeholder: String, type: InputType) {
         self.title = title
@@ -44,12 +47,29 @@ class TextInputComponent: UIStackView {
     
     func enableTextField() {
         textField.isEnabled = true
+        textField.placeholder = placeholder
     }
     
     func disableTextField() {
         textField.isEnabled = false
+        textField.placeholder = "This is opened when the link is video"
     }
     
+    func setErrorUI(message: String) {
+        errorLabel.text = message
+        errorLabel.textColor = .red
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.addArrangedSubview(errorLabel)
+    }
+    
+    func removeErrorUI() {
+        self.removeArrangedSubview(errorLabel)
+        errorLabel.removeFromSuperview()
+    }
+    
+}
+
+extension TextInputComponent {
     private func configureView(title: String, placeholder: String, type: InputType) {
         configureLabel(title: title)
         configureTextField(placeholder: placeholder, type: type)
