@@ -12,16 +12,17 @@ enum VideoType {
     case shorts
 }
 
-struct Video {
+struct Video: Hashable {
+    let uuid = UUID()
     var name: String
     var urlString: String
     var type: VideoType
     var isFavorite: Bool
     var startTime: String?
     var filePath: String
-    var category: String
+    var category: Category
     
-    init(name: String, urlString: String, type: VideoType, isFavorite: Bool, startTime: String? = nil, filePath: String, category: String) {
+    init(name: String, urlString: String, type: VideoType, isFavorite: Bool, startTime: String? = nil, filePath: String, category: Category) {
         self.name = name
         self.urlString = urlString
         self.type = type
@@ -34,6 +35,6 @@ struct Video {
 
 extension Video {
     static var mock: [Video] = [
-        Video(name: "Fㅏ니", urlString: "https://www.youtube.com/shorts/cxo-IeAG2T4", type: .shorts, isFavorite: false, filePath: "", category: "")
+        Video(name: "Fㅏ니", urlString: "https://www.youtube.com/shorts/cxo-IeAG2T4", type: .shorts, isFavorite: false, filePath: "", category: Category(name: "하니"))
     ]
 }

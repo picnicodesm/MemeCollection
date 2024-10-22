@@ -14,7 +14,7 @@ class MainViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private let viewModel = MainViewModel()
     private let deleteItem = PassthroughSubject<IndexPath, Never>()
-    private let cellSelectEvent = PassthroughSubject<String, Never>()
+    private let cellSelectEvent = PassthroughSubject<Category, Never>()
     private let cellIdentifier = "CollectionViewListCell"
     
     var subscriptions = Set<AnyCancellable>()
@@ -53,8 +53,9 @@ class MainViewController: UIViewController {
         cellSelectEvent
             .receive(on: RunLoop.main)
             .sink { [unowned self] category in
+                let vm = MemesViewModel(category: category)
                 let destination = MemesViewController()
-                destination.categoryTitle = category
+                destination.initialSetup(memesVM: vm, title: category.getName())
                 navigationController?.pushViewController(destination, animated: true)
             }
             .store(in: &subscriptions)
@@ -118,7 +119,6 @@ extension MainViewController {
         editAction.backgroundColor = .lightGray
         
         if collectionView.isEditing == true {
-            print("wow")
             return UISwipeActionsConfiguration(actions: [deleteAction])
         }
         
@@ -167,6 +167,7 @@ extension MainViewController {
     private func configureNavigationBarItem() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "MemeCollection"
+        self.navigationItem.backButtonTitle = "Back"
         self.navigationItem.rightBarButtonItem = editButtonItem
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Order", style: .plain, target: self, action: #selector(testOrder))
     }
@@ -202,8 +203,8 @@ extension MainViewController {
 // MARK: - Delegate
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let categoryTitle = viewModel.categories[indexPath.item].getName()
+        let category = viewModel.categories[indexPath.item]
         self.collectionView.deselectItem(at: indexPath, animated: false)
-        cellSelectEvent.send(categoryTitle)
+        cellSelectEvent.send(category)
     }
 }

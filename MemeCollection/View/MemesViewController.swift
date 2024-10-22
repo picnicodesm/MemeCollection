@@ -18,16 +18,15 @@ enum CellMode {
 class MemesViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    var categoryTitle: String?
+    var memesVM: MemesViewModel!
+    var categoryTitle: String!
     var cellMode: CellMode = .grid {
         didSet {
             updateCollectionView()
         }
     }
     
-    var mock: [String] = []
-    
-    typealias Item = String
+    typealias Item = Video
     enum Section {
         case main
     }
@@ -46,6 +45,11 @@ class MemesViewController: UIViewController {
         } else if cellMode == .editList {
             cellMode = .grid
         }
+    }
+    
+    func initialSetup(memesVM: MemesViewModel, title: String) {
+        self.memesVM = memesVM
+        self.categoryTitle = title
     }
     
     private struct Constants {
@@ -89,42 +93,42 @@ extension MemesViewController {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeGridCell.identifier, for: indexPath) as? MemeGridCell else { return UICollectionViewCell() }
             
-            cell.configureCell(title: item)
+            cell.configureCell(title: item.name)
             cell.startIndicatorAnimation()
             
             return cell
         })
-        updateSnapshot(mock)
+        updateSnapshot(memesVM!.memes)
     }
     
     private func configureEditListDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeEditListCell.identifier, for: indexPath) as? MemeEditListCell else { return UICollectionViewCell() }
             
-            cell.configureCell(title: item)
+            cell.configureCell(title: item.name)
             cell.accessories = [.delete(displayed: .whenEditing),
                                 .reorder(displayed: .whenEditing),
                                 .detail(displayed: .whenEditing),]
             return cell
         })
-        updateSnapshot(mock)
+        updateSnapshot(memesVM.memes)
     }
     
     private func configureListDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeListCell.identifier, for: indexPath) as? MemeListCell else { return UICollectionViewCell() }
             
-            cell.configureCell(title: item)
+            cell.configureCell(title: item.name)
             cell.startIndicatorAnimation()
             cell.accessories = [.delete(displayed: .whenEditing),
                                 .reorder(displayed: .whenEditing),
                                 .detail(displayed: .whenEditing),]
             return cell
         })
-        updateSnapshot(mock)
+        updateSnapshot(memesVM.memes)
     }
     
-    private func updateSnapshot(_ items: [String]) {
+    private func updateSnapshot(_ items: [Video]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items)

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// TODO: - 1. 저장로직 구현, viewmodel 구현
+
 class AddVideoViewController: UIViewController {
     
     var textFieldsVStack: UIStackView!
@@ -16,11 +18,20 @@ class AddVideoViewController: UIViewController {
     let titleField = TextInputComponent(title: "TITLE", placeholder: "Write the title of the video", type: .title)
     let linkField = TextInputComponent(title: "LINK", placeholder: "Input video link", type: .link)
     let startTimeField = TextInputComponent(title: "START TIME", placeholder: "Start time of video", type: .startTime)
+    var addAction: ((Video) -> Void)?
+    lazy var didChanged: UIAction = UIAction { [unowned self] _ in
+        guard let text1 = self.titleField.textField.text, let text2 = self.linkField.textField.text else { return }
+        if (!text1.isEmpty && !text2.isEmpty) {
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+        } else {
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
-       
     }
     
     private struct Constants {
@@ -42,6 +53,7 @@ extension AddVideoViewController {
     @objc func cancelTapped() {
         self.dismiss(animated: true)
     }
+    
 }
 
 // MARK: - View
@@ -56,7 +68,9 @@ extension AddVideoViewController {
     
     private func configreNavBarItem() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        let rightBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        rightBarButton.isEnabled = false
+        self.navigationItem.rightBarButtonItem = rightBarButton
     }
     
     private func configureTextFieldStackView() {
@@ -64,7 +78,11 @@ extension AddVideoViewController {
         textFieldsVStack.translatesAutoresizingMaskIntoConstraints = false
         textFieldsVStack.axis = .vertical
         textFieldsVStack.spacing = Constants.stackSpacing
-        let _ = [titleField, linkField, startTimeField].map { textFieldsVStack.addArrangedSubview($0) }
+        let _ = [titleField, linkField, startTimeField].map {
+            $0.textField.addAction(didChanged, for: .editingChanged)
+            $0.setDelegate(self)
+            textFieldsVStack.addArrangedSubview($0)
+        }
         view.addSubview(textFieldsVStack)
         
         NSLayoutConstraint.activate([
@@ -111,5 +129,5 @@ extension AddVideoViewController {
 }
 
 extension AddVideoViewController: UITextFieldDelegate {
-    
+
 }

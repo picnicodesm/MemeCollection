@@ -8,6 +8,7 @@
 import Foundation
 
 struct Category: Hashable {
+    let uuid = UUID()
     private var name: String
     private var videoNums: Int = 0
     
@@ -25,5 +26,5 @@ struct Category: Hashable {
 }
 
 extension Category {
-    static var mock: [Category] = [Category(name: "Favorites"), Category(name: "Category 1"), Category(name: "Category 2"), Category(name: "Category 3"), Category(name: "Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title")]
+    static var mock: [Category] = [Category(name: "Favorites"), Category(name: "하니"), Category(name: "Category 2"), Category(name: "Category 3"), Category(name: "Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title")]
 }

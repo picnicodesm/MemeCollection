@@ -22,7 +22,6 @@ enum InputType {
 }
 
 class TextInputComponent: UIStackView {
-    
     var titleLabel: UILabel!
     var textField: UITextField!
     var title: String
@@ -38,7 +37,18 @@ class TextInputComponent: UIStackView {
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    func setDelegate(_ delegate: UITextFieldDelegate) {
+        textField.delegate = delegate
+    }
+    
+    func enableTextField() {
+        textField.isEnabled = true
+    }
+    
+    func disableTextField() {
+        textField.isEnabled = false
+    }
     
     private func configureView(title: String, placeholder: String, type: InputType) {
         configureLabel(title: title)
@@ -49,7 +59,6 @@ class TextInputComponent: UIStackView {
         self.spacing = 3
         self.addArrangedSubview(titleLabel)
         self.addArrangedSubview(textField)
-
     }
     
     private func configureLabel(title: String) {
@@ -70,9 +79,5 @@ class TextInputComponent: UIStackView {
         NSLayoutConstraint.activate([
             textField.heightAnchor.constraint(equalToConstant: 60)
         ])
-    }
-    
-    func setDelegate(_ delegate: UITextFieldDelegate) {
-        textField.delegate = delegate
     }
 }
