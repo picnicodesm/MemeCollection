@@ -8,36 +8,48 @@
 import UIKit
 import Combine
 
-// TODO: - 1. 저장로직 구현, viewmodel 구현
-
 class AddVideoViewController: UIViewController {
+    private var textFieldsVStack: UIStackView!
+    private var thumbnailVStack: UIStackView!
+    private var thumbnailLabel: UILabel!
+    private var thumbnailImageView: UIImageView!
+    private let titleField = TextInputComponent(title: "TITLE",
+                                                placeholder: "Write the title of the video",
+                                                type: .title)
+    private let linkField = TextInputComponent(title: "LINK",
+                                               placeholder: "Input video link",
+                                               type: .link)
+    private let startTimeField = TextInputComponent(title: "START TIME",
+                                                    placeholder: "Start time of video",
+                                                    type: .startTime)
     
-    var textFieldsVStack: UIStackView!
-    var thumbnailVStack: UIStackView!
-    var thumbnailLabel: UILabel!
-    var thumbnailImageView: UIImageView!
-    let titleField = TextInputComponent(title: "TITLE", placeholder: "Write the title of the video", type: .title)
-    let linkField = TextInputComponent(title: "LINK", placeholder: "Input video link", type: .link)
-    let startTimeField = TextInputComponent(title: "START TIME", placeholder: "Start time of video", type: .startTime)
-    
-    let viewModel = AddVideoViewModel()
-    
-    var addAction: ((Video) -> Void)?
-    lazy var didChanged: UIAction = UIAction { [unowned self] _ in
-        guard let titleText = self.titleField.textField.text, let linkText = self.linkField.textField.text else { return }
+    private lazy var titleTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
+        guard let titleText = self.titleField.textField.text else { return }
+        testCanSave(title: titleText, linkFlag: linkFlag)
+        
+    }
+    private lazy var linkTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
+        guard let titleText = self.titleField.textField.text,
+              let linkText = self.linkField.textField.text else { return }
         testLink(linkText)
+        testCanSave(title: titleText, linkFlag: linkFlag)
     }
     
-    var errorData: Data?
+    private var linkFlag = false
+    private let viewModel = AddVideoViewModel()
+    
+    var addAction: ((Video) -> Void)?
+    
+    // Data for comparison with error data caused by an invalid key.
+    private var errorData: Data?
     
     // Combine
-    var subscriptions = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         bind()
-        
         Task {
             errorData = await viewModel.getErrorData()
         }
@@ -52,13 +64,16 @@ class AddVideoViewController: UIViewController {
                 if (thumbnailData != nil && thumbnailData == errorData) {
                     removeThumbnail()
                     linkField.setErrorUI(message: LinkError.keyError.rawValue)
+                    self.startTimeField.removeErrorUI()
                     self.startTimeField.disableTextField()
+                    linkFlag = false
                 }
                 else {
                     guard let thumbnailData = thumbnailData else { return }
                     self.thumbnailImageView.image = UIImage(data: thumbnailData)
                     self.startTimeField.setErrorUI(message: "if the time is over length of video, it will be blocked")
                     self.startTimeField.enableTextField()
+                    linkFlag = true
                 }
             }.store(in: &subscriptions)
     }
@@ -80,7 +95,7 @@ extension AddVideoViewController {
         self.dismiss(animated: true)
     }
     
-    private func testLink(_ link: String) -> Bool {
+    private func testLink(_ link: String) {
         if !link.isEmpty {
             let (isSuccess, error, _, _, key) = viewModel.testLink(with: link)
             
@@ -89,24 +104,40 @@ extension AddVideoViewController {
                 Task {
                     await viewModel.setThumbnail(with: key!)
                 }
-                return true
             } else {
-                guard let error = error else { return false }
-                removeThumbnail()
-                linkField.setErrorUI(message: error.rawValue)
-                startTimeField.disableTextField()
-                return false
+                testFailedByInvalidLink(error: error!)
             }
         } else {
-            linkField.removeErrorUI()
-            removeThumbnail()
-            startTimeField.disableTextField()
-            return false
+            testFailedByEmptyText()
         }
     }
     
     private func removeThumbnail() {
         thumbnailImageView.image = nil
+    }
+    
+    private func testCanSave(title: String, linkFlag: Bool) {
+        if !title.isEmpty && linkFlag {
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+        } else {
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+    }
+    
+    private func testFailedByEmptyText() {
+        linkField.removeErrorUI()
+        removeThumbnail()
+        startTimeField.removeErrorUI()
+        startTimeField.disableTextField()
+        linkFlag = false
+    }
+    
+    private func testFailedByInvalidLink(error: LinkError) {
+        removeThumbnail()
+        linkField.setErrorUI(message: error.rawValue)
+        startTimeField.removeErrorUI()
+        startTimeField.disableTextField()
+        linkFlag = false
     }
     
 }
@@ -134,8 +165,9 @@ extension AddVideoViewController {
         textFieldsVStack.axis = .vertical
         textFieldsVStack.spacing = Constants.stackSpacing
         startTimeField.disableTextField()
+        titleField.textField.addAction(titleTextFieldDidChanged, for: .editingChanged)
+        linkField.textField.addAction(linkTextFieldDidChanged, for: .editingChanged)
         let _ = [titleField, linkField, startTimeField].map {
-            $0.textField.addAction(didChanged, for: .editingChanged)
             textFieldsVStack.addArrangedSubview($0)
         }
         view.addSubview(textFieldsVStack)
@@ -157,9 +189,9 @@ extension AddVideoViewController {
         
         configureThumbnailLabel()
         configureThumbnailImageView()
-    
+        
         let _ = [thumbnailLabel, thumbnailImageView].map { thumbnailVStack.addArrangedSubview($0) }
-     
+        
         NSLayoutConstraint.activate([
             thumbnailVStack.topAnchor.constraint(equalTo: textFieldsVStack.bottomAnchor, constant: Constants.stackSpacing),
             thumbnailVStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
