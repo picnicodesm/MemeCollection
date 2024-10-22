@@ -25,14 +25,14 @@ class AddVideoViewController: UIViewController {
     
     private lazy var titleTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let titleText = self.titleField.textField.text else { return }
-        testCanSave(title: titleText, linkFlag: linkFlag)
+        testCanSave()
         
     }
     private lazy var linkTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let titleText = self.titleField.textField.text,
               let linkText = self.linkField.textField.text else { return }
         testLink(linkText)
-        testCanSave(title: titleText, linkFlag: linkFlag)
+        testCanSave()
     }
     
     private var linkFlag = false
@@ -74,6 +74,7 @@ class AddVideoViewController: UIViewController {
                     self.startTimeField.setErrorUI(message: "if the time is over length of video, it will be blocked")
                     self.startTimeField.enableTextField()
                     linkFlag = true
+                    testCanSave()
                 }
             }.store(in: &subscriptions)
     }
@@ -116,8 +117,9 @@ extension AddVideoViewController {
         thumbnailImageView.image = nil
     }
     
-    private func testCanSave(title: String, linkFlag: Bool) {
-        if !title.isEmpty && linkFlag {
+    private func testCanSave() {
+        guard let titleText = self.titleField.textField.text else { return }
+        if !titleText.isEmpty && linkFlag {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = false

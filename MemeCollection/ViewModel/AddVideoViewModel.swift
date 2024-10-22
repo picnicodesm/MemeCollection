@@ -7,6 +7,8 @@
 
 import Foundation
 
+// TODO: - Link Logic 수정해야 함.
+
 enum LinkError: String {
     case linkTypeError = "Link isn't matched with correct type."
     case videoTypeError = "Link isn't matched with correct video type."
