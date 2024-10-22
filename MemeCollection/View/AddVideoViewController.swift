@@ -52,10 +52,13 @@ class AddVideoViewController: UIViewController {
                 if (thumbnailData != nil && thumbnailData == errorData) {
                     removeThumbnail()
                     linkField.setErrorUI(message: LinkError.keyError.rawValue)
+                    self.startTimeField.disableTextField()
                 }
                 else {
                     guard let thumbnailData = thumbnailData else { return }
                     self.thumbnailImageView.image = UIImage(data: thumbnailData)
+                    self.startTimeField.setErrorUI(message: "if the time is over length of video, it will be blocked")
+                    self.startTimeField.enableTextField()
                 }
             }.store(in: &subscriptions)
     }
@@ -91,11 +94,13 @@ extension AddVideoViewController {
                 guard let error = error else { return false }
                 removeThumbnail()
                 linkField.setErrorUI(message: error.rawValue)
+                startTimeField.disableTextField()
                 return false
             }
         } else {
             linkField.removeErrorUI()
             removeThumbnail()
+            startTimeField.disableTextField()
             return false
         }
     }

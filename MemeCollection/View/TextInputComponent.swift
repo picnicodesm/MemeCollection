@@ -48,6 +48,7 @@ class TextInputComponent: UIStackView {
     }
     
     func disableTextField() {
+        textField.text = ""
         textField.backgroundColor = .systemGray5
         textField.isEnabled = false
         textField.placeholder = "This will be opened when the link is video"
@@ -56,6 +57,7 @@ class TextInputComponent: UIStackView {
     func setErrorUI(message: String) {
         errorLabel.text = message
         errorLabel.textColor = .red
+        errorLabel.numberOfLines = 2
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         self.addArrangedSubview(errorLabel)
     }

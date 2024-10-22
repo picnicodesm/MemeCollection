@@ -24,18 +24,18 @@ struct Video: Hashable {
     var urlString: String
     var type: VideoType
     var isFavorite: Bool
-    var startTime: String?
     var filePath: String
     var category: Category
+    var startTime: Int = 0
     
-    init(name: String, urlString: String, type: VideoType, isFavorite: Bool, startTime: String? = nil, filePath: String, category: Category) {
+    init(name: String, urlString: String, type: VideoType, isFavorite: Bool, filePath: String, category: Category, startTime: Int = 0) {
         self.name = name
         self.urlString = urlString
         self.type = type
         self.isFavorite = isFavorite
-        self.startTime = startTime
         self.filePath = filePath
         self.category = category
+        self.startTime = startTime
     }
 }
 
