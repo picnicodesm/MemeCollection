@@ -55,7 +55,7 @@ class MainViewController: UIViewController {
             .sink { [unowned self] category in
                 let vm = MemesViewModel(category: category)
                 let destination = MemesViewController()
-                destination.initialSetup(memesVM: vm, category: category)
+                destination.initialSetup(memesVM: vm)
                 navigationController?.pushViewController(destination, animated: true)
             }
             .store(in: &subscriptions)
@@ -65,7 +65,7 @@ class MainViewController: UIViewController {
 // MARK: - DataSource
 extension MainViewController {
     private func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { [unowned self] collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewListCell", for: indexPath) as? UICollectionViewListCell else { return UICollectionViewCell() }
             
             var config = cell.defaultContentConfiguration()
@@ -76,7 +76,7 @@ extension MainViewController {
                 .reorder(displayed: .whenEditing),
                 .detail(displayed: .whenEditing),
                 .disclosureIndicator(displayed: .whenNotEditing),
-                .label(text: "\(item.getVideoNumbers())")
+                .label(text: "\(self.viewModel.getVideoNums(of: item))")
             ]
             
             return cell

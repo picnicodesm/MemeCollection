@@ -6,8 +6,7 @@
 //
 
 import UIKit
-
-// TODO: - 모델 적용!!
+import Combine
 
 enum CellMode {
     case grid
@@ -31,10 +30,15 @@ class MemesViewController: UIViewController {
         case main
     }
     
+    // Combine
+    private var subscriptions = Set<AnyCancellable>()
+    private let addVideoSubject = PassthroughSubject<Video, Never>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         configureGridDataSource()
+        bind()
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -47,9 +51,22 @@ class MemesViewController: UIViewController {
         }
     }
     
-    func initialSetup(memesVM: MemesViewModel, category: Category) {
+    func initialSetup(memesVM: MemesViewModel) {
         self.memesVM = memesVM
-        self.category = category
+        self.category = memesVM.category
+    }
+    
+    private func bind() {
+        memesVM.$memes
+            .receive(on: RunLoop.main)
+            .sink { [unowned self] memes in
+                self.updateSnapshot(memes)
+            }.store(in: &subscriptions)
+        
+        addVideoSubject
+            .sink { video in
+                TempStorage.shared.addData(video)
+            }.store(in: &subscriptions)
     }
     
     private struct Constants {
@@ -68,7 +85,7 @@ extension MemesViewController {
         deleteAction.image = UIImage(systemName: "trash.fill")
         
         let editAction = UIContextualAction(style: .normal, title: "") { (action, view, completion) in
-
+            
             print("editAction!")
             completion(true)
         }
@@ -82,6 +99,9 @@ extension MemesViewController {
         return UIAction { [weak self] _ in
             let destination = AddVideoViewController()
             destination.category = self?.category
+            destination.addAction = { [weak self] newVideo in
+                self?.addVideoSubject.send(newVideo)
+            }
             let navigationVC = UINavigationController(rootViewController: destination)
             self?.present(navigationVC, animated: true)
         }
@@ -99,7 +119,7 @@ extension MemesViewController {
             
             return cell
         })
-        updateSnapshot(memesVM!.memes)
+        updateSnapshot(memesVM.memes)
     }
     
     private func configureEditListDataSource() {

@@ -6,11 +6,23 @@
 //
 
 import Foundation
+import Combine
 
 class TempStorage {
     static let shared = TempStorage()
     
-    private var datas: [Video] = []
+    @Published var datas: [Video] = []
+    
+    func getDatas() -> [Video] {
+        return datas
+    }
+    
+    func getDatas(of category: Category) -> [Video] {
+        print("now datas: \(datas)")
+        return datas.filter { video in
+            video.category.uuid == category.uuid
+        }
+    }
     
     func addData(_ data: Video) {
         datas.append(data)
@@ -20,6 +32,10 @@ class TempStorage {
         datas.removeAll { deleteItem in
             data.uuid == deleteItem.uuid
         }
+    }
+    
+    func getNumberOfVideos(in category: Category) -> Int {
+        return getDatas(of: category).count
     }
     
     

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 class MainViewModel: CategoryViewModel {
-    @Published var categories: [Category] = Category.mock
+    @Published var categories: [Category] = [Category(name: "Favorites"), Category(name: "하니")]
     
     func addCategory(_ newCategory: Category) {
         categories.append(newCategory)
@@ -23,5 +23,9 @@ class MainViewModel: CategoryViewModel {
     
     func updateCategoryOrder(to orderedCategory: [Category]) {
         categories = orderedCategory
+    }
+    
+    func getVideoNums(of category: Category) -> Int {
+        return TempStorage.shared.getNumberOfVideos(in: category)
     }
 }

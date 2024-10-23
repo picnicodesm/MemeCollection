@@ -10,7 +10,6 @@ import Foundation
 struct Category: Hashable {
     let uuid = UUID()
     private var name: String
-    private var videoNums: Int = 0
     
     init(name: String) {
         self.name = name
@@ -18,10 +17,6 @@ struct Category: Hashable {
     
     func getName() -> String {
         return name
-    }
-    
-    func getVideoNumbers() -> Int {
-        return videoNums
     }
 }
 
