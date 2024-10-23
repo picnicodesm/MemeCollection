@@ -55,7 +55,7 @@ class MainViewController: UIViewController {
             .sink { [unowned self] category in
                 let vm = MemesViewModel(category: category)
                 let destination = MemesViewController()
-                destination.initialSetup(memesVM: vm, title: category.getName())
+                destination.initialSetup(memesVM: vm, category: category)
                 navigationController?.pushViewController(destination, animated: true)
             }
             .store(in: &subscriptions)

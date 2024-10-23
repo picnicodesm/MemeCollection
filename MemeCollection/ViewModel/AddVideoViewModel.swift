@@ -16,14 +16,15 @@ enum LinkError: String {
 
 class AddVideoViewModel {
     typealias LinkTestResult = (Bool, LinkError?, VideoType?, LinkType?, String?)
-
+    typealias VideoInfo = (key: String?, videoType: VideoType?, linkType: LinkType?)
+    
     @Published var thumbnailData: Data?
+    private var videoInfo: VideoInfo = (nil, nil, nil)
     
     /// Test the given link whether it is correct youtube link.
     /// - Parameter link: The link for test
     /// - Returns: if test is succeed, return (true, nil, videoType, LinkType, key). if failed, return (false, error, nil, nil, nil)
     func testLink(with link: String) -> LinkTestResult {
-        
         guard let linkType = getLinkType(of: link) else {
             return (false, LinkError.linkTypeError , nil, nil, nil)
         }
@@ -34,6 +35,7 @@ class AddVideoViewModel {
             return (false, LinkError.strangeLinkError, nil, nil, nil)
         }
         
+        self.videoInfo = (key, videoType, linkType)
         return (true, nil, videoType, linkType, key)
     }
     
@@ -62,11 +64,27 @@ class AddVideoViewModel {
             return nil
         }
     }
-
     
-    func makeMobileLink(using key: String, type videoType: VideoType, at time: String) -> String {
+    func makeMobileLink(of link: String, using key: String, at time: String) -> String {
+        let videoType = getVideoType(of: link)
         if videoType == .shorts { return "https://m.youtube.com/shorts/\(key)" }
-        else { return "https://m.youtube.com/watch?v=\(key)&t=\(time)s" }
+        else {
+            print("gived time: \(time)")
+            return "https://m.youtube.com/watch?v=\(key)&t=\(time)s"
+        }
+    }
+    
+    func getMobileLink(startFrom time: Int) -> String? {
+        guard let videoType = videoInfo.videoType, let key = videoInfo.key else { return nil }
+        
+        if videoType == .shorts { return "https://m.youtube.com/shorts/\(key)" }
+        else {
+            return "https://m.youtube.com/watch?v=\(key)&t=\(time)s"
+        }
+    }
+    
+    func getVideoInfo() -> VideoInfo {
+        return videoInfo
     }
     
 }
@@ -84,9 +102,9 @@ extension AddVideoViewModel {
         }
     }
     
+    /// This function must be used after getLinkType(of:).
+    /// Or use this function when you sure the link has no problem.
     private func getVideoType(of urlString: String) -> VideoType? {
-        // This function must use after getLinkType(of:).
-        // Because It doesn't ensure video's type without getLinkType(of:).
         if urlString.contains("shorts/") { return .shorts }
         if urlString.contains("watch?v=") || urlString.contains("youtu.be") { return .video }
         return nil

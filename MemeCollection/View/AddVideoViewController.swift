@@ -38,13 +38,14 @@ class AddVideoViewController: UIViewController {
     private var linkFlag = false
     private let viewModel = AddVideoViewModel()
     
-    var addAction: ((Video) -> Void)?
-    
-    // Data for comparison with error data caused by an invalid key.
+    /// Data for comparison with error data caused by an invalid key.
     private var errorData: Data?
     
     // Combine
     private var subscriptions = Set<AnyCancellable>()
+    
+    var addAction: ((Video) -> Void)?
+    var category: Category?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,19 +63,10 @@ class AddVideoViewController: UIViewController {
                 print(error)
             } receiveValue: { [unowned self] thumbnailData in
                 if (thumbnailData != nil && thumbnailData == errorData) {
-                    removeThumbnail()
-                    linkField.setErrorUI(message: LinkError.keyError.rawValue)
-                    self.startTimeField.removeErrorUI()
-                    self.startTimeField.disableTextField()
-                    linkFlag = false
+                    failedGettingThumbnail()
                 }
                 else {
-                    guard let thumbnailData = thumbnailData else { return }
-                    self.thumbnailImageView.image = UIImage(data: thumbnailData)
-                    self.startTimeField.setErrorUI(message: "if the time is over length of video, it will be blocked")
-                    self.startTimeField.enableTextField()
-                    linkFlag = true
-                    testCanSave()
+                    succeededGettingThumbnail(of: thumbnailData)
                 }
             }.store(in: &subscriptions)
     }
@@ -89,6 +81,17 @@ class AddVideoViewController: UIViewController {
 // MARK: - Actions
 extension AddVideoViewController {
     @objc func doneTapped() {
+        guard let title = titleField.textField.text,
+              let startTimeText = startTimeField.textField.text,
+              let category = self.category
+        else { return }
+        
+        let startTime = startTimeText == "" ? 0 : Int(startTimeText)!
+        let mobileLink = viewModel.getMobileLink(startFrom: startTime)!
+        let videoInfo = viewModel.getVideoInfo()
+        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!, isFavorite: false, filePath: "", category: category, startTime: startTime)
+        
+        addAction?(newVideo)
         self.dismiss(animated: true)
     }
     
@@ -142,6 +145,23 @@ extension AddVideoViewController {
         linkFlag = false
     }
     
+    private func succeededGettingThumbnail(of thumbnailData: Data?) {
+        guard let thumbnailData = thumbnailData else { return }
+        self.thumbnailImageView.image = UIImage(data: thumbnailData)
+        self.startTimeField.setErrorUI(message: "if the time is over length of video, it will be blocked")
+        self.startTimeField.enableTextField()
+        linkFlag = true
+        testCanSave()
+    }
+    
+    private func failedGettingThumbnail() {
+        removeThumbnail()
+        linkField.setErrorUI(message: LinkError.keyError.rawValue)
+        self.startTimeField.removeErrorUI()
+        self.startTimeField.disableTextField()
+        linkFlag = false
+    }
+    
 }
 
 // MARK: - View
@@ -169,6 +189,7 @@ extension AddVideoViewController {
         startTimeField.disableTextField()
         titleField.textField.addAction(titleTextFieldDidChanged, for: .editingChanged)
         linkField.textField.addAction(linkTextFieldDidChanged, for: .editingChanged)
+        startTimeField.textField.keyboardType = .numberPad
         let _ = [titleField, linkField, startTimeField].map {
             textFieldsVStack.addArrangedSubview($0)
         }

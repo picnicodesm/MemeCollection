@@ -19,7 +19,7 @@ class MemesViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     var memesVM: MemesViewModel!
-    var categoryTitle: String!
+    var category: Category!
     var cellMode: CellMode = .grid {
         didSet {
             updateCollectionView()
@@ -47,9 +47,9 @@ class MemesViewController: UIViewController {
         }
     }
     
-    func initialSetup(memesVM: MemesViewModel, title: String) {
+    func initialSetup(memesVM: MemesViewModel, category: Category) {
         self.memesVM = memesVM
-        self.categoryTitle = title
+        self.category = category
     }
     
     private struct Constants {
@@ -81,6 +81,7 @@ extension MemesViewController {
     private func openAddVideoPage() -> UIAction {
         return UIAction { [weak self] _ in
             let destination = AddVideoViewController()
+            destination.category = self?.category
             let navigationVC = UINavigationController(rootViewController: destination)
             self?.present(navigationVC, animated: true)
         }
@@ -145,7 +146,7 @@ extension MemesViewController {
     }
     
     private func configureNavBar() {
-        self.navigationItem.title = categoryTitle
+        self.navigationItem.title = category.getName()
         self.navigationItem.rightBarButtonItem = editButtonItem
     }
     
