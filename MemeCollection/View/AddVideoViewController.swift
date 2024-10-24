@@ -83,13 +83,31 @@ extension AddVideoViewController {
     @objc func doneTapped() {
         guard let title = titleField.textField.text,
               let startTimeText = startTimeField.textField.text,
-              let category = self.category
-        else { return }
+              let category = self.category,
+              let thumbnailData = viewModel.thumbnailData
+        else {
+            // Alert with message "save failed"
+            return }
+        
+        // test if image can be saved.
+        let imageManager = ImageManager.shared
+        var imageIdentifierNumber = 0
+        var imageIdentifier = "\(title) \(imageIdentifierNumber)"
+        
+        while imageManager.isImageNameDuplicated(identifier: imageIdentifier) {
+            imageIdentifierNumber += 1
+            imageIdentifier = "\(title) \(imageIdentifierNumber)"
+        }
+        
+        guard imageManager.saveImage(image: UIImage(data: thumbnailData)!, name: imageIdentifier) else {
+            // Alert with message "save failed"
+            return
+        }
         
         let startTime = startTimeText == "" ? 0 : Int(startTimeText)!
         let mobileLink = viewModel.getMobileLink(startFrom: startTime)!
         let videoInfo = viewModel.getVideoInfo()
-        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!, isFavorite: false, filePath: "", category: category, startTime: startTime)
+        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!, isFavorite: false, thumbnailIdentifier: "\(imageIdentifier)", category: category, startTime: startTime)
         
         addAction?(newVideo)
         self.dismiss(animated: true)
@@ -98,7 +116,9 @@ extension AddVideoViewController {
     @objc func cancelTapped() {
         self.dismiss(animated: true)
     }
-    
+}
+
+extension AddVideoViewController {
     private func testLink(_ link: String) {
         if !link.isEmpty {
             let (isSuccess, error, _, _, key) = viewModel.testLink(with: link)
@@ -160,7 +180,6 @@ extension AddVideoViewController {
         self.startTimeField.disableTextField()
         linkFlag = false
     }
-    
 }
 
 // MARK: - View

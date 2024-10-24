@@ -41,9 +41,18 @@ class ImageManager {
     }
 
     func getSavedImage(named: String) -> UIImage? {
+        guard let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
+        
         if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
             return UIImage(contentsOfFile: URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path)
         }
         return nil
+    }
+    
+    func isImageNameDuplicated(identifier: String) -> Bool {
+        guard let image = getSavedImage(named: identifier) else {
+            return false
+        }
+        return true
     }
 }
