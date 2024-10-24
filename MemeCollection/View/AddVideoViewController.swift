@@ -132,7 +132,6 @@ extension AddVideoViewController {
     private func testFailedByEmptyText() {
         linkField.removeErrorUI()
         removeThumbnail()
-        startTimeField.removeErrorUI()
         startTimeField.disableTextField()
         linkFlag = false
     }
@@ -140,16 +139,17 @@ extension AddVideoViewController {
     private func testFailedByInvalidLink(error: LinkError) {
         removeThumbnail()
         linkField.setErrorUI(message: error.rawValue)
-        startTimeField.removeErrorUI()
         startTimeField.disableTextField()
         linkFlag = false
     }
     
     private func succeededGettingThumbnail(of thumbnailData: Data?) {
         guard let thumbnailData = thumbnailData else { return }
+        guard let videoType = viewModel.getVideoInfo().videoType else { return }
         self.thumbnailImageView.image = UIImage(data: thumbnailData)
-        self.startTimeField.setErrorUI(message: "if the time is over length of video, it will be blocked")
-        self.startTimeField.enableTextField()
+        if videoType == .video {
+            self.startTimeField.enableTextField()
+        }
         linkFlag = true
         testCanSave()
     }
@@ -157,7 +157,6 @@ extension AddVideoViewController {
     private func failedGettingThumbnail() {
         removeThumbnail()
         linkField.setErrorUI(message: LinkError.keyError.rawValue)
-        self.startTimeField.removeErrorUI()
         self.startTimeField.disableTextField()
         linkFlag = false
     }

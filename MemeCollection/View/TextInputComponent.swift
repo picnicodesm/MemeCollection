@@ -8,8 +8,6 @@
 import Foundation
 import UIKit
 
-
-
 class TextInputComponent: UIStackView {
     enum InputType {
         case title, link, startTime
@@ -45,6 +43,7 @@ class TextInputComponent: UIStackView {
         textField.backgroundColor = .white
         textField.isEnabled = true
         textField.placeholder = placeholder
+        setErrorUI(message: "if the time is over length of video, it will be blocked")
     }
     
     func disableTextField() {
@@ -52,6 +51,7 @@ class TextInputComponent: UIStackView {
         textField.backgroundColor = .systemGray5
         textField.isEnabled = false
         textField.placeholder = "This will be opened when the link is video"
+        removeErrorUI()
     }
     
     func setErrorUI(message: String) {

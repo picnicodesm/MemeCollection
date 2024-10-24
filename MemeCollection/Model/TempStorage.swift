@@ -18,7 +18,6 @@ class TempStorage {
     }
     
     func getDatas(of category: Category) -> [Video] {
-        print("now datas: \(datas)")
         return datas.filter { video in
             video.category.uuid == category.uuid
         }

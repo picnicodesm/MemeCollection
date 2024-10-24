@@ -8,6 +8,8 @@
 import UIKit
 import Combine
 
+// TODO: - 셀 디자인, Realm 준비
+
 enum CellMode {
     case grid
     case editList
