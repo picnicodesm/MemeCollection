@@ -9,30 +9,19 @@ import Foundation
 import UIKit
 
 class ImageManager {
+    typealias CompressedImage = (String, Data)
+    
     static let shared = ImageManager()
 
-    func saveImage(image: UIImage, name imageName: String) -> Bool {
-        var imageExtension = ""
-        var compressedImage: Data = Data()
-//        guard let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else {
-//            return false
-//        }
-        if let data = image.jpegData(compressionQuality: 1) {
-            imageExtension = "jpeg"
-            compressedImage = data
-        } else if let data = image.pngData() {
-            imageExtension = "png"
-            compressedImage = data
-        } else {
-            return false
-        }
-            
-        guard let directoryPath = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
+    func saveImage(imageData: Data, as identifier: String) -> Bool {
+        guard let directoryPath = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return false
         }
         do {
-            print(directoryPath)
-            try compressedImage.write(to: directoryPath.appendingPathComponent("\(imageName).\(imageExtension)")!)
+            print("directoryPath: \(directoryPath)")
+            let encodedIdentifier = identifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+            print("saving identifier: \(identifier)")
+            try imageData.write(to: directoryPath.appendingPathComponent(encodedIdentifier))
             return true
         } catch {
             print(error.localizedDescription)
@@ -40,19 +29,59 @@ class ImageManager {
         }
     }
 
-    func getSavedImage(named: String) -> UIImage? {
-        guard let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
-        
-        if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
-            return UIImage(contentsOfFile: URL(fileURLWithPath: dir.absoluteString).appendingPathComponent(named).path)
+    /// If you encode the identifier, filemanager can't find a file cottectly. DON'T KNOW WHY
+    func getSavedImage(of identifier: String) -> UIImage? {
+        guard let fileURL = getFileURL(of: identifier) else { return nil }
+                
+        if FileManager.default.fileExists(atPath: fileURL.path()) {
+            return UIImage(contentsOfFile: fileURL.path())
+        } else {
+            return nil
         }
-        return nil
     }
     
-    func isImageNameDuplicated(identifier: String) -> Bool {
-        guard let image = getSavedImage(named: identifier) else {
+    func isImageNameExist(identifier: String) -> Bool {
+        guard let fileURL = getFileURL(of: identifier) else { return false }
+                
+        if FileManager.default.fileExists(atPath: fileURL.path()) {
+            return true
+        } else {
             return false
         }
-        return true
+    }
+    
+   func getCompleteIdentifier(of thumbnailData: Data, with title: String) -> CompressedImage? {
+        var imageIdentifierNumber = 0
+        let thumbnailImage = UIImage(data: thumbnailData)!
+        var imageExtension = ""
+        var imageIdentifier = ""
+        var compressedImageData: Data = Data()
+        
+        if let data = thumbnailImage.jpegData(compressionQuality: 1) {
+            imageExtension = "jpeg"
+            compressedImageData = data
+        } else if let data = thumbnailImage.pngData() {
+            imageExtension = "png"
+            compressedImageData = data
+        } else {
+            return nil
+        }
+        
+        imageIdentifier = "\(title) \(imageIdentifierNumber).\(imageExtension)"
+        
+        while isImageNameExist(identifier: imageIdentifier) {
+            imageIdentifierNumber += 1
+            imageIdentifier = "\(title) \(imageIdentifierNumber).\(imageExtension)"
+        }
+    
+        return CompressedImage(imageIdentifier, compressedImageData)
+    }
+    
+}
+
+extension ImageManager {
+    private func getFileURL(of identifier: String) -> URL? {
+        guard let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
+        return dir.appending(path: identifier)
     }
 }

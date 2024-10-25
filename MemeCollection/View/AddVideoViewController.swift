@@ -86,28 +86,26 @@ extension AddVideoViewController {
               let category = self.category,
               let thumbnailData = viewModel.thumbnailData
         else {
-            // Alert with message "save failed"
+            // Alert with message "save failed" and dismiss
             return }
         
-        // test if image can be saved.
         let imageManager = ImageManager.shared
-        var imageIdentifierNumber = 0
-        var imageIdentifier = "\(title) \(imageIdentifierNumber)"
+        let startTime = startTimeText == "" ? 0 : Int(startTimeText)!
+        let mobileLink = viewModel.getMobileLink(startFrom: startTime)!
+        let videoInfo = viewModel.getVideoInfo()
         
-        while imageManager.isImageNameDuplicated(identifier: imageIdentifier) {
-            imageIdentifierNumber += 1
-            imageIdentifier = "\(title) \(imageIdentifierNumber)"
+        guard let (imageIdentifier, compressedImage) = imageManager.getCompleteIdentifier(of: thumbnailData, with: title) else {
+            // comopressed failed
+            return
         }
         
-        guard imageManager.saveImage(image: UIImage(data: thumbnailData)!, name: imageIdentifier) else {
+        guard imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
+        else {
             // Alert with message "save failed"
             return
         }
         
-        let startTime = startTimeText == "" ? 0 : Int(startTimeText)!
-        let mobileLink = viewModel.getMobileLink(startFrom: startTime)!
-        let videoInfo = viewModel.getVideoInfo()
-        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!, isFavorite: false, thumbnailIdentifier: "\(imageIdentifier)", category: category, startTime: startTime)
+        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!, isFavorite: false, thumbnailIdentifier: imageIdentifier, category: category, startTime: startTime)
         
         addAction?(newVideo)
         self.dismiss(animated: true)

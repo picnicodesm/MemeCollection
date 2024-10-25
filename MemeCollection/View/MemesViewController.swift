@@ -8,7 +8,8 @@
 import UIKit
 import Combine
 
-// TODO: - 셀 디자인, Realm 준비
+// Closure로 받아서 저장하는 것보다 바로 저장하는게 나을 수도 있다.
+// Realm 적용 후 고쳐보기
 
 enum CellMode {
     case grid
