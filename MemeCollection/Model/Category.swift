@@ -25,6 +25,10 @@ struct Category: Hashable {
         return id
     }
     
+    mutating func setName(to name: String) {
+        self.name = name
+    }
+    
 }
 
 extension Category: Persistable {

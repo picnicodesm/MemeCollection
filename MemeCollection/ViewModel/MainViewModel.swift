@@ -41,7 +41,18 @@ class MainViewModel: CategoryViewModel {
     }
     
     func editCategoryName(of id: UUID, to name: String) {
-        print("id: \(id) to \(name)")
+        categories = categories.map { editItem in
+            var editItem = editItem
+            if editItem.getId() == id {
+                editItem.setName(to: name)
+            }
+            return editItem
+        }
+        
+        guard let editableCategory = database.read(of: RealmCategory.self, with: id) else { return }
+        database.update(editableCategory) { editObject in
+            editObject.setName(to: name)
+        }
     }
     
     func updateCategoryOrder(to orderedCategories: [Category]) {

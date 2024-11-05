@@ -21,4 +21,8 @@ class RealmCategory: Object {
         return id
     }
     
+    func setName(to name: String) {
+        self.name = name
+    }
+    
 }
