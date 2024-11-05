@@ -26,17 +26,15 @@ struct Video: Hashable {
     private var isFavorite: Bool
     private var thumbnailIdentifier: String
     private var categoryId: UUID
-    private var index: Int = -1
     private var startTime: Int = 0
     
-    init(name: String, urlString: String, type: String, isFavorite: Bool, thumbnailIdentifier: String, categoryId: UUID, index: Int = -1, startTime: Int = 0) {
+    init(name: String, urlString: String, type: String, isFavorite: Bool, thumbnailIdentifier: String, categoryId: UUID, startTime: Int = 0) {
         self.name = name
         self.urlString = urlString
         self.type = type
         self.isFavorite = isFavorite
         self.thumbnailIdentifier = thumbnailIdentifier
         self.categoryId = categoryId
-        self.index = index
         self.startTime = startTime
     }
     
@@ -51,14 +49,6 @@ struct Video: Hashable {
     func getName() -> String {
         return name
     }
-    
-    func getIndex() -> Int {
-        return index
-    }
-    
-    mutating func setIndex(to index: Int) {
-        self.index = index
-    }
 }
 
 extension Video: Persistable {
@@ -70,7 +60,7 @@ extension Video: Persistable {
         self.isFavorite = managedObject.isFavorite
         self.thumbnailIdentifier = managedObject.thumbnailIdentifier
         self.categoryId = managedObject.categoryId
-        self.index = managedObject.index
+
         self.startTime = managedObject.startTime
     }
     
@@ -83,7 +73,6 @@ extension Video: Persistable {
         realmVideo.isFavorite = self.isFavorite
         realmVideo.thumbnailIdentifier = self.thumbnailIdentifier
         realmVideo.categoryId = self.categoryId
-        realmVideo.index = self.index
         realmVideo.startTime = self.startTime
         return realmVideo
     }

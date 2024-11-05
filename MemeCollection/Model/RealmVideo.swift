@@ -17,7 +17,6 @@ class RealmVideo: Object {
     @Persisted var isFavorite: Bool
     @Persisted var thumbnailIdentifier: String
     @Persisted var categoryId: UUID
-    @Persisted var index: Int
     @Persisted var startTime: Int = 0
     
     func toStruct() -> Video {

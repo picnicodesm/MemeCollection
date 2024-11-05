@@ -111,8 +111,9 @@ extension MainViewController {
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
         
-        let editAction = UIContextualAction(style: .normal, title: "") { (action, view, completion) in
-            print("editAction!")
+        let editAction = UIContextualAction(style: .normal, title: "") { [weak self] (action, view, completion) in
+            guard let self = self else { return }
+            self.openEditCategoryView(with: indexPath)
             completion(true)
         }
         editAction.image = UIImage(systemName: "info.circle.fill")
@@ -133,6 +134,15 @@ extension MainViewController {
         }
     }
     
+    private func openEditCategoryView(with indexPath: IndexPath) {
+        let newCategoryView = AddCategoryViewController()
+        newCategoryView.viewModel = self.viewModel
+        let editingCategoryId = viewModel.categories[indexPath.item].getId()
+        newCategoryView.setToEditMode(with: editingCategoryId)
+        let navigationViewController = UINavigationController(rootViewController: newCategoryView)
+        self.present(navigationViewController, animated: true)
+    }
+    
     @objc private func openNewCategoryView() {
         let newCategoryView = AddCategoryViewController()
         newCategoryView.viewModel = self.viewModel
@@ -145,10 +155,7 @@ extension MainViewController {
         let db = DataBaseManager.shared
         
         print(db.read(RealmCategory.self))
-        
-//        for item in viewModel.categories {
-//            print("categories: \(item.getName()) having \(item.getId()) and index: \(item.getIndex())")
-//        }
+
     }
     
 }

@@ -10,13 +10,28 @@ import UIKit
 class AddCategoryViewController: UIViewController {
     
     private var textField: UITextField!
+    private var isEditMode: Bool = false
     var viewModel: MainViewModel?
+    var editingCategoryId: UUID?
+    private lazy var textFieldDidChanged: UIAction = UIAction { [unowned self] _ in
+        guard let categoryText = self.textField.text else { return }
+        if categoryText == "" {
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+        } else {
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         configureView()
         textField.becomeFirstResponder()
+    }
+    
+    func setToEditMode(with id: UUID) {
+        isEditMode = true
+        editingCategoryId = id
     }
 
 }
@@ -27,8 +42,17 @@ extension AddCategoryViewController {
         guard let vm = viewModel else {
             print("viewmodel doesn't exsist")
             return}
-        let newCategory = Category(name: textField.text!)
-        vm.addCategory(newCategory)
+        
+        if !isEditMode {
+            let newCategory = Category(name: textField.text!)
+            vm.addCategory(newCategory)
+        } else {
+            // Edit
+            let newName = textField.text!
+            if let id = editingCategoryId {
+                vm.editCategoryName(of: id, to: newName)
+            }
+        }
         self.dismiss(animated: true)
     }
     
@@ -41,14 +65,16 @@ extension AddCategoryViewController {
 extension AddCategoryViewController {
     private func configureView() {
         view.backgroundColor = .systemGray6
-        self.navigationItem.title = "New Category"
+        self.navigationItem.title = isEditMode ? "Edit Category" : "New Category"
         configreNavBarItem()
         configureTextField()
     }
     
     private func configreNavBarItem() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        rightBarButtonItem.isEnabled = false
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
     private func configureTextField() {
@@ -60,6 +86,7 @@ extension AddCategoryViewController {
         textField.placeholder = "Category Name"
         textField.font = textFieldFont
         textField.clearButtonMode = .whileEditing
+        textField.addAction(textFieldDidChanged, for: .editingChanged)
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         
@@ -76,7 +103,6 @@ extension AddCategoryViewController {
 
 extension AddCategoryViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        print(textField.text)
         return true
     }
 }

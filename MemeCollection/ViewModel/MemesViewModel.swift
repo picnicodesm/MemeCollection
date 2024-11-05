@@ -46,7 +46,6 @@ class MemesViewModel {
     
     private func addVideo(_ video: Video) {
         var updateVideo = video
-        updateVideo.setIndex(to: memes.count + 1)
         Video.mock.append(updateVideo)
         
     }

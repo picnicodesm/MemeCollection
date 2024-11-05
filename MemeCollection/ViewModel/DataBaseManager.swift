@@ -99,10 +99,10 @@ final class DataBaseManager: DataBase {
         do {
             try database.write {
                 guard let realmCategoryToDelete = database.object(ofType: RealmCategory.self, forPrimaryKey: categoryId) else {
+                    print("Realm can't find that object")
                     return
                 }
                 database.delete(realmCategoryToDelete)
-                print("\(realmCategoryToDelete.name) is deleted")
             }
         } catch {
             print(error)

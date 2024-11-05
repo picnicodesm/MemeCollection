@@ -26,7 +26,6 @@ class AddVideoViewController: UIViewController {
     private lazy var titleTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let titleText = self.titleField.textField.text else { return }
         testCanSave()
-        
     }
     private lazy var linkTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let titleText = self.titleField.textField.text,
@@ -106,7 +105,7 @@ extension AddVideoViewController {
             return
         }
         
-        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: memesVM!.memes.count, startTime: startTime)
+        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, startTime: startTime)
         
         addAction?(newVideo)
         self.dismiss(animated: true)
