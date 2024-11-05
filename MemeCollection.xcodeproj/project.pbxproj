@@ -7,9 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		047356DE2CCB53F200791570 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 047356DD2CCB53F200791570 /* Realm */; };
-		047356E02CCB53F200791570 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 047356DF2CCB53F200791570 /* RealmSwift */; };
+		04B23EB12CCC9E5B0047DCAE /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04B23EB02CCC9E5B0047DCAE /* RealmSwift */; };
+		04B23EB22CCC9F0C0047DCAE /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04B23EB02CCC9E5B0047DCAE /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		04B23EB32CCC9F0C0047DCAE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				04B23EB22CCC9F0C0047DCAE /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		04A38C1C2CBD3A38008A9D02 /* MemeCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemeCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,8 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				047356E02CCB53F200791570 /* RealmSwift in Frameworks */,
-				047356DE2CCB53F200791570 /* Realm in Frameworks */,
+				04B23EB12CCC9E5B0047DCAE /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +88,7 @@
 				04A38C182CBD3A38008A9D02 /* Sources */,
 				04A38C192CBD3A38008A9D02 /* Frameworks */,
 				04A38C1A2CBD3A38008A9D02 /* Resources */,
+				04B23EB32CCC9F0C0047DCAE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -85,8 +99,7 @@
 			);
 			name = MemeCollection;
 			packageProductDependencies = (
-				047356DD2CCB53F200791570 /* Realm */,
-				047356DF2CCB53F200791570 /* RealmSwift */,
+				04B23EB02CCC9E5B0047DCAE /* RealmSwift */,
 			);
 			productName = MemeCollection;
 			productReference = 04A38C1C2CBD3A38008A9D02 /* MemeCollection.app */;
@@ -117,7 +130,7 @@
 			mainGroup = 04A38C132CBD3A38008A9D02;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				047356DC2CCB53F200791570 /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+				04B23EAD2CCC9E5B0047DCAE /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 04A38C1D2CBD3A38008A9D02 /* Products */;
@@ -347,25 +360,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		047356DC2CCB53F200791570 /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+		04B23EAD2CCC9E5B0047DCAE /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-cocoa.git";
+			repositoryURL = "https://github.com/realm/realm-swift.git";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.54.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		047356DD2CCB53F200791570 /* Realm */ = {
+		04B23EB02CCC9E5B0047DCAE /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 047356DC2CCB53F200791570 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
-			productName = Realm;
-		};
-		047356DF2CCB53F200791570 /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 047356DC2CCB53F200791570 /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 04B23EAD2CCC9E5B0047DCAE /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

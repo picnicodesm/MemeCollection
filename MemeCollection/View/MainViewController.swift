@@ -140,6 +140,17 @@ extension MainViewController {
         self.present(navigationViewController, animated: true)
     }
     
+    
+    @objc func testOrder() {
+        let db = DataBaseManager.shared
+        
+        print(db.read(RealmCategory.self))
+        
+//        for item in viewModel.categories {
+//            print("categories: \(item.getName()) having \(item.getId()) and index: \(item.getIndex())")
+//        }
+    }
+    
 }
 
 // MARK: - Configure View
@@ -170,12 +181,6 @@ extension MainViewController {
         self.navigationItem.backButtonTitle = "Back"
         self.navigationItem.rightBarButtonItem = editButtonItem
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Order", style: .plain, target: self, action: #selector(testOrder))
-    }
-    
-    @objc func testOrder() {
-        for item in viewModel.categories {
-            print(item.getName())
-        }
     }
     
     private func configureToolbar() {

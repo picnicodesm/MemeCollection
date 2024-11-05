@@ -10,7 +10,7 @@ import UIKit
 class AddCategoryViewController: UIViewController {
     
     private var textField: UITextField!
-    var viewModel: CategoryViewModel?
+    var viewModel: MainViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,8 +24,11 @@ class AddCategoryViewController: UIViewController {
 // MARK: - Actions
 extension AddCategoryViewController {
     @objc func doneTapped() {
+        guard let vm = viewModel else {
+            print("viewmodel doesn't exsist")
+            return}
         let newCategory = Category(name: textField.text!)
-        viewModel?.addCategory(newCategory)
+        vm.addCategory(newCategory)
         self.dismiss(animated: true)
     }
     

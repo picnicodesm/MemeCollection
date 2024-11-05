@@ -8,18 +8,37 @@
 import Foundation
 
 struct Category: Hashable {
-    let uuid = UUID()
+    private var id = UUID()
     private var name: String
+    private var videos: [Video]
     
-    init(name: String) {
+    init(name: String, videos: [Video] = []) {
         self.name = name
+        self.videos = videos
     }
     
     func getName() -> String {
         return name
     }
+    
+    func getId() -> UUID {
+        return id
+    }
+    
 }
 
-extension Category {
-    static var mock: [Category] = [Category(name: "Favorites"), Category(name: "하니"), Category(name: "Category 2"), Category(name: "Category 3"), Category(name: "Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title Long Title")]
+extension Category: Persistable {
+    func managedObject() -> RealmCategory {
+        let realmCategory = RealmCategory()
+        realmCategory.id = self.id
+        realmCategory.name = self.name
+        realmCategory.videos.append(objectsIn: self.videos.map { $0.managedObject()})
+        return realmCategory
+    }
+    
+    init(managedObject: RealmCategory) {
+        self.id = managedObject.id
+        self.name = managedObject.name
+        self.videos = managedObject.videos.map { return $0.toStruct()}
+    }
 }

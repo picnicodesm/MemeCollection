@@ -41,10 +41,13 @@ class MemesViewModel {
     }
     
     private func setData(with category: Category) {
-        memes = Video.mock.filter { $0.category.uuid == category.uuid }
+        memes = Video.mock.filter { $0.getCategoryId() == category.getId() }
     }
     
     private func addVideo(_ video: Video) {
-        Video.mock.append(video)
+        var updateVideo = video
+        updateVideo.setIndex(to: memes.count + 1)
+        Video.mock.append(updateVideo)
+        
     }
 }

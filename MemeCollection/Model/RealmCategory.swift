@@ -6,7 +6,19 @@
 //
 
 import Foundation
+import RealmSwift
 
-class RealmCategory {
+class RealmCategory: Object {
+    @Persisted(primaryKey: true) var id: UUID
+    @Persisted var name: String
+    @Persisted var videos: List<RealmVideo>
+    
+    func toStruct() -> Category {
+        return Category(managedObject: self)
+    }
+    
+    func getId() -> UUID {
+        return id
+    }
     
 }

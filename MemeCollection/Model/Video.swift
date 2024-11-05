@@ -13,34 +13,85 @@ enum LinkType {
     case share
 }
 
-enum VideoType {
+enum VideoType: String {
     case shorts
     case video
 }
 
 struct Video: Hashable {
-    let uuid = UUID()
-    var name: String
-    var urlString: String
-    var type: VideoType
-    var isFavorite: Bool
-    var thumbnailIdentifier: String
-    var category: Category
-    var startTime: Int = 0
+    private var id = UUID()
+    private var name: String
+    private var urlString: String
+    private var type: String
+    private var isFavorite: Bool
+    private var thumbnailIdentifier: String
+    private var categoryId: UUID
+    private var index: Int = -1
+    private var startTime: Int = 0
     
-    init(name: String, urlString: String, type: VideoType, isFavorite: Bool, thumbnailIdentifier: String, category: Category, startTime: Int = 0) {
+    init(name: String, urlString: String, type: String, isFavorite: Bool, thumbnailIdentifier: String, categoryId: UUID, index: Int = -1, startTime: Int = 0) {
         self.name = name
         self.urlString = urlString
         self.type = type
         self.isFavorite = isFavorite
         self.thumbnailIdentifier = thumbnailIdentifier
-        self.category = category
+        self.categoryId = categoryId
+        self.index = index
         self.startTime = startTime
+    }
+    
+    func getId() -> UUID {
+        return id
+    }
+    
+    func getCategoryId() -> UUID {
+        return categoryId
+    }
+    
+    func getName() -> String {
+        return name
+    }
+    
+    func getIndex() -> Int {
+        return index
+    }
+    
+    mutating func setIndex(to index: Int) {
+        self.index = index
+    }
+}
+
+extension Video: Persistable {
+    init(managedObject: RealmVideo) {
+        self.id = managedObject.id
+        self.name = managedObject.name
+        self.urlString = managedObject.urlString
+        self.type = managedObject.type
+        self.isFavorite = managedObject.isFavorite
+        self.thumbnailIdentifier = managedObject.thumbnailIdentifier
+        self.categoryId = managedObject.categoryId
+        self.index = managedObject.index
+        self.startTime = managedObject.startTime
+    }
+    
+    func managedObject() -> RealmVideo {
+        let realmVideo = RealmVideo()
+        realmVideo.id = self.id
+        realmVideo.name = self.name
+        realmVideo.urlString = self.urlString
+        realmVideo.type = self.type
+        realmVideo.isFavorite = self.isFavorite
+        realmVideo.thumbnailIdentifier = self.thumbnailIdentifier
+        realmVideo.categoryId = self.categoryId
+        realmVideo.index = self.index
+        realmVideo.startTime = self.startTime
+        return realmVideo
     }
 }
 
 extension Video {
-    static var mock: [Video] = [
-        Video(name: "Fㅏ니", urlString: "https://www.youtube.com/shorts/cxo-IeAG2T4", type: .shorts, isFavorite: false, thumbnailIdentifier: "", category: Category(name: "하니"))
-    ]
+    static var mock: [Video] = []
+    /*
+     https://youtu.be/-J8AG88-2os?si=9FOsj5Z_7UNVec3X
+     */
 }

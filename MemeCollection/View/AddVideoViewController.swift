@@ -36,7 +36,8 @@ class AddVideoViewController: UIViewController {
     }
     
     private var linkFlag = false
-    private let viewModel = AddVideoViewModel()
+    private let addVideoVM = AddVideoViewModel()
+    var memesVM: MemesViewModel!
     
     /// Data for comparison with error data caused by an invalid key.
     private var errorData: Data?
@@ -45,19 +46,19 @@ class AddVideoViewController: UIViewController {
     private var subscriptions = Set<AnyCancellable>()
     
     var addAction: ((Video) -> Void)?
-    var category: Category?
+    var categoryId: UUID?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         bind()
         Task {
-            errorData = await viewModel.getErrorData()
+            errorData = await addVideoVM.getErrorData()
         }
     }
     
     private func bind() {
-        viewModel.$thumbnailData
+        addVideoVM.$thumbnailData
             .receive(on: RunLoop.main)
             .sink { error in
                 print(error)
@@ -83,16 +84,16 @@ extension AddVideoViewController {
     @objc func doneTapped() {
         guard let title = titleField.textField.text,
               let startTimeText = startTimeField.textField.text,
-              let category = self.category,
-              let thumbnailData = viewModel.thumbnailData
+              let categoryId = self.categoryId,
+              let thumbnailData = addVideoVM.thumbnailData
         else {
             // Alert with message "save failed" and dismiss
             return }
         
         let imageManager = ImageManager.shared
         let startTime = startTimeText == "" ? 0 : Int(startTimeText)!
-        let mobileLink = viewModel.getMobileLink(startFrom: startTime)!
-        let videoInfo = viewModel.getVideoInfo()
+        let mobileLink = addVideoVM.getMobileLink(startFrom: startTime)!
+        let videoInfo = addVideoVM.getVideoInfo()
         
         guard let (imageIdentifier, compressedImage) = imageManager.getCompleteIdentifier(of: thumbnailData, with: title) else {
             // comopressed failed
@@ -105,7 +106,7 @@ extension AddVideoViewController {
             return
         }
         
-        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!, isFavorite: false, thumbnailIdentifier: imageIdentifier, category: category, startTime: startTime)
+        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: memesVM!.memes.count, startTime: startTime)
         
         addAction?(newVideo)
         self.dismiss(animated: true)
@@ -119,12 +120,12 @@ extension AddVideoViewController {
 extension AddVideoViewController {
     private func testLink(_ link: String) {
         if !link.isEmpty {
-            let (isSuccess, error, _, _, key) = viewModel.testLink(with: link)
+            let (isSuccess, error, _, _, key) = addVideoVM.testLink(with: link)
             
             if isSuccess {
                 linkField.removeErrorUI()
                 Task {
-                    await viewModel.setThumbnail(with: key!)
+                    await addVideoVM.setThumbnail(with: key!)
                 }
             } else {
                 testFailedByInvalidLink(error: error!)
@@ -163,7 +164,7 @@ extension AddVideoViewController {
     
     private func succeededGettingThumbnail(of thumbnailData: Data?) {
         guard let thumbnailData = thumbnailData else { return }
-        guard let videoType = viewModel.getVideoInfo().videoType else { return }
+        guard let videoType = addVideoVM.getVideoInfo().videoType else { return }
         self.thumbnailImageView.image = UIImage(data: thumbnailData)
         if videoType == .video {
             self.startTimeField.enableTextField()

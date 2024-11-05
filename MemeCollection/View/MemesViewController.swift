@@ -101,7 +101,8 @@ extension MemesViewController {
     private func openAddVideoPage() -> UIAction {
         return UIAction { [weak self] _ in
             let destination = AddVideoViewController()
-            destination.category = self?.category
+            destination.categoryId = self?.category.getId()
+            destination.memesVM = self?.memesVM
             destination.addAction = { [weak self] newVideo in
                 self?.addVideoSubject.send(newVideo)
             }
@@ -117,7 +118,7 @@ extension MemesViewController {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeGridCell.identifier, for: indexPath) as? MemeGridCell else { return UICollectionViewCell() }
             
-            cell.configureCell(title: item.name)
+            cell.configureCell(title: item.getName())
             cell.startIndicatorAnimation()
             
             return cell
@@ -129,7 +130,7 @@ extension MemesViewController {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeEditListCell.identifier, for: indexPath) as? MemeEditListCell else { return UICollectionViewCell() }
             
-            cell.configureCell(title: item.name)
+            cell.configureCell(title: item.getName())
             cell.accessories = [.delete(displayed: .whenEditing),
                                 .reorder(displayed: .whenEditing),
                                 .detail(displayed: .whenEditing),]
@@ -142,7 +143,7 @@ extension MemesViewController {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeListCell.identifier, for: indexPath) as? MemeListCell else { return UICollectionViewCell() }
             
-            cell.configureCell(title: item.name)
+            cell.configureCell(title: item.getName())
             cell.startIndicatorAnimation()
             cell.accessories = [.delete(displayed: .whenEditing),
                                 .reorder(displayed: .whenEditing),

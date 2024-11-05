@@ -19,7 +19,7 @@ class TempStorage {
     
     func getDatas(of category: Category) -> [Video] {
         return datas.filter { video in
-            video.category.uuid == category.uuid
+            video.getCategoryId() == category.getId()
         }
     }
     
@@ -29,13 +29,11 @@ class TempStorage {
     
     func removeData(_ data: Video) {
         datas.removeAll { deleteItem in
-            data.uuid == deleteItem.uuid
+            data.getId() == deleteItem.getId()
         }
     }
     
     func getNumberOfVideos(in category: Category) -> Int {
         return getDatas(of: category).count
     }
-    
-    
 }
