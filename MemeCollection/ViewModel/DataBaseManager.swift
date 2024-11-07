@@ -117,6 +117,9 @@ final class DataBaseManager: DataBase {
         do {
             try database.write{
                 let currentCategories = database.objects(RealmCategory.self)
+                for category in currentCategories {
+                    database.delete(category.videos)
+                }
                 database.delete(currentCategories)
                 let _ = orderedCategories.map {
                     database.add($0.managedObject())

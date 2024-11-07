@@ -78,7 +78,9 @@ extension MainViewController {
             cell.accessories = [
                 .delete(displayed: .whenEditing),
                 .reorder(displayed: .whenEditing),
-                .detail(displayed: .whenEditing),
+                .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                    self.openEditCategoryView(with: indexPath)
+                }),
                 .disclosureIndicator(displayed: .whenNotEditing),
                 .label(text: "\(self.viewModel.getVideoNums(of: item))")
             ]
@@ -95,6 +97,7 @@ extension MainViewController {
                 self?.viewModel.updateCategoryOrder(to: updatedBackingStore)
             }
         }
+        
     }
     
     private func updateSnapshot(_ items: [Category]) {
@@ -219,8 +222,9 @@ extension MainViewController {
 // MARK: - Delegate
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let category = viewModel.categories[indexPath.item]
-        self.collectionView.deselectItem(at: indexPath, animated: false)
-        cellSelectEvent.send(category)
+ 
+              let category = viewModel.categories[indexPath.item]
+              self.collectionView.deselectItem(at: indexPath, animated: false)
+              cellSelectEvent.send(category)
     }
 }
