@@ -8,11 +8,6 @@
 import UIKit
 import Combine
 
-// Closure로 받아서 저장하는 것보다 바로 저장하는게 나을 수도 있다.
-// Realm 적용 후 고쳐보기
-// TODO: Video 추가!
-
-
 enum CellMode {
     case grid
     case editList
@@ -172,7 +167,15 @@ extension MemesViewController {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeListCell.identifier, for: indexPath) as? MemeListCell else { return UICollectionViewCell() }
             let deleteHandler = { [unowned self] in
                 // need alert
-                self.deleteVideoSubject.send(indexPath)
+                let alert = UIAlertController(title: "Delete Video", message: "Do you want to remove this video?", preferredStyle: .alert)
+                let success = UIAlertAction(title: "Remove", style: .default) { _ in
+                    self.deleteVideoSubject.send(indexPath)
+                }
+                let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+                alert.addAction(success)
+                alert.addAction(cancel)
+                
+                present(alert, animated: true)
             }
             
             cell.configureCell(title: item.getName())
@@ -198,7 +201,6 @@ extension MemesViewController {
             }
         }
 
-        
         updateSnapshot(memesVM.memes)
     }
     
