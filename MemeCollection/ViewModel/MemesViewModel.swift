@@ -8,12 +8,6 @@
 import Foundation
 import Combine
 
-/*
- MemesViewModel이 초기화 되는 시점: 카테고리 안으로 들어왔을 때
- 초기화될 때 해야하는 것: 데이터에서 해당 카테고리의 영상들을 가지고 와야함. <- 지금 할 수 없음. 그러면...
- 전체 데이터에서 해당 카테고리인 것만 가져옴.
- */
-
 class MemesViewModel {
     @Published var memes: [Video] = []
     var category: Category
@@ -58,6 +52,7 @@ class MemesViewModel {
                     realmCategory.videos.remove(at: deleteIndex)
                 }
             }
+            ImageManager.shared.removeImage(of: video.getThumbnailIdentifier())
         }
     }
     

@@ -12,9 +12,10 @@ class ImageManager {
     typealias CompressedImage = (String, Data)
     
     static let shared = ImageManager()
+    private let fileManager = FileManager.default
 
     func saveImage(imageData: Data, as identifier: String) -> Bool {
-        guard let directoryPath = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+        guard let directoryPath = try? fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return false
         }
         do {
@@ -28,12 +29,24 @@ class ImageManager {
             return false
         }
     }
+    
+    func removeImage(of identifier: String) {
+        guard let fileURL = getFileURL(of: identifier) else { return }
+        if isImageNameExist(identifier: identifier) {
+            do {
+                try fileManager.removeItem(atPath: fileURL.path())
+                // why wasn't image removed with removeItem(url:)???
+            } catch {
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+    }
 
     /// If you encode the identifier, filemanager can't find a file cottectly. DON'T KNOW WHY
     func getSavedImage(of identifier: String) -> UIImage? {
         guard let fileURL = getFileURL(of: identifier) else { return nil }
                 
-        if FileManager.default.fileExists(atPath: fileURL.path()) {
+        if fileManager.fileExists(atPath: fileURL.path()) {
             return UIImage(contentsOfFile: fileURL.path())
         } else {
             return nil
@@ -43,7 +56,7 @@ class ImageManager {
     func isImageNameExist(identifier: String) -> Bool {
         guard let fileURL = getFileURL(of: identifier) else { return false }
                 
-        if FileManager.default.fileExists(atPath: fileURL.path()) {
+        if fileManager.fileExists(atPath: fileURL.path()) {
             return true
         } else {
             return false
@@ -81,7 +94,7 @@ class ImageManager {
 
 extension ImageManager {
     private func getFileURL(of identifier: String) -> URL? {
-        guard let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
+        guard let dir = try? fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
         return dir.appending(path: identifier)
     }
 }

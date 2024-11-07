@@ -167,10 +167,14 @@ extension MemesViewController {
     private func configureListDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeListCell.identifier, for: indexPath) as? MemeListCell else { return UICollectionViewCell() }
+            let deleteHandler = { [unowned self] in
+                // need alert
+                self.deleteVideoSubject.send(indexPath)
+            }
             
             cell.configureCell(title: item.getName())
             cell.startIndicatorAnimation()
-            cell.accessories = [.delete(displayed: .whenEditing),
+            cell.accessories = [.delete(displayed: .whenEditing, actionHandler: deleteHandler),
                                 .reorder(displayed: .whenEditing),
                                 .detail(displayed: .whenEditing),]
             return cell

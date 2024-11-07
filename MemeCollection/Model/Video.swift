@@ -49,6 +49,10 @@ struct Video: Hashable {
     func getName() -> String {
         return name
     }
+    
+    func getThumbnailIdentifier() -> String {
+        return thumbnailIdentifier
+    }
 }
 
 extension Video: Persistable {
