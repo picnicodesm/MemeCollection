@@ -135,6 +135,7 @@ extension MemesViewController {
             
             return cell
         })
+        
         updateSnapshot(memesVM.memes)
     }
     
@@ -148,6 +149,18 @@ extension MemesViewController {
                                 .detail(displayed: .whenEditing),]
             return cell
         })
+        
+        dataSource.reorderingHandlers.canReorderItem = { item in
+            return true
+        }
+        
+        dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+            if let updatedBackingStore = self?.memesVM.memes.applying(transaction.difference) {
+                self?.memesVM.updateVideoOrder(to: updatedBackingStore)
+            }
+        }
+
+        
         updateSnapshot(memesVM.memes)
     }
     
@@ -162,6 +175,18 @@ extension MemesViewController {
                                 .detail(displayed: .whenEditing),]
             return cell
         })
+        
+        dataSource.reorderingHandlers.canReorderItem = { item in
+            return true
+        }
+        
+        dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+            if let updatedBackingStore = self?.memesVM.memes.applying(transaction.difference) {
+                self?.memesVM.updateVideoOrder(to: updatedBackingStore)
+            }
+        }
+
+        
         updateSnapshot(memesVM.memes)
     }
     

@@ -60,4 +60,18 @@ class MemesViewModel {
             }
         }
     }
+    
+    func updateVideoOrder(to orderedVideos: [Video]) {
+        self.memes = orderedVideos
+        let categoryId = category.getId()
+        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
+            let orderedRealmVideos = orderedVideos.map { $0.managedObject() }
+            self.database.delete(realmCategory.videos)
+            database.update(orderedRealmVideos) { item in
+                let _ = orderedRealmVideos.map { video in
+                    realmCategory.videos.append(video)
+                }
+            }
+        }
+    }
 }

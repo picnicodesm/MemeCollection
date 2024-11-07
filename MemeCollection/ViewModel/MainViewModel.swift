@@ -41,7 +41,8 @@ class MainViewModel: CategoryViewModel {
             print("deleteItem: \(deleteItem.getName()) having \(deleteItem.getId())")
             let deleteItemId = categories[deleteIndex].getId()
             categories.remove(at: deleteIndex)
-            database.deleteCategory(id: deleteItemId)
+            guard let deleteRealmItem = database.read(of: RealmCategory.self, with: deleteItemId) else { return }
+            database.delete(deleteRealmItem)
         }
     }
     
@@ -62,7 +63,15 @@ class MainViewModel: CategoryViewModel {
     
     func updateCategoryOrder(to orderedCategories: [Category]) {
         categories = orderedCategories
-        database.reorderCategories(orderedCategories)
+        let currentCategories = database.read(RealmCategory.self)
+        for category in currentCategories {
+            database.delete(category.videos)
+        }
+        database.delete(currentCategories)
+        let _ = orderedCategories.map {
+            database.write($0.managedObject())
+        }
+        
     }
 
     func getVideoNums(of category: Category) -> Int {

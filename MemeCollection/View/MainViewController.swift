@@ -222,7 +222,6 @@ extension MainViewController {
 // MARK: - Delegate
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
- 
               let category = viewModel.categories[indexPath.item]
               self.collectionView.deselectItem(at: indexPath, animated: false)
               cellSelectEvent.send(category)
