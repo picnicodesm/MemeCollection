@@ -38,9 +38,7 @@ class MemesViewModel {
     }
     
     func addVideo(_ video: Video) {
-        // datasource에는 memes에만 추가해주면 되고 + 원래 Category에 추가해줘야 함.
         memes.append(video)
-        // realm에는 category를 찾아서 해당 list에 추가해야 한다.
         let realmVideo = video.managedObject()
         let categoryId = category.getId()
         if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
@@ -48,6 +46,18 @@ class MemesViewModel {
                 realmCategory.videos.append(realmVideo)
             }
         }
-        
+    }
+    
+    func deleteVideo(_ video: Video) {
+        guard let deleteIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
+        memes.remove(at: deleteIndex)
+        let categoryId = category.getId()
+        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
+            database.update(video.managedObject()) { _ in
+                if let deleteIndex = realmCategory.videos.firstIndex(where: { $0.id == video.getId() }) {
+                    realmCategory.videos.remove(at: deleteIndex)
+                }
+            }
+        }
     }
 }

@@ -39,6 +39,7 @@ class MemesViewController: UIViewController {
     // Combine
     private var subscriptions = Set<AnyCancellable>()
     private let addVideoSubject = PassthroughSubject<Video, Never>()
+    private let deleteVideoSubject = PassthroughSubject<IndexPath, Never>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,6 +76,12 @@ class MemesViewController: UIViewController {
             .sink { [unowned self] video in
                 self.memesVM.addVideo(video)
             }.store(in: &subscriptions)
+        
+        deleteVideoSubject
+            .sink { [unowned self] indexPath in
+                let deleteItem = self.memesVM.memes[indexPath.item]
+                self.memesVM.deleteVideo(deleteItem)
+            }.store(in: &subscriptions)
     }
     
     private struct Constants {
@@ -87,7 +94,7 @@ extension MemesViewController {
     private func swipeAction(_ indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] deleteAction, view, completion in
             guard let self = self else { return }
-            //            self.deleteItem.send(indexPath)
+            deleteVideoSubject.send(indexPath)
             completion(true)
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
