@@ -18,22 +18,15 @@ class MemesViewModel {
     @Published var memes: [Video] = []
     var category: Category
     private var subscriptions = Set<AnyCancellable>()
+    private let database = DataBaseManager.shared
     
-    init(category: Category) {
+    init(with category: Category) {
         self.category = category
-        self.memes = TempStorage.shared.getDatas(of: category)
-//        setData(with: category)
-        bind(with: category)
+        self.memes = category.getVideos()
     }
     
     private func bind(with category: Category) {
-        TempStorage.shared.$datas.sink { [weak self] video in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                // 데이터가 실제로 반영되기 전에 함수가 불리는 것을 방지하기 위함.
-                self.memes = TempStorage.shared.getDatas(of: category)
-            }
-        }.store(in: &subscriptions)
+        
     }
     
     func updateData() {
@@ -44,9 +37,17 @@ class MemesViewModel {
         memes = Video.mock.filter { $0.getCategoryId() == category.getId() }
     }
     
-    private func addVideo(_ video: Video) {
-        var updateVideo = video
-        Video.mock.append(updateVideo)
+    func addVideo(_ video: Video) {
+        // datasource에는 memes에만 추가해주면 되고 + 원래 Category에 추가해줘야 함.
+        memes.append(video)
+        // realm에는 category를 찾아서 해당 list에 추가해야 한다.
+        let realmVideo = video.managedObject()
+        let categoryId = category.getId()
+        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
+            database.update(realmVideo) { realmVideo in
+                realmCategory.videos.append(realmVideo)
+            }
+        }
         
     }
 }

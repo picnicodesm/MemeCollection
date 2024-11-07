@@ -53,9 +53,13 @@ class MainViewController: UIViewController {
         cellSelectEvent
             .receive(on: RunLoop.main)
             .sink { [unowned self] category in
-                let vm = MemesViewModel(category: category)
+                let vm = MemesViewModel(with: category)
                 let destination = MemesViewController()
-                destination.initialSetup(memesVM: vm)
+                destination.initialSetup(memesVM: vm) { isUpdated in
+                    if isUpdated {
+                        self.viewModel.refreshCategory()
+                    }
+                }
                 navigationController?.pushViewController(destination, animated: true)
             }
             .store(in: &subscriptions)

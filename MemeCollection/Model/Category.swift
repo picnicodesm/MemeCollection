@@ -25,6 +25,14 @@ struct Category: Hashable {
         return id
     }
     
+    func getVideos() -> [Video] {
+        return videos
+    }
+    
+    func getVideoNums() -> Int {
+        return videos.count
+    }
+    
     mutating func setName(to name: String) {
         self.name = name
     }

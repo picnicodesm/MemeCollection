@@ -26,6 +26,11 @@ class MainViewModel: CategoryViewModel {
         }
     }
     
+    func refreshCategory() {
+        let categories = database.read(RealmCategory.self)
+        self.categories = categories.map { $0.toStruct() }
+    }
+    
     func addCategory(_ newCategory: Category) {
         categories.append(newCategory)
         database.write(newCategory.managedObject())
@@ -61,6 +66,6 @@ class MainViewModel: CategoryViewModel {
     }
 
     func getVideoNums(of category: Category) -> Int {
-        return TempStorage.shared.getNumberOfVideos(in: category)
+        return category.getVideoNums()
     }
 }

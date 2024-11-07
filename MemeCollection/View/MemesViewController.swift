@@ -10,6 +10,8 @@ import Combine
 
 // Closure로 받아서 저장하는 것보다 바로 저장하는게 나을 수도 있다.
 // Realm 적용 후 고쳐보기
+// TODO: Video 추가!
+
 
 enum CellMode {
     case grid
@@ -22,6 +24,7 @@ class MemesViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     var memesVM: MemesViewModel!
     var category: Category!
+    var categoryUpdateHandler: ((Bool) -> Void)?
     var cellMode: CellMode = .grid {
         didSet {
             updateCollectionView()
@@ -54,9 +57,10 @@ class MemesViewController: UIViewController {
         }
     }
     
-    func initialSetup(memesVM: MemesViewModel) {
+    func initialSetup(memesVM: MemesViewModel, updateHandler: @escaping (Bool) -> Void) {
         self.memesVM = memesVM
         self.category = memesVM.category
+        self.categoryUpdateHandler = updateHandler
     }
     
     private func bind() {
@@ -64,11 +68,12 @@ class MemesViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [unowned self] memes in
                 self.updateSnapshot(memes)
+                categoryUpdateHandler?(true)
             }.store(in: &subscriptions)
         
         addVideoSubject
-            .sink { video in
-                TempStorage.shared.addData(video)
+            .sink { [unowned self] video in
+                self.memesVM.addVideo(video)
             }.store(in: &subscriptions)
     }
     
