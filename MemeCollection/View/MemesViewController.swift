@@ -132,6 +132,9 @@ extension MemesViewController {
             
             cell.configureCell(title: item.getName())
             cell.startIndicatorAnimation()
+            if let thumbnailImage = ImageManager.shared.getSavedImage(of: item.getThumbnailIdentifier()) {
+                cell.setThumbnail(thumbnailImage)
+            }
             
             return cell
         })
@@ -177,6 +180,11 @@ extension MemesViewController {
             cell.accessories = [.delete(displayed: .whenEditing, actionHandler: deleteHandler),
                                 .reorder(displayed: .whenEditing),
                                 .detail(displayed: .whenEditing),]
+            
+            if let thumbnailImage = ImageManager.shared.getSavedImage(of: item.getThumbnailIdentifier()) {
+                cell.setThumbnail(thumbnailImage)
+            }
+            
             return cell
         })
         

@@ -28,9 +28,7 @@ class MemeGridCell: UICollectionViewListCell, MemeCell {
         self.titleLabel.text = title
     }
     
-    func setThumbnail(imageData data: Data?) {
-        guard let data = data else { return }
-        guard let image = UIImage(data: data) else { return }
+    func setThumbnail(_ image: UIImage) {
         thumbnailImageView.image = image
         thumbnailImageView.isHidden = false
         activityIndicator.stopAnimating()
