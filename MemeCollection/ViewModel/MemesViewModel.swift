@@ -56,6 +56,26 @@ class MemesViewModel {
         }
     }
     
+    func editVideo(_ video: Video) {
+        guard let editIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
+        memes[editIndex] = video
+        
+        let categoryId = category.getId()
+        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
+            if let editVideo = realmCategory.videos.first(where: { $0.id == video.getId() }) {
+                database.update {
+                    editVideo.name = video.getName()
+                    editVideo.urlString = video.getUrlString()
+                    editVideo.type = video.getVideoType().rawValue
+                    editVideo.isFavorite = video.getIsFavorite()
+                    editVideo.thumbnailIdentifier = video.getThumbnailIdentifier()
+                    editVideo.categoryId = video.getCategoryId()
+                    editVideo.startTime = Int(video.getStartTime())!
+                }
+            }
+        }
+    }
+    
     func updateVideoOrder(to orderedVideos: [Video]) {
         self.memes = orderedVideos
         let categoryId = category.getId()
@@ -69,4 +89,6 @@ class MemesViewModel {
             }
         }
     }
+    
+    
 }

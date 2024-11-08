@@ -35,6 +35,7 @@ class MemesViewController: UIViewController {
     private var subscriptions = Set<AnyCancellable>()
     private let addVideoSubject = PassthroughSubject<Video, Never>()
     private let deleteVideoSubject = PassthroughSubject<IndexPath, Never>()
+    private let editVideoSubject = PassthroughSubject<Video, Never>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +78,11 @@ class MemesViewController: UIViewController {
                 let deleteItem = self.memesVM.memes[indexPath.item]
                 self.memesVM.deleteVideo(deleteItem)
             }.store(in: &subscriptions)
+        
+        editVideoSubject
+            .sink { [unowned self] editedVideo in
+                self.memesVM.editVideo(editedVideo)
+            }.store(in: &subscriptions)
     }
     
     private struct Constants {
@@ -117,6 +123,18 @@ extension MemesViewController {
             self?.present(navigationVC, animated: true)
         }
     }
+    
+    private func openEditVideoPage(of video: Video) {
+        let destination = AddVideoViewController()
+        destination.categoryId = self.category.getId()
+        destination.memesVM = self.memesVM
+        destination.setToEditMode(with: video)
+        destination.addAction = { [weak self] editedVideo in
+            self?.editVideoSubject.send(editedVideo)
+        }
+        let navigationVC = UINavigationController(rootViewController: destination)
+        self.present(navigationVC, animated: true)
+    }
 }
 
 // MARK: - DataSource
@@ -144,7 +162,11 @@ extension MemesViewController {
             cell.configureCell(title: item.getName())
             cell.accessories = [.delete(displayed: .whenEditing),
                                 .reorder(displayed: .whenEditing),
-                                .detail(displayed: .whenEditing),]
+                                .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                                    let editVideo = memesVM.memes[indexPath.item]
+                                    self.openEditVideoPage(of: editVideo)
+                                    
+                                }),]
             return cell
         })
         

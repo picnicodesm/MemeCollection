@@ -57,7 +57,7 @@ final class DataBaseManager: DataBase {
             }
 
         } catch let error {
-            print(error)
+            print(error.localizedDescription)
         }
     }
     
@@ -68,7 +68,17 @@ final class DataBaseManager: DataBase {
             }
 
         } catch let error {
-            print(error)
+            print(error.localizedDescription)
+        }
+    }
+    
+    func update(completion: @escaping () -> ()) {
+        do {
+            try database.write {
+                completion()
+            }
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
         

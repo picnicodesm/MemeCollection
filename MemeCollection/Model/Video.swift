@@ -38,6 +38,18 @@ struct Video: Hashable {
         self.startTime = startTime
     }
     
+    /// Use this initializer when you edit Video object.
+    init(id: UUID, name: String, urlString: String, type: String, isFavorite: Bool, thumbnailIdentifier: String, categoryId: UUID, startTime: Int) {
+        self.id = id
+        self.name = name
+        self.urlString = urlString
+        self.type = type
+        self.isFavorite = isFavorite
+        self.thumbnailIdentifier = thumbnailIdentifier
+        self.categoryId = categoryId
+        self.startTime = startTime
+    }
+    
     func getId() -> UUID {
         return id
     }
@@ -52,6 +64,26 @@ struct Video: Hashable {
     
     func getThumbnailIdentifier() -> String {
         return thumbnailIdentifier
+    }
+    
+    func getUrlString() -> String {
+        return urlString
+    }
+    
+    func getStartTime() -> String {
+        return String(startTime)
+    }
+    
+    func getIsFavorite() -> Bool {
+        return isFavorite
+    }
+    
+    func getVideoType() -> VideoType {
+        if type == "shorts" {
+            return .shorts
+        } else {
+            return .video
+        }
     }
 }
 
@@ -86,5 +118,6 @@ extension Video {
     static var mock: [Video] = []
     /*
      https://youtu.be/-J8AG88-2os?si=9FOsj5Z_7UNVec3X
+     https://www.youtube.com/shorts/G25eg25el8s
      */
 }

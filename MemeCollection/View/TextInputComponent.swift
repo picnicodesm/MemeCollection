@@ -22,11 +22,11 @@ class TextInputComponent: UIStackView {
         }
     }
     
-    var titleLabel: UILabel!
-    var textField: UITextField!
-    var title: String
-    var placeholder: String
-    let errorLabel = UILabel()
+    private var titleLabel: UILabel!
+    private var textField: UITextField!
+    private var title: String
+    private var placeholder: String
+    private let errorLabel = UILabel()
     
     init(title: String, placeholder: String, type: InputType) {
         self.title = title
@@ -37,6 +37,22 @@ class TextInputComponent: UIStackView {
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func getText() -> String? {
+        return textField.text
+    }
+    
+    func addAction(_ action: UIAction) {
+        textField.addAction(action, for: .editingChanged)
+    }
+    
+    func setText(to text: String) {
+        textField.text = text
+    }
+    
+    func setKeyboartType(to type: UIKeyboardType) {
+        textField.keyboardType = type
     }
     
     func enableTextField() {

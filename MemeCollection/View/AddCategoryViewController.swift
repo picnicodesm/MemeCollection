@@ -10,7 +10,7 @@ import UIKit
 class AddCategoryViewController: UIViewController {
     
     private var textField: UITextField!
-    private var isEditMode: Bool = false
+    private var isEditMode = false
     var viewModel: MainViewModel?
     var editingCategoryId: UUID?
     private lazy var textFieldDidChanged: UIAction = UIAction { [unowned self] _ in

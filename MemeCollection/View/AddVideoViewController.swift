@@ -24,13 +24,17 @@ class AddVideoViewController: UIViewController {
                                                     type: .startTime)
     
     private lazy var titleTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
-        guard let titleText = self.titleField.textField.text else { return }
+        guard let titleText = self.titleField.getText() else { return }
         testCanSave()
     }
     private lazy var linkTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
-        guard let titleText = self.titleField.textField.text,
-              let linkText = self.linkField.textField.text else { return }
+        guard let titleText = self.titleField.getText(),
+              let linkText = self.linkField.getText() else { return }
         testLink(linkText)
+        testCanSave()
+    }
+    private lazy var startTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
+        guard let startTimeText = self.startTimeField.getText() else { return }
         testCanSave()
     }
     
@@ -46,6 +50,11 @@ class AddVideoViewController: UIViewController {
     
     var addAction: ((Video) -> Void)?
     var categoryId: UUID?
+    
+    /// Used when editMode is true for setting current video's information.
+    /// If this page is not edit mode, the property must be nil.
+    var currentVideo: Video? = nil
+    private var isEditMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,6 +80,11 @@ class AddVideoViewController: UIViewController {
             }.store(in: &subscriptions)
     }
     
+    func setToEditMode(with video: Video) {
+        self.currentVideo = video
+        self.isEditMode = true
+    }
+    
     private struct Constants {
         static let sideInsets: CGFloat = 24
         static let topInsets: CGFloat = 16
@@ -80,9 +94,10 @@ class AddVideoViewController: UIViewController {
 
 // MARK: - Actions
 extension AddVideoViewController {
+    
     @objc func doneTapped() {
-        guard let title = titleField.textField.text,
-              let startTimeText = startTimeField.textField.text,
+        guard let title = titleField.getText(),
+              let startTimeText = startTimeField.getText(),
               let categoryId = self.categoryId,
               let thumbnailData = addVideoVM.thumbnailData
         else {
@@ -97,6 +112,16 @@ extension AddVideoViewController {
         guard let (imageIdentifier, compressedImage) = imageManager.getCompleteIdentifier(of: thumbnailData, with: title) else {
             // comopressed failed
             return
+        }
+        
+        if let currentVideo = currentVideo {
+            if isEditMode {
+                let editVideo = Video(id: currentVideo.getId(), name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: currentVideo.getIsFavorite(), thumbnailIdentifier: imageIdentifier, categoryId: categoryId, startTime: startTime)
+                
+                imageManager.removeImage(of: currentVideo.getThumbnailIdentifier())
+                addAction?(editVideo)
+                self.dismiss(animated: true)
+            }
         }
         
         guard imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
@@ -139,7 +164,7 @@ extension AddVideoViewController {
     }
     
     private func testCanSave() {
-        guard let titleText = self.titleField.textField.text else { return }
+        guard let titleText = self.titleField.getText() else { return }
         if !titleText.isEmpty && linkFlag {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
@@ -184,7 +209,7 @@ extension AddVideoViewController {
 extension AddVideoViewController {
     private func configureView() {
         view.backgroundColor = .systemGray6
-        self.navigationItem.title = "New Video"
+        self.navigationItem.title = isEditMode ? "Edit Video" : "New Video"
         configreNavBarItem()
         configureTextFieldStackView()
         configureThumbnailVStack()
@@ -202,10 +227,27 @@ extension AddVideoViewController {
         textFieldsVStack.translatesAutoresizingMaskIntoConstraints = false
         textFieldsVStack.axis = .vertical
         textFieldsVStack.spacing = Constants.stackSpacing
+        titleField.addAction(titleTextFieldDidChanged)
+        linkField.addAction(linkTextFieldDidChanged)
+        startTimeField.addAction(startTextFieldDidChanged)
+        startTimeField.setKeyboartType(to: .numberPad)
         startTimeField.disableTextField()
-        titleField.textField.addAction(titleTextFieldDidChanged, for: .editingChanged)
-        linkField.textField.addAction(linkTextFieldDidChanged, for: .editingChanged)
-        startTimeField.textField.keyboardType = .numberPad
+        
+        if let currentVideo = currentVideo {
+            if isEditMode {
+                titleField.setText(to: currentVideo.getName())
+                linkField.setText(to: currentVideo.getUrlString())
+                testLink(currentVideo.getUrlString())
+            }
+            
+            if isEditMode && currentVideo.getVideoType() == .video {
+                startTimeField.enableTextField()
+                startTimeField.setText(to: currentVideo.getStartTime())
+            } else {
+                startTimeField.disableTextField()
+            }
+        }
+        
         let _ = [titleField, linkField, startTimeField].map {
             textFieldsVStack.addArrangedSubview($0)
         }
