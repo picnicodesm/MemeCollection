@@ -36,6 +36,7 @@ class MemesViewController: UIViewController {
     private let addVideoSubject = PassthroughSubject<Video, Never>()
     private let deleteVideoSubject = PassthroughSubject<IndexPath, Never>()
     private let editVideoSubject = PassthroughSubject<Video, Never>()
+    private let itemSelectedSubject = PassthroughSubject<IndexPath, Never>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +83,14 @@ class MemesViewController: UIViewController {
         editVideoSubject
             .sink { [unowned self] editedVideo in
                 self.memesVM.editVideo(editedVideo)
+            }.store(in: &subscriptions)
+        
+        itemSelectedSubject
+            .sink { indexPath in
+                let destination = MemeVideoViewController()
+                destination.memesVM = self.memesVM
+                destination.currentIndex = indexPath.item
+                self.navigationController?.pushViewController(destination, animated: true)
             }.store(in: &subscriptions)
     }
     
@@ -365,5 +374,7 @@ extension MemesViewController {
 extension MemesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.collectionView.deselectItem(at: indexPath, animated: false)
+        itemSelectedSubject.send(indexPath)
+        print("selected")
     }
 }

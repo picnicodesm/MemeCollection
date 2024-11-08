@@ -19,8 +19,8 @@ class MemesViewModel {
         self.memes = category.getVideos()
     }
     
-    private func bind(with category: Category) {
-        
+    func getVideoNum() -> Int {
+        return memes.count
     }
     
     func updateData() {

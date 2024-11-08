@@ -6,24 +6,149 @@
 //
 
 import UIKit
+import WebKit
 
 class MemeVideoViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    private var isMoved: Bool = false
+//    let viewAspectRatio: CGFloat = 16/9
+    var webView: WKWebView!
+    var memesVM: MemesViewModel!
+    var currentIndex: Int! {
+        willSet(newValue) {
+            isMoved = false
+            currentVideoURL = memesVM.memes[newValue].getUrlString()
+            videoType = memesVM.memes[newValue].getVideoType()
+        }
+    }
+    lazy var currentVideoURL: String = memesVM.memes[currentIndex].getUrlString()
+    lazy var videoType: VideoType = memesVM.memes[currentIndex].getVideoType()
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = true
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureView()
     }
-    */
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.isHidden = false
+    }
+    
+}
 
+// MARK: - Configure View
+extension MemeVideoViewController {
+    private func configureView() {
+        view.backgroundColor = .black
+        createWebView()
+        loadWebView()
+        configureToolbar()
+    }
+    
+    private func createWebView() {
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.allowsInlineMediaPlayback = true
+        webConfiguration.mediaTypesRequiringUserActionForPlayback = .video
+        
+        let webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        webView.backgroundColor = .black
+        webView.scrollView.backgroundColor = .black
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
+        view.addSubview(webView)
+        self.webView = webView
+        
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    private func loadWebView() {
+        guard let url = URL(string: currentVideoURL) else { return }
+        let request = URLRequest(url: url)
+        
+        webView.load(request)
+    }
+    
+    private func loadWebView(to urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        let request = URLRequest(url: url)
+        webView.load(request)
+    }
+    
+    private func configureToolbar() {
+        self.navigationController?.isToolbarHidden = false
+        let buttonSize = CGRect(x: 0, y: 0, width: 100, height: 0)
+        
+        let leftToolbarButton = UIButton(frame: buttonSize)
+        var leftToolbarButtonConfig = UIButton.Configuration.plain()
+        leftToolbarButtonConfig.title = "Previous"
+        leftToolbarButton.configuration = leftToolbarButtonConfig
+        
+        let leftToolbarButtonHandler = UIAction { [weak self] _ in
+            guard let self = self else { return }
+            let count = self.memesVM.getVideoNum()
+            currentIndex = (currentIndex + count - 1) % count
+            loadWebView(to: currentVideoURL)
+        }
+        leftToolbarButton.addAction(leftToolbarButtonHandler, for: .touchUpInside)
+        
+        let rightToolbarButton = UIButton(frame: buttonSize)
+        var rightToolbarButtonConfig = UIButton.Configuration.plain()
+        rightToolbarButtonConfig.title = "Next"
+        rightToolbarButton.configuration = rightToolbarButtonConfig
+        
+        let rightToolbarButtonHandler = UIAction { [weak self] _ in
+            guard let self = self else { return }
+            let count = self.memesVM.getVideoNum()
+            currentIndex = (currentIndex + count + 1 ) % count
+            loadWebView(to: currentVideoURL)
+        }
+        rightToolbarButton.addAction(rightToolbarButtonHandler, for: .touchUpInside)
+        
+        let centerToolbarButton = UIButton(frame: buttonSize)
+        var centerToolbarButtonConfig = UIButton.Configuration.plain()
+        centerToolbarButtonConfig.title = "Memes"
+        centerToolbarButton.configuration = centerToolbarButtonConfig
+        
+        let backToolbarButtonHandler = UIAction { [weak self] _ in
+            guard let self = self else { return }
+            self.navigationController?.popViewController(animated: true)
+        }
+        centerToolbarButton.addAction(backToolbarButtonHandler, for: .touchUpInside)
+        
+        
+        let leftToolbarButtonItem = UIBarButtonItem(customView: leftToolbarButton)
+        let rightToolbarButtonItem = UIBarButtonItem(customView: rightToolbarButton)
+        let centerToolbarButtonItem = UIBarButtonItem(customView: centerToolbarButton)
+        let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
+    
+        self.toolbarItems = [leftToolbarButtonItem, flexibleSpaceBarButtonItem, centerToolbarButtonItem, flexibleSpaceBarButtonItem, rightToolbarButtonItem]
+    }
+}
+
+extension MemeVideoViewController {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let url = self.webView.url?.absoluteString else { return }
+        
+        if url != currentVideoURL {
+            if videoType == .video {
+                if !isMoved {
+                    isMoved.toggle()
+                    currentVideoURL =  url
+                } else {
+                    loadWebView(to: currentVideoURL)
+                }
+            } else {
+                loadWebView(to: currentVideoURL)
+            }
+        }
+    }
 }
