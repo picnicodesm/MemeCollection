@@ -165,7 +165,6 @@ extension MemesViewController {
                                 .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
                                     let editVideo = memesVM.memes[indexPath.item]
                                     self.openEditVideoPage(of: editVideo)
-                                    
                                 }),]
             return cell
         })
@@ -179,7 +178,7 @@ extension MemesViewController {
                 self?.memesVM.updateVideoOrder(to: updatedBackingStore)
             }
         }
-
+        
         
         updateSnapshot(memesVM.memes)
     }
@@ -204,7 +203,10 @@ extension MemesViewController {
             cell.startIndicatorAnimation()
             cell.accessories = [.delete(displayed: .whenEditing, actionHandler: deleteHandler),
                                 .reorder(displayed: .whenEditing),
-                                .detail(displayed: .whenEditing),]
+                                .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                                    let editVideo = memesVM.memes[indexPath.item]
+                                    self.openEditVideoPage(of: editVideo)
+                                }),]
             
             if let thumbnailImage = ImageManager.shared.getSavedImage(of: item.getThumbnailIdentifier()) {
                 cell.setThumbnail(thumbnailImage)
@@ -222,7 +224,7 @@ extension MemesViewController {
                 self?.memesVM.updateVideoOrder(to: updatedBackingStore)
             }
         }
-
+        
         updateSnapshot(memesVM.memes)
     }
     
