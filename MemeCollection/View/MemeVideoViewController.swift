@@ -59,6 +59,7 @@ extension MemeVideoViewController {
         webView.scrollView.backgroundColor = .black
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
+        webView.scrollView.isScrollEnabled = false
         view.addSubview(webView)
         self.webView = webView
         
@@ -86,8 +87,17 @@ extension MemeVideoViewController {
     private func configureToolbar() {
         self.navigationController?.isToolbarHidden = false
         let buttonSize = CGRect(x: 0, y: 0, width: 100, height: 0)
-        
-        let leftToolbarButton = UIButton(frame: buttonSize)
+    
+        let leftToolbarButtonItem = configureLeftToolbarButton(frame: buttonSize)
+        let rightToolbarButtonItem = configureRightToolbarButton(frame: buttonSize)
+        let centerToolbarButtonItem = configureCenterTollbarButton(frame: buttonSize)
+        let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
+    
+        self.toolbarItems = [leftToolbarButtonItem, flexibleSpaceBarButtonItem, centerToolbarButtonItem, flexibleSpaceBarButtonItem, rightToolbarButtonItem]
+    }
+    
+    private func configureLeftToolbarButton(frame: CGRect) -> UIBarButtonItem {
+        let leftToolbarButton = UIButton(frame: frame)
         var leftToolbarButtonConfig = UIButton.Configuration.plain()
         leftToolbarButtonConfig.title = "Previous"
         leftToolbarButton.configuration = leftToolbarButtonConfig
@@ -100,7 +110,11 @@ extension MemeVideoViewController {
         }
         leftToolbarButton.addAction(leftToolbarButtonHandler, for: .touchUpInside)
         
-        let rightToolbarButton = UIButton(frame: buttonSize)
+        return UIBarButtonItem(customView: leftToolbarButton)
+    }
+    
+    private func configureRightToolbarButton(frame: CGRect) -> UIBarButtonItem {
+        let rightToolbarButton = UIButton(frame: frame)
         var rightToolbarButtonConfig = UIButton.Configuration.plain()
         rightToolbarButtonConfig.title = "Next"
         rightToolbarButton.configuration = rightToolbarButtonConfig
@@ -113,7 +127,11 @@ extension MemeVideoViewController {
         }
         rightToolbarButton.addAction(rightToolbarButtonHandler, for: .touchUpInside)
         
-        let centerToolbarButton = UIButton(frame: buttonSize)
+        return UIBarButtonItem(customView: rightToolbarButton)
+    }
+    
+    private func configureCenterTollbarButton(frame: CGRect) -> UIBarButtonItem {
+        let centerToolbarButton = UIButton(frame: frame)
         var centerToolbarButtonConfig = UIButton.Configuration.plain()
         centerToolbarButtonConfig.title = "Memes"
         centerToolbarButton.configuration = centerToolbarButtonConfig
@@ -124,13 +142,7 @@ extension MemeVideoViewController {
         }
         centerToolbarButton.addAction(backToolbarButtonHandler, for: .touchUpInside)
         
-        
-        let leftToolbarButtonItem = UIBarButtonItem(customView: leftToolbarButton)
-        let rightToolbarButtonItem = UIBarButtonItem(customView: rightToolbarButton)
-        let centerToolbarButtonItem = UIBarButtonItem(customView: centerToolbarButton)
-        let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
-    
-        self.toolbarItems = [leftToolbarButtonItem, flexibleSpaceBarButtonItem, centerToolbarButtonItem, flexibleSpaceBarButtonItem, rightToolbarButtonItem]
+        return UIBarButtonItem(customView: centerToolbarButton)
     }
 }
 
