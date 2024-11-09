@@ -85,6 +85,10 @@ struct Video: Hashable {
             return .video
         }
     }
+    
+    mutating func toggleIsFavorite() {
+        isFavorite.toggle()
+    }
 }
 
 extension Video: Persistable {

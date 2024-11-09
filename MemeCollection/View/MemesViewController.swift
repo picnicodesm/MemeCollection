@@ -150,10 +150,16 @@ extension MemesViewController {
 extension MemesViewController {
     private func configureGridDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
+            
+            let toggleFavoriteAction = { [unowned self] in
+                self.memesVM.toggleFavorite(of: item)
+            }
+            
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeGridCell.identifier, for: indexPath) as? MemeGridCell else { return UICollectionViewCell() }
             
-            cell.configureCell(title: item.getName())
+            cell.configureCell(title: item.getName(), isFavorite: item.getIsFavorite())
             cell.startIndicatorAnimation()
+            cell.addAction(toggleFavoriteAction)
             if let thumbnailImage = ImageManager.shared.getSavedImage(of: item.getThumbnailIdentifier()) {
                 cell.setThumbnail(thumbnailImage)
             }
@@ -188,13 +194,18 @@ extension MemesViewController {
             }
         }
         
-        
         updateSnapshot(memesVM.memes)
     }
     
     private func configureListDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
+            
+            let toggleFavoriteAction = { [unowned self] in
+                self.memesVM.toggleFavorite(of: item)
+            }
+            
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeListCell.identifier, for: indexPath) as? MemeListCell else { return UICollectionViewCell() }
+            
             let deleteHandler = { [unowned self] in
                 // need alert
                 let alert = UIAlertController(title: "Delete Video", message: "Do you want to remove this video?", preferredStyle: .alert)
@@ -208,8 +219,9 @@ extension MemesViewController {
                 present(alert, animated: true)
             }
             
-            cell.configureCell(title: item.getName())
+            cell.configureCell(title: item.getName(), isFavorite: item.getIsFavorite())
             cell.startIndicatorAnimation()
+            cell.addAction(toggleFavoriteAction)
             cell.accessories = [.delete(displayed: .whenEditing, actionHandler: deleteHandler),
                                 .reorder(displayed: .whenEditing),
                                 .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
@@ -241,7 +253,7 @@ extension MemesViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
@@ -336,7 +348,7 @@ extension MemesViewController {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(180))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(16)
         
@@ -379,6 +391,5 @@ extension MemesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.collectionView.deselectItem(at: indexPath, animated: false)
         itemSelectedSubject.send(indexPath)
-        print("selected")
     }
 }

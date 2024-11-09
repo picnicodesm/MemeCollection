@@ -8,10 +8,13 @@
 import UIKit
 
 class MemeGridCell: UICollectionViewListCell, MemeCell {
+    typealias ButtonAction = () -> Void
     static let identifier = "MemeGridCell"
     private var thumbnailImageView: UIImageView!
     private var titleLabel: UILabel!
     private var activityIndicator: UIActivityIndicatorView!
+    private var favoriteButton: UIButton!
+    var buttonAction: ButtonAction?
     
     override init(frame: CGRect) {
         super .init(frame: frame)
@@ -24,8 +27,14 @@ class MemeGridCell: UICollectionViewListCell, MemeCell {
         fatalError("error")
     }
     
-    func configureCell(title: String) {
+    
+    func configureCell(title: String, isFavorite: Bool) {
         self.titleLabel.text = title
+        if var buttonConfig = favoriteButton.configuration {
+            buttonConfig.image = isFavorite ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+            buttonConfig.baseForegroundColor = isFavorite ? .red : .black
+            favoriteButton.configuration = buttonConfig
+        }
     }
     
     func setThumbnail(_ image: UIImage) {
@@ -38,7 +47,13 @@ class MemeGridCell: UICollectionViewListCell, MemeCell {
         activityIndicator.startAnimating()
     }
     
-    
+    func addAction(_ action: ButtonAction?) {
+        self.buttonAction = action
+    }
+
+    @objc func toggleFavorite() {
+        buttonAction?()
+    }
 }
 
 extension MemeGridCell {
@@ -57,7 +72,11 @@ extension MemeGridCell {
         ])
     }
     
-    private func configureViews() {        
+    private func configureViews() {
+        var backgroundConfig = self.defaultBackgroundConfiguration()
+        backgroundConfig.backgroundColor = .clear
+        self.backgroundConfiguration = backgroundConfig
+        
         let thumbnailImageView = UIImageView()
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailImageView.isHidden = true
@@ -69,11 +88,21 @@ extension MemeGridCell {
         titleLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         titleLabel.textAlignment = .left
         
+        let favoriteButton = UIButton()
+        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
+        var buttonConfig = UIButton.Configuration.plain()
+        buttonConfig.image = UIImage(systemName: "heart")
+        buttonConfig.baseForegroundColor = .black
+        favoriteButton.configuration = buttonConfig
+        favoriteButton.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
+        
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
+        contentView.addSubview(favoriteButton)
         
         self.thumbnailImageView = thumbnailImageView
         self.titleLabel = titleLabel
+        self.favoriteButton = favoriteButton
     }
     
     private func configureLayout() {
@@ -85,7 +114,12 @@ extension MemeGridCell {
             
             titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor, constant: 5),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: favoriteButton.leadingAnchor),
+            
+            favoriteButton.widthAnchor.constraint(equalToConstant: 25),
+            favoriteButton.heightAnchor.constraint(equalTo: favoriteButton.widthAnchor, multiplier: 1),
+            favoriteButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5)
         ])
         
     }

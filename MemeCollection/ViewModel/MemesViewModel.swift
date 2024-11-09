@@ -76,6 +76,20 @@ class MemesViewModel {
         }
     }
     
+    func toggleFavorite(of video: Video) {
+        guard let editIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
+        memes[editIndex].toggleIsFavorite()
+        
+        let categoryId = category.getId()
+        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
+            if let editVideo = realmCategory.videos.first(where: { $0.id == video.getId() }) {
+                database.update {
+                    editVideo.isFavorite = !video.getIsFavorite()
+                }
+            }
+        }
+    }
+    
     func updateVideoOrder(to orderedVideos: [Video]) {
         self.memes = orderedVideos
         let categoryId = category.getId()

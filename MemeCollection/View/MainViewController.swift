@@ -211,6 +211,7 @@ extension MainViewController {
     private func configureToolbar() {
         self.navigationController?.isToolbarHidden = false
         
+        /* Add Video Button in Main View having selecting category
         let leftToolbarButton = UIButton(type: .system)
         var leftToolbarButtonConfig = UIButton.Configuration.plain()
         leftToolbarButtonConfig.title = "Add Video"
@@ -221,6 +222,8 @@ extension MainViewController {
         leftToolbarButton.configuration = leftToolbarButtonConfig
         
         let leftToolbarButtonItem = UIBarButtonItem(customView: leftToolbarButton)
+        */
+        
         let rightToolbarButtonItem = UIBarButtonItem(title: "New Category", style: .plain, target: self, action: #selector(openNewCategoryView))
         let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
         
