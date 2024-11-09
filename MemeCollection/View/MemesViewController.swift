@@ -322,7 +322,11 @@ extension MemesViewController {
         let rightToolbarButtonItem = rightToolbarButton
         let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
         
-        self.toolbarItems = [leftToolbarButtonItem, flexibleSpaceBarButtonItem, rightToolbarButtonItem]
+        if category.getIsForFavortie() == true {
+            self.toolbarItems = [flexibleSpaceBarButtonItem, rightToolbarButton]
+        } else {
+            self.toolbarItems = [leftToolbarButtonItem, flexibleSpaceBarButtonItem, rightToolbarButtonItem]
+        }
     }
 }
 
