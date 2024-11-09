@@ -75,15 +75,24 @@ extension MainViewController {
             var config = cell.defaultContentConfiguration()
             config.text = item.getName()
             cell.contentConfiguration = config
-            cell.accessories = [
-                .delete(displayed: .whenEditing),
-                .reorder(displayed: .whenEditing),
-                .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
-                    self.openEditCategoryView(with: indexPath)
-                }),
-                .disclosureIndicator(displayed: .whenNotEditing),
-                .label(text: "\(self.viewModel.getVideoNums(of: item))")
-            ]
+            
+            if item.getName() == "Favorites" {
+                cell.accessories = [
+                    .reorder(displayed: .whenEditing),
+                    .disclosureIndicator(displayed: .whenNotEditing),
+                    .label(text: "\(self.viewModel.getVideoNums(of: item))")
+                ]
+            } else {
+                cell.accessories = [
+                    .delete(displayed: .whenEditing),
+                    .reorder(displayed: .whenEditing),
+                    .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                        self.openEditCategoryView(with: indexPath)
+                    }),
+                    .disclosureIndicator(displayed: .whenNotEditing),
+                    .label(text: "\(self.viewModel.getVideoNums(of: item))")
+                ]
+            }
             
             return cell
         })
@@ -213,7 +222,7 @@ extension MainViewController {
         let rightToolbarButtonItem = UIBarButtonItem(title: "New Category", style: .plain, target: self, action: #selector(openNewCategoryView))
         let flexibleSpaceBarButtonItem = UIBarButtonItem(systemItem: .flexibleSpace)
         
-        self.toolbarItems = [leftToolbarButtonItem, flexibleSpaceBarButtonItem, rightToolbarButtonItem]
+        self.toolbarItems = [flexibleSpaceBarButtonItem, rightToolbarButtonItem]
     }
 }
 

@@ -86,7 +86,10 @@ extension MemeVideoViewController {
     
     private func configureToolbar() {
         self.navigationController?.isToolbarHidden = false
+        guard let toolbar = self.navigationController?.toolbar else { return }
+        toolbar.barStyle = .black
         let buttonSize = CGRect(x: 0, y: 0, width: 100, height: 0)
+        
     
         let leftToolbarButtonItem = configureLeftToolbarButton(frame: buttonSize)
         let rightToolbarButtonItem = configureRightToolbarButton(frame: buttonSize)
@@ -100,6 +103,7 @@ extension MemeVideoViewController {
         let leftToolbarButton = UIButton(frame: frame)
         var leftToolbarButtonConfig = UIButton.Configuration.plain()
         leftToolbarButtonConfig.title = "Previous"
+        leftToolbarButtonConfig.baseForegroundColor = .white
         leftToolbarButton.configuration = leftToolbarButtonConfig
         
         let leftToolbarButtonHandler = UIAction { [weak self] _ in
@@ -117,6 +121,7 @@ extension MemeVideoViewController {
         let rightToolbarButton = UIButton(frame: frame)
         var rightToolbarButtonConfig = UIButton.Configuration.plain()
         rightToolbarButtonConfig.title = "Next"
+        rightToolbarButtonConfig.baseForegroundColor = .white
         rightToolbarButton.configuration = rightToolbarButtonConfig
         
         let rightToolbarButtonHandler = UIAction { [weak self] _ in
@@ -134,6 +139,7 @@ extension MemeVideoViewController {
         let centerToolbarButton = UIButton(frame: frame)
         var centerToolbarButtonConfig = UIButton.Configuration.plain()
         centerToolbarButtonConfig.title = "Memes"
+        centerToolbarButtonConfig.baseForegroundColor = .white
         centerToolbarButton.configuration = centerToolbarButtonConfig
         
         let backToolbarButtonHandler = UIAction { [weak self] _ in

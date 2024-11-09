@@ -9,20 +9,35 @@ import Foundation
 import Combine
 import RealmSwift
 
+// TODO: - Favorite을 만들고 unique하게 알 수 있는 방법 생각하기
+// TODO: - Favorite button 추가하고 로직 넣기
+// TODO: - Cell design
+// TODO: - Add video category 선택도 할 수 있게 하기
+
 class MainViewModel: CategoryViewModel {
-    @Published var categories: [Category] = [Category(name: "Favorites"), Category(name: "하니")]
+    @Published var categories: [Category] = []
     let database = DataBaseManager.shared
     
     init() {
         let categories = database.read(RealmCategory.self)
-        if categories.isEmpty {
-            let favorites = Category(name: "Favorites")
-            self.categories = [favorites]
-            database.write(favorites.managedObject())
-            return
-            
-        } else {
+        if categories.first(where: { $0.isForFavorites == true }) != nil {
             self.categories = categories.map { $0.toStruct() }
+        } else {
+            let favorites = Category(name: "Favorites", isForFavorites: true)
+            if categories.isEmpty {
+                self.categories.append(favorites)
+                database.write(favorites.managedObject())
+            } else {
+                let temp: [Category] = categories.map { $0.toStruct() }
+                self.categories.insert(favorites, at: 0)
+                database.delete(categories)
+                database.write(favorites.managedObject())
+                for category in temp {
+                    self.database.write(category.managedObject())
+                    self.categories.append(category)
+                }
+            }
+
         }
     }
     

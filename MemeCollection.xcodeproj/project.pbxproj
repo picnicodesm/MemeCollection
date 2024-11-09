@@ -34,6 +34,7 @@
 		049B778B2CDDF69B0079F951 /* ViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77712CDDF69B0079F951 /* ViewModelProtocol.swift */; };
 		049B778C2CDDF69B0079F951 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049B776B2CDDF69B0079F951 /* Assets.xcassets */; };
 		049B778E2CDDF69B0079F951 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049B776F2CDDF69B0079F951 /* LaunchScreen.storyboard */; };
+		049B77912CDE77310079F951 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049B77902CDE77310079F951 /* Storyboard.storyboard */; };
 		04B23EB12CCC9E5B0047DCAE /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04B23EB02CCC9E5B0047DCAE /* RealmSwift */; };
 		04B23EB22CCC9F0C0047DCAE /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04B23EB02CCC9E5B0047DCAE /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -81,6 +82,7 @@
 		049B776E2CDDF69B0079F951 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		049B77702CDDF69B0079F951 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		049B77712CDDF69B0079F951 /* ViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelProtocol.swift; sourceTree = "<group>"; };
+		049B77902CDE77310079F951 /* Storyboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		04A38C1C2CBD3A38008A9D02 /* MemeCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemeCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -159,6 +161,7 @@
 				049B776B2CDDF69B0079F951 /* Assets.xcassets */,
 				049B776D2CDDF69B0079F951 /* Info.plist */,
 				049B776F2CDDF69B0079F951 /* LaunchScreen.storyboard */,
+				049B77902CDE77310079F951 /* Storyboard.storyboard */,
 			);
 			path = MemeCollection;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 			files = (
 				049B778C2CDDF69B0079F951 /* Assets.xcassets in Resources */,
 				049B778E2CDDF69B0079F951 /* LaunchScreen.storyboard in Resources */,
+				049B77912CDE77310079F951 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

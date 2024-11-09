@@ -15,9 +15,9 @@ class TextInputComponent: UIStackView {
         var textFont: UIFont {
             switch self {
             case .title:
-                return UIFont.systemFont(ofSize: 24, weight: .bold)
+                return UIFont.systemFont(ofSize: 20, weight: .bold)
             default:
-                return UIFont.systemFont(ofSize: 16, weight: .medium)
+                return UIFont.systemFont(ofSize: 14, weight: .medium)
             }
         }
     }
@@ -100,7 +100,7 @@ extension TextInputComponent {
     private func configureLabel(title: String) {
         titleLabel = UILabel()
         titleLabel.text = title
-        titleLabel.font = .systemFont(ofSize: 16)
+        titleLabel.font = .systemFont(ofSize: 14)
         titleLabel.textColor = .lightGray
     }
     
@@ -113,7 +113,7 @@ extension TextInputComponent {
         textField.font = type.textFont
         
         NSLayoutConstraint.activate([
-            textField.heightAnchor.constraint(equalToConstant: 60)
+            textField.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }

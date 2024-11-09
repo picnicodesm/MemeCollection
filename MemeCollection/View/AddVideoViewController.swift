@@ -9,6 +9,7 @@ import UIKit
 import Combine
 
 class AddVideoViewController: UIViewController {
+    
     private var textFieldsVStack: UIStackView!
     private var thumbnailVStack: UIStackView!
     private var thumbnailLabel: UILabel!
@@ -214,6 +215,8 @@ extension AddVideoViewController {
         configureTextFieldStackView()
         configureThumbnailVStack()
     }
+    
+
     
     private func configreNavBarItem() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
