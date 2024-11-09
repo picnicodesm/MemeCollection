@@ -76,7 +76,7 @@ extension MainViewController {
             config.text = item.getName()
             cell.contentConfiguration = config
             
-            if item.getName() == "Favorites" {
+            if item.getIsForFavortie() == true {
                 cell.accessories = [
                     .reorder(displayed: .whenEditing),
                     .disclosureIndicator(displayed: .whenNotEditing),
@@ -120,7 +120,10 @@ extension MainViewController {
 // MARK: - Actions
 extension MainViewController {
     private func swipeAction(_ indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if viewModel.categories[indexPath.item].getIsForFavortie() == true { return nil }
+        
         let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] deleteAction, view, completion in
+            
             guard let self = self else { return }
             self.deleteItem.send(indexPath)
             completion(true)
@@ -171,7 +174,6 @@ extension MainViewController {
         let db = DataBaseManager.shared
         
         print(db.read(RealmCategory.self))
-
     }
     
 }

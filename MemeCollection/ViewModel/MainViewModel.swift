@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import RealmSwift
 
-// TODO: - Favorite을 만들고 unique하게 알 수 있는 방법 생각하기
+// TODO: - Favorite을 만들고 unique하게 알 수 있는 방법 생각하기 ✅
 // TODO: - Favorite button 추가하고 로직 넣기
 // TODO: - Cell design
 // TODO: - Add video category 선택도 할 수 있게 하기
@@ -37,7 +37,6 @@ class MainViewModel: CategoryViewModel {
                     self.categories.append(category)
                 }
             }
-
         }
     }
     
