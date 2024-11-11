@@ -117,7 +117,7 @@ extension AddVideoViewController {
         
         if let currentVideo = currentVideo {
             if isEditMode {
-                let editVideo = Video(id: currentVideo.getId(), name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: currentVideo.getIsFavorite(), thumbnailIdentifier: imageIdentifier, categoryId: categoryId, startTime: startTime)
+                let editVideo = Video(id: currentVideo.getId(), name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: currentVideo.getIsFavorite(), thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: currentVideo.getIndex(), favoriteIndex: currentVideo.getFavoriteIndex(), startTime: startTime)
                 
                 imageManager.removeImage(of: currentVideo.getThumbnailIdentifier())
                 addAction?(editVideo)
@@ -131,7 +131,7 @@ extension AddVideoViewController {
             return
         }
         
-        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, startTime: startTime)
+        let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: memesVM.memes.count, startTime: startTime)
         
         addAction?(newVideo)
         self.dismiss(animated: true)

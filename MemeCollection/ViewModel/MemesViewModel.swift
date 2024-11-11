@@ -16,7 +16,7 @@ class MemesViewModel {
     
     init(with category: Category) {
         self.category = category
-        self.memes = category.getVideos()
+        self.memes = category.getVideos(isFavorites: category.getIsForFavortie())
     }
     
     func getVideoNum() -> Int {
@@ -45,15 +45,13 @@ class MemesViewModel {
     func deleteVideo(_ video: Video) {
         guard let deleteIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
         memes.remove(at: deleteIndex)
-        let categoryId = category.getId()
-        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
-            database.update(video.managedObject()) { _ in
-                if let deleteIndex = realmCategory.videos.firstIndex(where: { $0.id == video.getId() }) {
-                    realmCategory.videos.remove(at: deleteIndex)
-                }
-            }
-            ImageManager.shared.removeImage(of: video.getThumbnailIdentifier())
+
+        if let deleteItem = database.read(of: RealmVideo.self, with: video.getId()) {
+            database.delete(deleteItem)
         }
+        ImageManager.shared.removeImage(of: video.getThumbnailIdentifier())
+        
+        updateVideoOrder(to: memes)
     }
     
     func editVideo(_ video: Video) {
@@ -77,28 +75,52 @@ class MemesViewModel {
     }
     
     func toggleFavorite(of video: Video) {
+        print("\(video.getName()) toggle!")
         guard let editIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
         memes[editIndex].toggleIsFavorite()
+
+        guard let editVideo = database.read(of: RealmVideo.self, with: video.getId()) else { return }
+        guard let favoriteCategory = database.read(RealmCategory.self).first(where: { $0.isForFavorites == true }) else { return }
         
-        let categoryId = category.getId()
-        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
-            if let editVideo = realmCategory.videos.first(where: { $0.id == video.getId() }) {
-                database.update {
-                    editVideo.isFavorite = !video.getIsFavorite()
+        database.update {
+            editVideo.isFavorite = !video.getIsFavorite()
+        }
+        
+        if editVideo.isFavorite == true {
+            database.update {
+                editVideo.favoritesIndex = favoriteCategory.videos.count
+                favoriteCategory.videos.append(editVideo)
+            }
+        } else {
+            database.update { [unowned self] in
+                if let removeRealmIndex = favoriteCategory.videos.firstIndex(where: { $0.id == video.getId() }),
+                    let removeIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) {
+                    editVideo.favoritesIndex = -1
+                    favoriteCategory.videos.remove(at: removeRealmIndex)
+                    if self.category.getIsForFavortie() {
+                        memes.remove(at: removeIndex)
+                    }
                 }
             }
         }
+        
+        if !editVideo.isFavorite && category.getIsForFavortie() {
+            updateVideoOrder(to: memes)
+        }
+        
     }
     
     func updateVideoOrder(to orderedVideos: [Video]) {
         self.memes = orderedVideos
-        let categoryId = category.getId()
-        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
-            let orderedRealmVideos = orderedVideos.map { $0.managedObject() }
-            self.database.delete(realmCategory.videos)
-            database.update(orderedRealmVideos) { item in
-                let _ = orderedRealmVideos.map { video in
-                    realmCategory.videos.append(video)
+        
+        for (index, video) in orderedVideos.enumerated() {
+            if let willBeEditedVideo = database.read(of: RealmVideo.self, with: video.getId()) {
+                database.update { [unowned self] in
+                    if self.category.getIsForFavortie() {
+                        willBeEditedVideo.favoritesIndex = index
+                    } else {
+                        willBeEditedVideo.index = index
+                    }
                 }
             }
         }

@@ -9,11 +9,6 @@ import Foundation
 import Combine
 import RealmSwift
 
-// TODO: - Favorite을 만들고 unique하게 알 수 있는 방법 생각하기 ✅
-// TODO: - Favorite button 추가하고 로직 넣기
-// TODO: - Cell design
-// TODO: - Add video category 선택도 할 수 있게 하기
-
 class MainViewModel: CategoryViewModel {
     @Published var categories: [Category] = []
     let database = DataBaseManager.shared
@@ -21,28 +16,17 @@ class MainViewModel: CategoryViewModel {
     init() {
         let categories = database.read(RealmCategory.self)
         if categories.first(where: { $0.isForFavorites == true }) != nil {
-            self.categories = categories.map { $0.toStruct() }
+            self.categories = categories.sorted(byKeyPath: "index", ascending: true).map { $0.toStruct() }
         } else {
-            let favorites = Category(name: "Favorites", isForFavorites: true)
-            if categories.isEmpty {
-                self.categories.append(favorites)
-                database.write(favorites.managedObject())
-            } else {
-                let temp: [Category] = categories.map { $0.toStruct() }
-                self.categories.insert(favorites, at: 0)
-                database.delete(categories)
-                database.write(favorites.managedObject())
-                for category in temp {
-                    self.database.write(category.managedObject())
-                    self.categories.append(category)
-                }
-            }
+            let favorites = Category(name: "Favorites", index: 0, isForFavorites: true)
+            self.categories.append(favorites)
+            database.write(favorites.managedObject())
         }
     }
     
     func refreshCategory() {
         let categories = database.read(RealmCategory.self)
-        self.categories = categories.map { $0.toStruct() }
+        self.categories = categories.sorted(byKeyPath: "index", ascending: true).map { $0.toStruct() }
     }
     
     func addCategory(_ newCategory: Category) {
@@ -77,15 +61,14 @@ class MainViewModel: CategoryViewModel {
     
     func updateCategoryOrder(to orderedCategories: [Category]) {
         categories = orderedCategories
-        let currentCategories = database.read(RealmCategory.self)
-        for category in currentCategories {
-            database.delete(category.videos)
-        }
-        database.delete(currentCategories)
-        let _ = orderedCategories.map {
-            database.write($0.managedObject())
-        }
         
+        for (index, category) in orderedCategories.enumerated() {
+            if let willBeEditedCategory = database.read(of: RealmCategory.self, with: category.getId()) {
+                database.update {
+                    willBeEditedCategory.index = index
+                }
+            }
+        }
     }
 
     func getVideoNums(of category: Category) -> Int {

@@ -172,8 +172,8 @@ extension MainViewController {
     
     @objc func testOrder() {
         let db = DataBaseManager.shared
-        
         print(db.read(RealmCategory.self))
+ 
     }
     
 }

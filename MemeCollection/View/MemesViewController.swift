@@ -171,16 +171,26 @@ extension MemesViewController {
     }
     
     private func configureEditListDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { [unowned self] collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeEditListCell.identifier, for: indexPath) as? MemeEditListCell else { return UICollectionViewCell() }
             
             cell.configureCell(title: item.getName())
-            cell.accessories = [.delete(displayed: .whenEditing),
-                                .reorder(displayed: .whenEditing),
-                                .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
-                                    let editVideo = memesVM.memes[indexPath.item]
-                                    self.openEditVideoPage(of: editVideo)
-                                }),]
+            
+            if self.category.getIsForFavortie() {
+                cell.accessories = [.reorder(displayed: .whenEditing),
+                                    .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                                        let editVideo = memesVM.memes[indexPath.item]
+                                        self.openEditVideoPage(of: editVideo)
+                                    }),]
+            } else {
+                cell.accessories = [.delete(displayed: .whenEditing),
+                                    .reorder(displayed: .whenEditing),
+                                    .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                                        let editVideo = memesVM.memes[indexPath.item]
+                                        self.openEditVideoPage(of: editVideo)
+                                    }),]
+            }
+            
             return cell
         })
         
@@ -198,7 +208,7 @@ extension MemesViewController {
     }
     
     private func configureListDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { [unowned self] collectionView, indexPath, item in
             
             let toggleFavoriteAction = { [unowned self] in
                 self.memesVM.toggleFavorite(of: item)
@@ -222,12 +232,21 @@ extension MemesViewController {
             cell.configureCell(title: item.getName(), isFavorite: item.getIsFavorite())
             cell.startIndicatorAnimation()
             cell.addAction(toggleFavoriteAction)
-            cell.accessories = [.delete(displayed: .whenEditing, actionHandler: deleteHandler),
-                                .reorder(displayed: .whenEditing),
-                                .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
-                                    let editVideo = memesVM.memes[indexPath.item]
-                                    self.openEditVideoPage(of: editVideo)
-                                }),]
+            
+            if self.category.getIsForFavortie() {
+                cell.accessories = [.reorder(displayed: .whenEditing),
+                                    .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                                        let editVideo = memesVM.memes[indexPath.item]
+                                        self.openEditVideoPage(of: editVideo)
+                                    }),]
+            } else {
+                cell.accessories = [.delete(displayed: .whenEditing, actionHandler: deleteHandler),
+                                    .reorder(displayed: .whenEditing),
+                                    .detail(displayed: .whenEditing, actionHandler: { [unowned self] in
+                                        let editVideo = memesVM.memes[indexPath.item]
+                                        self.openEditVideoPage(of: editVideo)
+                                    }),]
+            }
             
             if let thumbnailImage = ImageManager.shared.getSavedImage(of: item.getThumbnailIdentifier()) {
                 cell.setThumbnail(thumbnailImage)

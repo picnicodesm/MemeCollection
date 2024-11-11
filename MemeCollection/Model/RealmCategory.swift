@@ -12,6 +12,7 @@ class RealmCategory: Object {
     @Persisted(primaryKey: true) var id: UUID
     @Persisted var name: String
     @Persisted var isForFavorites: Bool
+    @Persisted var index: Int
     @Persisted var videos: List<RealmVideo>
     
     func toStruct() -> Category {

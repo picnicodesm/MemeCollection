@@ -44,7 +44,7 @@ extension AddCategoryViewController {
             return}
         
         if !isEditMode {
-            let newCategory = Category(name: textField.text!)
+            let newCategory = Category(name: textField.text!, index: vm.categories.count)
             vm.addCategory(newCategory)
         } else {
             // Edit
