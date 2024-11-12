@@ -7,22 +7,34 @@
 		<key>GettingStarted (Playground).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<key>MemeCollection.xcscheme_^#shared#^_</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>ShareExtension.xcscheme_^#shared#^_</key>
+		<key>MemeCollectionShareExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>04268FD32CE2F6A10098175A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>046477D32CE3281D00C94744</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>046478002CE330D100C94744</key>
 		<dict>
 			<key>primary</key>
 			<true/>

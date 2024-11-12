@@ -127,3 +127,28 @@ class MemesViewModel {
     
     
 }
+
+/*
+ let label: UILabel = {
+     let label = UILabel()
+     label.text = "Hello Share Component"
+     label.translatesAutoresizingMaskIntoConstraints = false
+
+     return label
+ }()
+ 
+ override func viewDidLoad() {
+     super.viewDidLoad()
+     configureLayout()
+ }
+ 
+ func configureLayout() {
+     view.addSubview(label)
+     
+     NSLayoutConstraint.activate([
+         label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+         label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+     ])
+ }
+
+ */

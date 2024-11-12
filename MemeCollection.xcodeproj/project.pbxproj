@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04268FF22CE2F8740098175A /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 04268FE82CE2F8740098175A /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0464780B2CE330D100C94744 /* MemeCollectionShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		049B77732CDDF69B0079F951 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77512CDDF69B0079F951 /* Category.swift */; };
 		049B77742CDDF69B0079F951 /* ModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77522CDDF69B0079F951 /* ModelProtocol.swift */; };
 		049B77752CDDF69B0079F951 /* RealmCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77532CDDF69B0079F951 /* RealmCategories.swift */; };
@@ -41,12 +41,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		04268FF02CE2F8740098175A /* PBXContainerItemProxy */ = {
+		046478092CE330D100C94744 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 04A38C142CBD3A38008A9D02 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 04268FE72CE2F8740098175A;
-			remoteInfo = ShareExtension;
+			remoteGlobalIDString = 046478002CE330D100C94744;
+			remoteInfo = MemeCollectionShareExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -57,7 +57,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				04268FF22CE2F8740098175A /* ShareExtension.appex in Embed Foundation Extensions */,
+				0464780B2CE330D100C94744 /* MemeCollectionShareExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,7 +76,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		04268FE82CE2F8740098175A /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MemeCollectionShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		049B77512CDDF69B0079F951 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		049B77522CDDF69B0079F951 /* ModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelProtocol.swift; sourceTree = "<group>"; };
 		049B77532CDDF69B0079F951 /* RealmCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmCategories.swift; sourceTree = "<group>"; };
@@ -110,28 +110,28 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		04268FF32CE2F8740098175A /* Exceptions for "ShareExtension" folder in "ShareExtension" target */ = {
+		0464780C2CE330D100C94744 /* Exceptions for "MemeCollectionShareExtension" folder in "MemeCollectionShareExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 04268FE72CE2F8740098175A /* ShareExtension */;
+			target = 046478002CE330D100C94744 /* MemeCollectionShareExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		04268FE92CE2F8740098175A /* ShareExtension */ = {
+		046478022CE330D100C94744 /* MemeCollectionShareExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				04268FF32CE2F8740098175A /* Exceptions for "ShareExtension" folder in "ShareExtension" target */,
+				0464780C2CE330D100C94744 /* Exceptions for "MemeCollectionShareExtension" folder in "MemeCollectionShareExtension" target */,
 			);
-			path = ShareExtension;
+			path = MemeCollectionShareExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		04268FE52CE2F8740098175A /* Frameworks */ = {
+		046477FE2CE330D100C94744 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -229,7 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				049B77722CDDF69B0079F951 /* MemeCollection */,
-				04268FE92CE2F8740098175A /* ShareExtension */,
+				046478022CE330D100C94744 /* MemeCollectionShareExtension */,
 				04A38C1D2CBD3A38008A9D02 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -238,7 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				04A38C1C2CBD3A38008A9D02 /* MemeCollection.app */,
-				04268FE82CE2F8740098175A /* ShareExtension.appex */,
+				046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -246,26 +246,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04268FE72CE2F8740098175A /* ShareExtension */ = {
+		046478002CE330D100C94744 /* MemeCollectionShareExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04268FF42CE2F8740098175A /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildConfigurationList = 0464780D2CE330D100C94744 /* Build configuration list for PBXNativeTarget "MemeCollectionShareExtension" */;
 			buildPhases = (
-				04268FE42CE2F8740098175A /* Sources */,
-				04268FE52CE2F8740098175A /* Frameworks */,
-				04268FE62CE2F8740098175A /* Resources */,
+				046477FD2CE330D100C94744 /* Sources */,
+				046477FE2CE330D100C94744 /* Frameworks */,
+				046477FF2CE330D100C94744 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				04268FE92CE2F8740098175A /* ShareExtension */,
+				046478022CE330D100C94744 /* MemeCollectionShareExtension */,
 			);
-			name = ShareExtension;
+			name = MemeCollectionShareExtension;
 			packageProductDependencies = (
 			);
-			productName = ShareExtension;
-			productReference = 04268FE82CE2F8740098175A /* ShareExtension.appex */;
+			productName = MemeCollectionShareExtension;
+			productReference = 046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		04A38C1B2CBD3A38008A9D02 /* MemeCollection */ = {
@@ -281,7 +281,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				04268FF12CE2F8740098175A /* PBXTargetDependency */,
+				0464780A2CE330D100C94744 /* PBXTargetDependency */,
 			);
 			name = MemeCollection;
 			packageProductDependencies = (
@@ -301,7 +301,7 @@
 				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
-					04268FE72CE2F8740098175A = {
+					046478002CE330D100C94744 = {
 						CreatedOnToolsVersion = 16.1;
 					};
 					04A38C1B2CBD3A38008A9D02 = {
@@ -327,13 +327,13 @@
 			projectRoot = "";
 			targets = (
 				04A38C1B2CBD3A38008A9D02 /* MemeCollection */,
-				04268FE72CE2F8740098175A /* ShareExtension */,
+				046478002CE330D100C94744 /* MemeCollectionShareExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		04268FE62CE2F8740098175A /* Resources */ = {
+		046477FF2CE330D100C94744 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -353,7 +353,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		04268FE42CE2F8740098175A /* Sources */ = {
+		046477FD2CE330D100C94744 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -395,10 +395,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		04268FF12CE2F8740098175A /* PBXTargetDependency */ = {
+		0464780A2CE330D100C94744 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 04268FE72CE2F8740098175A /* ShareExtension */;
-			targetProxy = 04268FF02CE2F8740098175A /* PBXContainerItemProxy */;
+			target = 046478002CE330D100C94744 /* MemeCollectionShareExtension */;
+			targetProxy = 046478092CE330D100C94744 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -414,15 +414,15 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		04268FF52CE2F8740098175A /* Debug */ = {
+		0464780E2CE330D100C94744 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7492YXB292;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ShareExtension;
+				INFOPLIST_FILE = MemeCollectionShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MemeCollectionShareExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -431,7 +431,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.project.MemeCollection.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project.MemeCollection.MemeCollectionShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -440,15 +440,15 @@
 			};
 			name = Debug;
 		};
-		04268FF62CE2F8740098175A /* Release */ = {
+		0464780F2CE330D100C94744 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7492YXB292;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ShareExtension;
+				INFOPLIST_FILE = MemeCollectionShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MemeCollectionShareExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -457,7 +457,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.project.MemeCollection.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project.MemeCollection.MemeCollectionShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -644,11 +644,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04268FF42CE2F8740098175A /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+		0464780D2CE330D100C94744 /* Build configuration list for PBXNativeTarget "MemeCollectionShareExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04268FF52CE2F8740098175A /* Debug */,
-				04268FF62CE2F8740098175A /* Release */,
+				0464780E2CE330D100C94744 /* Debug */,
+				0464780F2CE330D100C94744 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
