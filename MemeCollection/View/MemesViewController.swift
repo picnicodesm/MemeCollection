@@ -272,6 +272,7 @@ extension MemesViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items)
+        snapshot.reloadSections([.main]) // reorder에서 최신 상태를 유지하기 위함
         dataSource.apply(snapshot, animatingDifferences: false)
     }
 }

@@ -23,13 +23,13 @@ class MemesViewModel {
         return memes.count
     }
     
-    func updateData() {
-        self.memes = TempStorage.shared.getDatas(of: category)
-    }
-    
-    private func setData(with category: Category) {
-        memes = Video.mock.filter { $0.getCategoryId() == category.getId() }
-    }
+//    func updateData() {
+//        self.memes = TempStorage.shared.getDatas(of: category)
+//    }
+//    
+//    private func setData(with category: Category) {
+//        memes = Video.mock.filter { $0.getCategoryId() == category.getId() }
+//    }
     
     func addVideo(_ video: Video) {
         memes.append(video)
@@ -75,7 +75,6 @@ class MemesViewModel {
     }
     
     func toggleFavorite(of video: Video) {
-        print("\(video.getName()) toggle!")
         guard let editIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
         memes[editIndex].toggleIsFavorite()
 
