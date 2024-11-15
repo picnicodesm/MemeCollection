@@ -8,6 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		0464780B2CE330D100C94744 /* MemeCollectionShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		046478172CE3553B00C94744 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 046478162CE3553B00C94744 /* RealmSwift */; };
+		046478182CE3553B00C94744 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 046478162CE3553B00C94744 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		046478232CE358AA00C94744 /* AddVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775E2CDDF69B0079F951 /* AddVideoViewController.swift */; };
+		046478242CE358AF00C94744 /* MemesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77682CDDF69B0079F951 /* MemesViewModel.swift */; };
+		046478252CE358B700C94744 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77652CDDF69B0079F951 /* DataBaseManager.swift */; };
+		046478262CE358D300C94744 /* TextInputComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77622CDDF69B0079F951 /* TextInputComponent.swift */; };
+		046478272CE358DC00C94744 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77572CDDF69B0079F951 /* Video.swift */; };
+		046478282CE358F400C94744 /* RealmVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77552CDDF69B0079F951 /* RealmVideo.swift */; };
+		046478292CE3590D00C94744 /* ModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77522CDDF69B0079F951 /* ModelProtocol.swift */; };
+		0464782A2CE3591D00C94744 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77642CDDF69B0079F951 /* AddVideoViewModel.swift */; };
+		0464782B2CE3593100C94744 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77662CDDF69B0079F951 /* ImageManager.swift */; };
+		0464782C2CE3596600C94744 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77512CDDF69B0079F951 /* Category.swift */; };
+		0464782D2CE3597500C94744 /* RealmCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77542CDDF69B0079F951 /* RealmCategory.swift */; };
+		0464783C2CE4CEE900C94744 /* SelectCategoryComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464783B2CE4CEE900C94744 /* SelectCategoryComponent.swift */; };
+		0464783D2CE4CEE900C94744 /* SelectCategoryComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464783B2CE4CEE900C94744 /* SelectCategoryComponent.swift */; };
+		046478432CE728E500C94744 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478422CE728E500C94744 /* NotificationName.swift */; };
+		046478442CE728E500C94744 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478422CE728E500C94744 /* NotificationName.swift */; };
 		049B77732CDDF69B0079F951 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77512CDDF69B0079F951 /* Category.swift */; };
 		049B77742CDDF69B0079F951 /* ModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77522CDDF69B0079F951 /* ModelProtocol.swift */; };
 		049B77752CDDF69B0079F951 /* RealmCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77532CDDF69B0079F951 /* RealmCategories.swift */; };
@@ -62,6 +79,17 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		046478142CE3553B00C94744 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				046478182CE3553B00C94744 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04B23EB32CCC9F0C0047DCAE /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -77,6 +105,9 @@
 
 /* Begin PBXFileReference section */
 		046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MemeCollectionShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0464783B2CE4CEE900C94744 /* SelectCategoryComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCategoryComponent.swift; sourceTree = "<group>"; };
+		0464783E2CE5977D00C94744 /* MemeCollection.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MemeCollection.entitlements; sourceTree = "<group>"; };
+		046478422CE728E500C94744 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		049B77512CDDF69B0079F951 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		049B77522CDDF69B0079F951 /* ModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelProtocol.swift; sourceTree = "<group>"; };
 		049B77532CDDF69B0079F951 /* RealmCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmCategories.swift; sourceTree = "<group>"; };
@@ -135,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				046478172CE3553B00C94744 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +181,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		046478112CE3553B00C94744 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		049B77582CDDF69B0079F951 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +229,7 @@
 		049B77692CDDF69B0079F951 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				049B77712CDDF69B0079F951 /* ViewModelProtocol.swift */,
 				049B77642CDDF69B0079F951 /* AddVideoViewModel.swift */,
 				049B77652CDDF69B0079F951 /* DataBaseManager.swift */,
 				049B77662CDDF69B0079F951 /* ImageManager.swift */,
@@ -202,10 +242,11 @@
 		049B77722CDDF69B0079F951 /* MemeCollection */ = {
 			isa = PBXGroup;
 			children = (
+				0464783E2CE5977D00C94744 /* MemeCollection.entitlements */,
 				049B776A2CDDF69B0079F951 /* AppDelegate.swift */,
+				046478422CE728E500C94744 /* NotificationName.swift */,
 				049B77702CDDF69B0079F951 /* SceneDelegate.swift */,
 				049B776C2CDDF69B0079F951 /* CellProtocol.swift */,
-				049B77712CDDF69B0079F951 /* ViewModelProtocol.swift */,
 				049B77582CDDF69B0079F951 /* Model */,
 				049B77632CDDF69B0079F951 /* View */,
 				049B77692CDDF69B0079F951 /* ViewModel */,
@@ -221,6 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				049B77622CDDF69B0079F951 /* TextInputComponent.swift */,
+				0464783B2CE4CEE900C94744 /* SelectCategoryComponent.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -230,6 +272,7 @@
 			children = (
 				049B77722CDDF69B0079F951 /* MemeCollection */,
 				046478022CE330D100C94744 /* MemeCollectionShareExtension */,
+				046478112CE3553B00C94744 /* Frameworks */,
 				04A38C1D2CBD3A38008A9D02 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -253,6 +296,7 @@
 				046477FD2CE330D100C94744 /* Sources */,
 				046477FE2CE330D100C94744 /* Frameworks */,
 				046477FF2CE330D100C94744 /* Resources */,
+				046478142CE3553B00C94744 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -263,6 +307,7 @@
 			);
 			name = MemeCollectionShareExtension;
 			packageProductDependencies = (
+				046478162CE3553B00C94744 /* RealmSwift */,
 			);
 			productName = MemeCollectionShareExtension;
 			productReference = 046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */;
@@ -357,6 +402,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0464782A2CE3591D00C94744 /* AddVideoViewModel.swift in Sources */,
+				0464782B2CE3593100C94744 /* ImageManager.swift in Sources */,
+				046478252CE358B700C94744 /* DataBaseManager.swift in Sources */,
+				046478292CE3590D00C94744 /* ModelProtocol.swift in Sources */,
+				046478272CE358DC00C94744 /* Video.swift in Sources */,
+				0464782D2CE3597500C94744 /* RealmCategory.swift in Sources */,
+				046478232CE358AA00C94744 /* AddVideoViewController.swift in Sources */,
+				046478242CE358AF00C94744 /* MemesViewModel.swift in Sources */,
+				046478262CE358D300C94744 /* TextInputComponent.swift in Sources */,
+				046478282CE358F400C94744 /* RealmVideo.swift in Sources */,
+				0464782C2CE3596600C94744 /* Category.swift in Sources */,
+				046478442CE728E500C94744 /* NotificationName.swift in Sources */,
+				0464783D2CE4CEE900C94744 /* SelectCategoryComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,7 +427,9 @@
 				049B77752CDDF69B0079F951 /* RealmCategories.swift in Sources */,
 				049B77762CDDF69B0079F951 /* RealmCategory.swift in Sources */,
 				049B77772CDDF69B0079F951 /* RealmVideo.swift in Sources */,
+				0464783C2CE4CEE900C94744 /* SelectCategoryComponent.swift in Sources */,
 				049B77782CDDF69B0079F951 /* TempStorage.swift in Sources */,
+				046478432CE728E500C94744 /* NotificationName.swift in Sources */,
 				049B77792CDDF69B0079F951 /* Video.swift in Sources */,
 				049B777A2CDDF69B0079F951 /* MemeEditListCell.swift in Sources */,
 				049B777B2CDDF69B0079F951 /* MemeGridCell.swift in Sources */,
@@ -417,6 +477,7 @@
 		0464780E2CE330D100C94744 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MemeCollectionShareExtension/MemeCollectionShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7492YXB292;
@@ -424,7 +485,7 @@
 				INFOPLIST_FILE = MemeCollectionShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MemeCollectionShareExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -443,6 +504,7 @@
 		0464780F2CE330D100C94744 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MemeCollectionShareExtension/MemeCollectionShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7492YXB292;
@@ -450,7 +512,7 @@
 				INFOPLIST_FILE = MemeCollectionShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MemeCollectionShareExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -471,6 +533,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MemeCollection/MemeCollection.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7492YXB292;
@@ -499,6 +562,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MemeCollection/MemeCollection.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7492YXB292;
@@ -685,6 +749,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		046478162CE3553B00C94744 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04B23EAD2CCC9E5B0047DCAE /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
 		04B23EB02CCC9E5B0047DCAE /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04B23EAD2CCC9E5B0047DCAE /* XCRemoteSwiftPackageReference "realm-swift" */;

@@ -32,7 +32,7 @@ class AddVideoViewController: UIViewController {
         guard let titleText = self.titleField.getText(),
               let linkText = self.linkField.getText() else { return }
         testLink(linkText)
-        testCanSave()
+//        testCanSave()
     }
     private lazy var startTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let startTimeText = self.startTimeField.getText() else { return }
@@ -178,6 +178,7 @@ extension AddVideoViewController {
         removeThumbnail()
         startTimeField.disableTextField()
         linkFlag = false
+        testCanSave()
     }
     
     private func testFailedByInvalidLink(error: LinkError) {
@@ -185,6 +186,7 @@ extension AddVideoViewController {
         linkField.setErrorUI(message: error.rawValue)
         startTimeField.disableTextField()
         linkFlag = false
+        testCanSave()
     }
     
     private func succeededGettingThumbnail(of thumbnailData: Data?) {
@@ -203,6 +205,7 @@ extension AddVideoViewController {
         linkField.setErrorUI(message: LinkError.keyError.rawValue)
         self.startTimeField.disableTextField()
         linkFlag = false
+        testCanSave()
     }
 }
 

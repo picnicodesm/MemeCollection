@@ -15,13 +15,13 @@ class ImageManager {
     private let fileManager = FileManager.default
 
     func saveImage(imageData: Data, as identifier: String) -> Bool {
-        guard let directoryPath = try? fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+        guard let directoryPath = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.MemeCollection.Share") else {
             return false
         }
         do {
-            print("directoryPath: \(directoryPath)")
+//            print("directoryPath: \(directoryPath)")
             let encodedIdentifier = identifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-            print("saving identifier: \(identifier)")
+//            print("saving identifier: \(identifier)")
             try imageData.write(to: directoryPath.appendingPathComponent(encodedIdentifier))
             return true
         } catch {
@@ -44,7 +44,8 @@ class ImageManager {
 
     /// If you encode the identifier, filemanager can't find a file cottectly. DON'T KNOW WHY
     func getSavedImage(of identifier: String) -> UIImage? {
-        guard let fileURL = getFileURL(of: identifier) else { return nil }
+        guard let fileURL = getFileURL(of: identifier) else {
+            return nil }
                 
         if fileManager.fileExists(atPath: fileURL.path()) {
             return UIImage(contentsOfFile: fileURL.path())
@@ -94,7 +95,7 @@ class ImageManager {
 
 extension ImageManager {
     private func getFileURL(of identifier: String) -> URL? {
-        guard let dir = try? fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
+        guard let dir = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.MemeCollection.Share") else { return nil }
         return dir.appending(path: identifier)
     }
 }

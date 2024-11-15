@@ -24,11 +24,16 @@ class MainViewController: UIViewController {
         case main
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        print("MainViewController will appear")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         configureDataSource()
         bind()
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: .checkVideoUpdateFromShareExtension, object: nil)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -63,6 +68,10 @@ class MainViewController: UIViewController {
                 navigationController?.pushViewController(destination, animated: true)
             }
             .store(in: &subscriptions)
+    }
+    
+    @objc func refreshData() {
+        viewModel.refreshCategory()
     }
 }
 

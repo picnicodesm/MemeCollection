@@ -124,31 +124,11 @@ class MemesViewModel {
             }
         }
     }
-    
+ 
+    func refreshMemes() {
+        guard let realmCategory = database.read(of: RealmCategory.self, with: category.getId()) else { return }
+        self.category = realmCategory.toStruct()
+        self.memes = self.category.getVideos(isFavorites: self.category.getIsForFavortie())
+    }
     
 }
-
-/*
- let label: UILabel = {
-     let label = UILabel()
-     label.text = "Hello Share Component"
-     label.translatesAutoresizingMaskIntoConstraints = false
-
-     return label
- }()
- 
- override func viewDidLoad() {
-     super.viewDidLoad()
-     configureLayout()
- }
- 
- func configureLayout() {
-     view.addSubview(label)
-     
-     NSLayoutConstraint.activate([
-         label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-         label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-     ])
- }
-
- */

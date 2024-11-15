@@ -43,6 +43,7 @@ class MemesViewController: UIViewController {
         configureView()
         configureGridDataSource()
         bind()
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: .checkVideoUpdateFromShareExtension, object: nil)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -92,6 +93,10 @@ class MemesViewController: UIViewController {
                 destination.currentIndex = indexPath.item
                 self.navigationController?.pushViewController(destination, animated: true)
             }.store(in: &subscriptions)
+    }
+    
+    @objc func refreshData() {
+        memesVM.refreshMemes()
     }
     
     private struct Constants {
