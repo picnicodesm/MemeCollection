@@ -27,10 +27,8 @@
 		046478442CE728E500C94744 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478422CE728E500C94744 /* NotificationName.swift */; };
 		049B77732CDDF69B0079F951 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77512CDDF69B0079F951 /* Category.swift */; };
 		049B77742CDDF69B0079F951 /* ModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77522CDDF69B0079F951 /* ModelProtocol.swift */; };
-		049B77752CDDF69B0079F951 /* RealmCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77532CDDF69B0079F951 /* RealmCategories.swift */; };
 		049B77762CDDF69B0079F951 /* RealmCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77542CDDF69B0079F951 /* RealmCategory.swift */; };
 		049B77772CDDF69B0079F951 /* RealmVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77552CDDF69B0079F951 /* RealmVideo.swift */; };
-		049B77782CDDF69B0079F951 /* TempStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77562CDDF69B0079F951 /* TempStorage.swift */; };
 		049B77792CDDF69B0079F951 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77572CDDF69B0079F951 /* Video.swift */; };
 		049B777A2CDDF69B0079F951 /* MemeEditListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77592CDDF69B0079F951 /* MemeEditListCell.swift */; };
 		049B777B2CDDF69B0079F951 /* MemeGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775A2CDDF69B0079F951 /* MemeGridCell.swift */; };
@@ -110,10 +108,8 @@
 		046478422CE728E500C94744 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		049B77512CDDF69B0079F951 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		049B77522CDDF69B0079F951 /* ModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelProtocol.swift; sourceTree = "<group>"; };
-		049B77532CDDF69B0079F951 /* RealmCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmCategories.swift; sourceTree = "<group>"; };
 		049B77542CDDF69B0079F951 /* RealmCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmCategory.swift; sourceTree = "<group>"; };
 		049B77552CDDF69B0079F951 /* RealmVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmVideo.swift; sourceTree = "<group>"; };
-		049B77562CDDF69B0079F951 /* TempStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempStorage.swift; sourceTree = "<group>"; };
 		049B77572CDDF69B0079F951 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		049B77592CDDF69B0079F951 /* MemeEditListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeEditListCell.swift; sourceTree = "<group>"; };
 		049B775A2CDDF69B0079F951 /* MemeGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeGridCell.swift; sourceTree = "<group>"; };
@@ -194,10 +190,8 @@
 				049B77522CDDF69B0079F951 /* ModelProtocol.swift */,
 				049B77512CDDF69B0079F951 /* Category.swift */,
 				049B77572CDDF69B0079F951 /* Video.swift */,
-				049B77532CDDF69B0079F951 /* RealmCategories.swift */,
 				049B77542CDDF69B0079F951 /* RealmCategory.swift */,
 				049B77552CDDF69B0079F951 /* RealmVideo.swift */,
-				049B77562CDDF69B0079F951 /* TempStorage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -424,11 +418,9 @@
 			files = (
 				049B77732CDDF69B0079F951 /* Category.swift in Sources */,
 				049B77742CDDF69B0079F951 /* ModelProtocol.swift in Sources */,
-				049B77752CDDF69B0079F951 /* RealmCategories.swift in Sources */,
 				049B77762CDDF69B0079F951 /* RealmCategory.swift in Sources */,
 				049B77772CDDF69B0079F951 /* RealmVideo.swift in Sources */,
 				0464783C2CE4CEE900C94744 /* SelectCategoryComponent.swift in Sources */,
-				049B77782CDDF69B0079F951 /* TempStorage.swift in Sources */,
 				046478432CE728E500C94744 /* NotificationName.swift in Sources */,
 				049B77792CDDF69B0079F951 /* Video.swift in Sources */,
 				049B777A2CDDF69B0079F951 /* MemeEditListCell.swift in Sources */,

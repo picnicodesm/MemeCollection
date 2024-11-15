@@ -10,7 +10,6 @@ import WebKit
 
 class MemeVideoViewController: UIViewController {
     private var isMoved: Bool = false
-//    let viewAspectRatio: CGFloat = 16/9
     var webView: WKWebView!
     var memesVM: MemesViewModel!
     var currentIndex: Int! {

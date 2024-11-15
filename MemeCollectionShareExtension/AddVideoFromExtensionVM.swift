@@ -63,7 +63,6 @@ class AddVideoFromExtensionVM {
         let videoType = getVideoType(of: link)
         if videoType == .shorts { return "https://m.youtube.com/shorts/\(key)" }
         else {
-            print("given time: \(time)")
             return "https://m.youtube.com/watch?v=\(key)&t=\(time)s"
         }
     }
@@ -120,7 +119,7 @@ extension AddVideoFromExtensionVM {
                 return String(key)
             } else {
                 let key = urlString[firstDividerRange.upperBound...]
-                print("key: \(key) with divider \(firstDivider)")
+//                print("key: \(key) with divider \(firstDivider)")
                 return String(key)
             }
         }

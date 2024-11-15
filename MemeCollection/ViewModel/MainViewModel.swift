@@ -36,7 +36,6 @@ class MainViewModel: CategoryViewModel {
         
     func deleteCategory(_ deleteItem: Category) {
         if let deleteIndex = categories.firstIndex(of: deleteItem) {
-            print("deleteItem: \(deleteItem.getName()) having \(deleteItem.getId())")
             let deleteItemId = categories[deleteIndex].getId()
             categories.remove(at: deleteIndex)
             guard let deleteRealmItem = database.read(of: RealmCategory.self, with: deleteItemId) else { return }
