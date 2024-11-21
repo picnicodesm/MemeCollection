@@ -11,12 +11,6 @@ import RealmSwift
 import Combine
 import UniformTypeIdentifiers
 
-/*
- 따로 ViewModel과 전용 View를 만들고
- 해당 뷰에서 저장을 하면 그냥 해당 카텍고리의 리스트에 저장해버리기.
- 좋은데?
- */
-
 enum EndExtension: Error {
     case none
     case error
@@ -54,7 +48,8 @@ class ShareViewController: UIViewController {
     }
     
     private var linkFlag = false
-    private let addVideoVM = AddVideoFromExtensionVM()
+    private let testLinkVM = TestLinkViewModel()
+    private let videoManager = VideoManager()
     private let database = DataBaseManager.shared
     private var categories: [Category] {
         return database.read(RealmCategory.self).map { $0.toStruct() }
@@ -65,15 +60,7 @@ class ShareViewController: UIViewController {
     
     // Combine
     private var subscriptions = Set<AnyCancellable>()
-    
-    //    var addAction: ((Video) -> Void)?
-    //    var categoryId: UUID?
-    
-    /// Used when editMode is true for setting current video's information.
-    /// If this page is not edit mode, the property must be nil.
-    //    var currentVideo: Video? = nil
-    //    private var isEditMode = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         if database.read(RealmCategory.self).count == 1 {
@@ -84,12 +71,12 @@ class ShareViewController: UIViewController {
         bind()
         getLinkFromExtension()
         Task {
-            errorData = await addVideoVM.getErrorData()
+            errorData = await testLinkVM.getErrorData()
         }
     }
     
     private func bind() {
-        addVideoVM.$thumbnailData
+        testLinkVM.$thumbnailData
             .receive(on: RunLoop.main)
             .sink { error in
                 print(error)
@@ -125,15 +112,15 @@ extension ShareViewController {
               let startTimeText = startTimeField.getText(),
               let categoryId = menuButton.getSelectedItem()?.getId(),
               let index = database.read(of: RealmCategory.self, with: categoryId)?.videos.count,
-              let thumbnailData = addVideoVM.thumbnailData
+              let thumbnailData = testLinkVM.thumbnailData
         else {
             // Alert with message "save failed" and dismiss
             return }
         
         let imageManager = ImageManager.shared
         let startTime = startTimeText == "" ? 0 : Int(startTimeText)!
-        let mobileLink = addVideoVM.getMobileLink(startFrom: startTime)!
-        let videoInfo = addVideoVM.getVideoInfo()
+        let mobileLink = testLinkVM.getMobileLink(startFrom: startTime)!
+        let videoInfo = testLinkVM.getVideoInfo()
         
         guard let (imageIdentifier, compressedImage) = imageManager.getCompleteIdentifier(of: thumbnailData, with: title) else {
             // comopressed failed
@@ -150,7 +137,7 @@ extension ShareViewController {
         
         let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: index, startTime: startTime)
         
-        addVideoVM.addVideo(newVideo, to: categoryId)
+        videoManager.addVideo(newVideo, to: categoryId)
         
         self.extensionContext?.cancelRequest(withError: EndExtension.none)
     }
@@ -197,11 +184,11 @@ extension ShareViewController {
     private func testLink(_ link: String) {
         linkField.removeErrorUI()
         if !link.isEmpty {
-            let (isSuccess, error, _, _, key) = addVideoVM.testLink(with: link)
+            let (isSuccess, error, _, _, key) = testLinkVM.testLink(with: link)
             
             if isSuccess {
                 Task {
-                    await addVideoVM.setThumbnail(with: key!)
+                    await testLinkVM.setThumbnail(with: key!)
                 }
             } else {
                 testFailedByInvalidLink(error: error!)
@@ -238,7 +225,7 @@ extension ShareViewController {
     
     private func succeededGettingThumbnail(of thumbnailData: Data?) {
         guard let thumbnailData = thumbnailData else { return }
-        guard let videoType = addVideoVM.getVideoInfo().videoType else { return }
+        guard let videoType = testLinkVM.getVideoInfo().videoType else { return }
         self.thumbnailImageView.image = UIImage(data: thumbnailData)
         if videoType == .video {
             self.startTimeField.enableTextField()
