@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class AddVideoViewController: UIViewController {
+class SetVideoViewController: UIViewController {
     
     private var textFieldsVStack: UIStackView!
     private var thumbnailVStack: UIStackView!
@@ -25,14 +25,12 @@ class AddVideoViewController: UIViewController {
                                                     type: .startTime)
     
     private lazy var titleTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
-        guard let titleText = self.titleField.getText() else { return }
         testCanSave()
     }
     private lazy var linkTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let titleText = self.titleField.getText(),
               let linkText = self.linkField.getText() else { return }
         testLink(linkText)
-//        testCanSave()
     }
     private lazy var startTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let startTimeText = self.startTimeField.getText() else { return }
@@ -40,7 +38,7 @@ class AddVideoViewController: UIViewController {
     }
     
     private var linkFlag = false
-    private let addVideoVM = AddVideoViewModel()
+    private let testLinkVM = TestLinkViewModel()
     var memesVM: MemesViewModel!
     
     /// Data for comparison with error data caused by an invalid key.
@@ -49,7 +47,6 @@ class AddVideoViewController: UIViewController {
     // Combine
     private var subscriptions = Set<AnyCancellable>()
     
-    var addAction: ((Video) -> Void)?
     var categoryId: UUID?
     
     /// Used when editMode is true for setting current video's information.
@@ -62,23 +59,21 @@ class AddVideoViewController: UIViewController {
         configureView()
         bind()
         Task {
-            errorData = await addVideoVM.getErrorData()
+            errorData = await testLinkVM.getErrorData()
         }
     }
     
     private func bind() {
-        addVideoVM.$thumbnailData
+        testLinkVM.$thumbnailData
             .receive(on: RunLoop.main)
-            .sink { error in
-                print(error)
-            } receiveValue: { [unowned self] thumbnailData in
+            .sink(receiveValue: { [unowned self] thumbnailData in
                 if (thumbnailData != nil && thumbnailData == errorData) {
                     failedGettingThumbnail()
                 }
-                else {
+                else { // thumbnailData는 nil이 되지 않는가?
                     succeededGettingThumbnail(of: thumbnailData)
                 }
-            }.store(in: &subscriptions)
+            }).store(in: &subscriptions)
     }
     
     func setToEditMode(with video: Video) {
@@ -90,39 +85,46 @@ class AddVideoViewController: UIViewController {
         static let sideInsets: CGFloat = 24
         static let topInsets: CGFloat = 16
         static let stackSpacing: CGFloat = 16
+        static let cornerRadius: CGFloat = 20
+        static let titleSpacing: CGFloat = 3
+        static let multiplier: CGFloat = 1.0
+        
+        struct Font {
+            static let fontSize: CGFloat = 16
+        }
     }
 }
 
 // MARK: - Actions
-extension AddVideoViewController {
+extension SetVideoViewController {
     
     @objc func doneTapped() {
         guard let title = titleField.getText(),
               let startTimeText = startTimeField.getText(),
               let categoryId = self.categoryId,
-              let thumbnailData = addVideoVM.thumbnailData
+              let thumbnailData = testLinkVM.thumbnailData
         else {
             // Alert with message "save failed" and dismiss
             return }
         
         let imageManager = ImageManager.shared
         let startTime = startTimeText == "" ? 0 : Int(startTimeText)!
-        let mobileLink = addVideoVM.getMobileLink(startFrom: startTime)!
-        let videoInfo = addVideoVM.getVideoInfo()
+        let mobileLink = testLinkVM.getMobileLink(startFrom: startTime)!
+        let videoInfo = testLinkVM.getVideoInfo()
         
         guard let (imageIdentifier, compressedImage) = imageManager.getCompleteIdentifier(of: thumbnailData, with: title) else {
             // comopressed failed
             return
         }
         
-        if let currentVideo = currentVideo {
-            if isEditMode {
-                let editVideo = Video(id: currentVideo.getId(), name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: currentVideo.getIsFavorite(), thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: currentVideo.getIndex(), favoriteIndex: currentVideo.getFavoriteIndex(), startTime: startTime)
-                
-                imageManager.removeImage(of: currentVideo.getThumbnailIdentifier())
-                addAction?(editVideo)
-                self.dismiss(animated: true)
-            }
+        if let currentVideo = currentVideo, isEditMode {
+            let editVideo = Video(id: currentVideo.getId(), name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: currentVideo.getIsFavorite(), thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: currentVideo.getIndex(), favoriteIndex: currentVideo.getFavoriteIndex(), startTime: startTime)
+            
+            imageManager.removeImage(of: currentVideo.getThumbnailIdentifier())
+            memesVM.editVideo(editVideo)
+            let _ = imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
+            self.dismiss(animated: true)
+            return
         }
         
         guard imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
@@ -133,7 +135,7 @@ extension AddVideoViewController {
         
         let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: memesVM.memes.count, startTime: startTime)
         
-        addAction?(newVideo)
+        memesVM.addVideo(newVideo)
         self.dismiss(animated: true)
     }
     
@@ -142,15 +144,15 @@ extension AddVideoViewController {
     }
 }
 
-extension AddVideoViewController {
+extension SetVideoViewController {
     private func testLink(_ link: String) {
+        linkField.removeErrorUI()
         if !link.isEmpty {
-            let (isSuccess, error, _, _, key) = addVideoVM.testLink(with: link)
+            let (isSuccess, error, _, _, key) = testLinkVM.testLink(with: link)
             
             if isSuccess {
-                linkField.removeErrorUI()
                 Task {
-                    await addVideoVM.setThumbnail(with: key!)
+                    await testLinkVM.setThumbnail(with: key!)
                 }
             } else {
                 testFailedByInvalidLink(error: error!)
@@ -174,7 +176,6 @@ extension AddVideoViewController {
     }
     
     private func testFailedByEmptyText() {
-        linkField.removeErrorUI()
         removeThumbnail()
         startTimeField.disableTextField()
         linkFlag = false
@@ -182,16 +183,13 @@ extension AddVideoViewController {
     }
     
     private func testFailedByInvalidLink(error: LinkError) {
-        removeThumbnail()
         linkField.setErrorUI(message: error.rawValue)
-        startTimeField.disableTextField()
-        linkFlag = false
-        testCanSave()
+        testFailedByEmptyText()
     }
     
     private func succeededGettingThumbnail(of thumbnailData: Data?) {
         guard let thumbnailData = thumbnailData else { return }
-        guard let videoType = addVideoVM.getVideoInfo().videoType else { return }
+        guard let videoType = testLinkVM.getVideoInfo().videoType else { return }
         self.thumbnailImageView.image = UIImage(data: thumbnailData)
         if videoType == .video {
             self.startTimeField.enableTextField()
@@ -201,16 +199,13 @@ extension AddVideoViewController {
     }
     
     private func failedGettingThumbnail() {
-        removeThumbnail()
         linkField.setErrorUI(message: LinkError.keyError.rawValue)
-        self.startTimeField.disableTextField()
-        linkFlag = false
-        testCanSave()
+        testFailedByEmptyText()
     }
 }
 
 // MARK: - View
-extension AddVideoViewController {
+extension SetVideoViewController {
     private func configureView() {
         view.backgroundColor = .systemGray6
         self.navigationItem.title = isEditMode ? "Edit Video" : "New Video"
@@ -270,7 +265,7 @@ extension AddVideoViewController {
         thumbnailVStack = UIStackView()
         thumbnailVStack.translatesAutoresizingMaskIntoConstraints = false
         thumbnailVStack.axis = .vertical
-        thumbnailVStack.spacing = 3
+        thumbnailVStack.spacing = Constants.titleSpacing
         
         view.addSubview(thumbnailVStack)
         
@@ -283,14 +278,14 @@ extension AddVideoViewController {
             thumbnailVStack.topAnchor.constraint(equalTo: textFieldsVStack.bottomAnchor, constant: Constants.stackSpacing),
             thumbnailVStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
             thumbnailVStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideInsets),
-            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: 1.0)
+            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: Constants.multiplier)
         ])
     }
     
     private func configureThumbnailLabel() {
         thumbnailLabel = UILabel()
         thumbnailLabel.text = "THUMBNAIL"
-        thumbnailLabel.font = .systemFont(ofSize: 16)
+        thumbnailLabel.font = .systemFont(ofSize: Constants.Font.fontSize)
         thumbnailLabel.textColor = .lightGray
     }
     
@@ -298,7 +293,7 @@ extension AddVideoViewController {
         thumbnailImageView = UIImageView()
         thumbnailImageView.image = nil
         thumbnailImageView.backgroundColor = .lightGray
-        thumbnailImageView.layer.cornerRadius = 20
+        thumbnailImageView.layer.cornerRadius = Constants.cornerRadius
         thumbnailImageView.clipsToBounds = true
     }
 }

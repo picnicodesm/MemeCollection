@@ -25,6 +25,7 @@ class MemeVideoViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.toolbar.barStyle = .black
     }
     
     override func viewDidLoad() {
@@ -35,6 +36,7 @@ class MemeVideoViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.toolbar.barStyle = .default
     }
     
 }
@@ -85,8 +87,6 @@ extension MemeVideoViewController {
     
     private func configureToolbar() {
         self.navigationController?.isToolbarHidden = false
-        guard let toolbar = self.navigationController?.toolbar else { return }
-        toolbar.barStyle = .black
         let buttonSize = CGRect(x: 0, y: 0, width: 100, height: 0)
         
     

@@ -10,14 +10,14 @@
 		0464780B2CE330D100C94744 /* MemeCollectionShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		046478172CE3553B00C94744 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 046478162CE3553B00C94744 /* RealmSwift */; };
 		046478182CE3553B00C94744 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 046478162CE3553B00C94744 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		046478232CE358AA00C94744 /* AddVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775E2CDDF69B0079F951 /* AddVideoViewController.swift */; };
+		046478232CE358AA00C94744 /* SetVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775E2CDDF69B0079F951 /* SetVideoViewController.swift */; };
 		046478242CE358AF00C94744 /* MemesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77682CDDF69B0079F951 /* MemesViewModel.swift */; };
 		046478252CE358B700C94744 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77652CDDF69B0079F951 /* DataBaseManager.swift */; };
 		046478262CE358D300C94744 /* TextInputComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77622CDDF69B0079F951 /* TextInputComponent.swift */; };
 		046478272CE358DC00C94744 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77572CDDF69B0079F951 /* Video.swift */; };
 		046478282CE358F400C94744 /* RealmVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77552CDDF69B0079F951 /* RealmVideo.swift */; };
 		046478292CE3590D00C94744 /* ModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77522CDDF69B0079F951 /* ModelProtocol.swift */; };
-		0464782A2CE3591D00C94744 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77642CDDF69B0079F951 /* AddVideoViewModel.swift */; };
+		0464782A2CE3591D00C94744 /* TestLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77642CDDF69B0079F951 /* TestLinkViewModel.swift */; };
 		0464782B2CE3593100C94744 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77662CDDF69B0079F951 /* ImageManager.swift */; };
 		0464782C2CE3596600C94744 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77512CDDF69B0079F951 /* Category.swift */; };
 		0464782D2CE3597500C94744 /* RealmCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77542CDDF69B0079F951 /* RealmCategory.swift */; };
@@ -25,6 +25,8 @@
 		0464783D2CE4CEE900C94744 /* SelectCategoryComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464783B2CE4CEE900C94744 /* SelectCategoryComponent.swift */; };
 		046478432CE728E500C94744 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478422CE728E500C94744 /* NotificationName.swift */; };
 		046478442CE728E500C94744 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478422CE728E500C94744 /* NotificationName.swift */; };
+		046478642CEF115900C94744 /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478632CEF115900C94744 /* VideoManager.swift */; };
+		046478652CEF115900C94744 /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478632CEF115900C94744 /* VideoManager.swift */; };
 		049B77732CDDF69B0079F951 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77512CDDF69B0079F951 /* Category.swift */; };
 		049B77742CDDF69B0079F951 /* ModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77522CDDF69B0079F951 /* ModelProtocol.swift */; };
 		049B77762CDDF69B0079F951 /* RealmCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77542CDDF69B0079F951 /* RealmCategory.swift */; };
@@ -33,13 +35,13 @@
 		049B777A2CDDF69B0079F951 /* MemeEditListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77592CDDF69B0079F951 /* MemeEditListCell.swift */; };
 		049B777B2CDDF69B0079F951 /* MemeGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775A2CDDF69B0079F951 /* MemeGridCell.swift */; };
 		049B777C2CDDF69B0079F951 /* MemeListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775B2CDDF69B0079F951 /* MemeListCell.swift */; };
-		049B777D2CDDF69B0079F951 /* AddCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775D2CDDF69B0079F951 /* AddCategoryViewController.swift */; };
-		049B777E2CDDF69B0079F951 /* AddVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775E2CDDF69B0079F951 /* AddVideoViewController.swift */; };
+		049B777D2CDDF69B0079F951 /* SetCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775D2CDDF69B0079F951 /* SetCategoryViewController.swift */; };
+		049B777E2CDDF69B0079F951 /* SetVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775E2CDDF69B0079F951 /* SetVideoViewController.swift */; };
 		049B777F2CDDF69B0079F951 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775F2CDDF69B0079F951 /* MainViewController.swift */; };
 		049B77802CDDF69B0079F951 /* MemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77602CDDF69B0079F951 /* MemesViewController.swift */; };
 		049B77812CDDF69B0079F951 /* MemeVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77612CDDF69B0079F951 /* MemeVideoViewController.swift */; };
 		049B77822CDDF69B0079F951 /* TextInputComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77622CDDF69B0079F951 /* TextInputComponent.swift */; };
-		049B77832CDDF69B0079F951 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77642CDDF69B0079F951 /* AddVideoViewModel.swift */; };
+		049B77832CDDF69B0079F951 /* TestLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77642CDDF69B0079F951 /* TestLinkViewModel.swift */; };
 		049B77842CDDF69B0079F951 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77652CDDF69B0079F951 /* DataBaseManager.swift */; };
 		049B77852CDDF69B0079F951 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77662CDDF69B0079F951 /* ImageManager.swift */; };
 		049B77862CDDF69B0079F951 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77672CDDF69B0079F951 /* MainViewModel.swift */; };
@@ -106,6 +108,7 @@
 		0464783B2CE4CEE900C94744 /* SelectCategoryComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCategoryComponent.swift; sourceTree = "<group>"; };
 		0464783E2CE5977D00C94744 /* MemeCollection.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MemeCollection.entitlements; sourceTree = "<group>"; };
 		046478422CE728E500C94744 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
+		046478632CEF115900C94744 /* VideoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoManager.swift; sourceTree = "<group>"; };
 		049B77512CDDF69B0079F951 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		049B77522CDDF69B0079F951 /* ModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelProtocol.swift; sourceTree = "<group>"; };
 		049B77542CDDF69B0079F951 /* RealmCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmCategory.swift; sourceTree = "<group>"; };
@@ -114,13 +117,13 @@
 		049B77592CDDF69B0079F951 /* MemeEditListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeEditListCell.swift; sourceTree = "<group>"; };
 		049B775A2CDDF69B0079F951 /* MemeGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeGridCell.swift; sourceTree = "<group>"; };
 		049B775B2CDDF69B0079F951 /* MemeListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeListCell.swift; sourceTree = "<group>"; };
-		049B775D2CDDF69B0079F951 /* AddCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryViewController.swift; sourceTree = "<group>"; };
-		049B775E2CDDF69B0079F951 /* AddVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewController.swift; sourceTree = "<group>"; };
+		049B775D2CDDF69B0079F951 /* SetCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCategoryViewController.swift; sourceTree = "<group>"; };
+		049B775E2CDDF69B0079F951 /* SetVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetVideoViewController.swift; sourceTree = "<group>"; };
 		049B775F2CDDF69B0079F951 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		049B77602CDDF69B0079F951 /* MemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemesViewController.swift; sourceTree = "<group>"; };
 		049B77612CDDF69B0079F951 /* MemeVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeVideoViewController.swift; sourceTree = "<group>"; };
 		049B77622CDDF69B0079F951 /* TextInputComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputComponent.swift; sourceTree = "<group>"; };
-		049B77642CDDF69B0079F951 /* AddVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewModel.swift; sourceTree = "<group>"; };
+		049B77642CDDF69B0079F951 /* TestLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLinkViewModel.swift; sourceTree = "<group>"; };
 		049B77652CDDF69B0079F951 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		049B77662CDDF69B0079F951 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		049B77672CDDF69B0079F951 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -210,8 +213,8 @@
 			isa = PBXGroup;
 			children = (
 				049B775C2CDDF69B0079F951 /* Cell */,
-				049B775D2CDDF69B0079F951 /* AddCategoryViewController.swift */,
-				049B775E2CDDF69B0079F951 /* AddVideoViewController.swift */,
+				049B775D2CDDF69B0079F951 /* SetCategoryViewController.swift */,
+				049B775E2CDDF69B0079F951 /* SetVideoViewController.swift */,
 				049B775F2CDDF69B0079F951 /* MainViewController.swift */,
 				049B77602CDDF69B0079F951 /* MemesViewController.swift */,
 				049B77612CDDF69B0079F951 /* MemeVideoViewController.swift */,
@@ -224,9 +227,10 @@
 			isa = PBXGroup;
 			children = (
 				049B77712CDDF69B0079F951 /* ViewModelProtocol.swift */,
-				049B77642CDDF69B0079F951 /* AddVideoViewModel.swift */,
+				049B77642CDDF69B0079F951 /* TestLinkViewModel.swift */,
 				049B77652CDDF69B0079F951 /* DataBaseManager.swift */,
 				049B77662CDDF69B0079F951 /* ImageManager.swift */,
+				046478632CEF115900C94744 /* VideoManager.swift */,
 				049B77672CDDF69B0079F951 /* MainViewModel.swift */,
 				049B77682CDDF69B0079F951 /* MemesViewModel.swift */,
 			);
@@ -396,19 +400,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0464782A2CE3591D00C94744 /* AddVideoViewModel.swift in Sources */,
+				0464782A2CE3591D00C94744 /* TestLinkViewModel.swift in Sources */,
 				0464782B2CE3593100C94744 /* ImageManager.swift in Sources */,
 				046478252CE358B700C94744 /* DataBaseManager.swift in Sources */,
 				046478292CE3590D00C94744 /* ModelProtocol.swift in Sources */,
 				046478272CE358DC00C94744 /* Video.swift in Sources */,
 				0464782D2CE3597500C94744 /* RealmCategory.swift in Sources */,
-				046478232CE358AA00C94744 /* AddVideoViewController.swift in Sources */,
+				046478232CE358AA00C94744 /* SetVideoViewController.swift in Sources */,
 				046478242CE358AF00C94744 /* MemesViewModel.swift in Sources */,
 				046478262CE358D300C94744 /* TextInputComponent.swift in Sources */,
 				046478282CE358F400C94744 /* RealmVideo.swift in Sources */,
 				0464782C2CE3596600C94744 /* Category.swift in Sources */,
 				046478442CE728E500C94744 /* NotificationName.swift in Sources */,
 				0464783D2CE4CEE900C94744 /* SelectCategoryComponent.swift in Sources */,
+				046478652CEF115900C94744 /* VideoManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,13 +431,14 @@
 				049B777A2CDDF69B0079F951 /* MemeEditListCell.swift in Sources */,
 				049B777B2CDDF69B0079F951 /* MemeGridCell.swift in Sources */,
 				049B777C2CDDF69B0079F951 /* MemeListCell.swift in Sources */,
-				049B777D2CDDF69B0079F951 /* AddCategoryViewController.swift in Sources */,
-				049B777E2CDDF69B0079F951 /* AddVideoViewController.swift in Sources */,
+				049B777D2CDDF69B0079F951 /* SetCategoryViewController.swift in Sources */,
+				049B777E2CDDF69B0079F951 /* SetVideoViewController.swift in Sources */,
 				049B777F2CDDF69B0079F951 /* MainViewController.swift in Sources */,
 				049B77802CDDF69B0079F951 /* MemesViewController.swift in Sources */,
 				049B77812CDDF69B0079F951 /* MemeVideoViewController.swift in Sources */,
 				049B77822CDDF69B0079F951 /* TextInputComponent.swift in Sources */,
-				049B77832CDDF69B0079F951 /* AddVideoViewModel.swift in Sources */,
+				049B77832CDDF69B0079F951 /* TestLinkViewModel.swift in Sources */,
+				046478642CEF115900C94744 /* VideoManager.swift in Sources */,
 				049B77842CDDF69B0079F951 /* DataBaseManager.swift in Sources */,
 				049B77852CDDF69B0079F951 /* ImageManager.swift in Sources */,
 				049B77862CDDF69B0079F951 /* MainViewModel.swift in Sources */,

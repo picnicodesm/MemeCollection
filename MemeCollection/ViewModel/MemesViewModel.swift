@@ -13,8 +13,9 @@ class MemesViewModel {
     var category: Category
     private var subscriptions = Set<AnyCancellable>()
     private let database = DataBaseManager.shared
+    private let videoManager = VideoManager()
     
-    init(with category: Category) {
+    init(of category: Category) {
         self.category = category
         self.memes = category.getVideos(isFavorites: category.getIsForFavortie())
     }
@@ -23,108 +24,48 @@ class MemesViewModel {
         return memes.count
     }
     
-//    func updateData() {
-//        self.memes = TempStorage.shared.getDatas(of: category)
-//    }
-//    
-//    private func setData(with category: Category) {
-//        memes = Video.mock.filter { $0.getCategoryId() == category.getId() }
-//    }
-    
     func addVideo(_ video: Video) {
         memes.append(video)
-        let realmVideo = video.managedObject()
-        let categoryId = category.getId()
-        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
-            database.update(realmVideo) { realmVideo in
-                realmCategory.videos.append(realmVideo)
-            }
-        }
+        videoManager.addVideo(video, to: category.getId())
     }
     
     func deleteVideo(_ video: Video) {
         guard let deleteIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
         memes.remove(at: deleteIndex)
-
-        if let deleteItem = database.read(of: RealmVideo.self, with: video.getId()) {
-            database.delete(deleteItem)
-        }
-        ImageManager.shared.removeImage(of: video.getThumbnailIdentifier())
-        
+        videoManager.deleteVideo(video)
         updateVideoOrder(to: memes)
     }
     
     func editVideo(_ video: Video) {
         guard let editIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
         memes[editIndex] = video
-        
-        let categoryId = category.getId()
-        if let realmCategory = database.read(of: RealmCategory.self, with: categoryId) {
-            if let editVideo = realmCategory.videos.first(where: { $0.id == video.getId() }) {
-                database.update {
-                    editVideo.name = video.getName()
-                    editVideo.urlString = video.getUrlString()
-                    editVideo.type = video.getVideoType().rawValue
-                    editVideo.isFavorite = video.getIsFavorite()
-                    editVideo.thumbnailIdentifier = video.getThumbnailIdentifier()
-                    editVideo.categoryId = video.getCategoryId()
-                    editVideo.startTime = Int(video.getStartTime())!
-                }
-            }
-        }
+      
+        videoManager.editVideo(video, in: category.getId())
     }
     
     func toggleFavorite(of video: Video) {
         guard let editIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
         memes[editIndex].toggleIsFavorite()
-
-        guard let editVideo = database.read(of: RealmVideo.self, with: video.getId()) else { return }
-        guard let favoriteCategory = database.read(RealmCategory.self).first(where: { $0.isForFavorites == true }) else { return }
+        let changedState = memes[editIndex].getIsFavorite()
         
-        database.update {
-            editVideo.isFavorite = !video.getIsFavorite()
-        }
+        videoManager.changeFavorite(of: video, to: changedState)
         
-        if editVideo.isFavorite == true {
-            database.update {
-                editVideo.favoritesIndex = favoriteCategory.videos.count
-                favoriteCategory.videos.append(editVideo)
-            }
-        } else {
-            database.update { [unowned self] in
-                if let removeRealmIndex = favoriteCategory.videos.firstIndex(where: { $0.id == video.getId() }),
-                    let removeIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) {
-                    editVideo.favoritesIndex = -1
-                    favoriteCategory.videos.remove(at: removeRealmIndex)
-                    if self.category.getIsForFavortie() {
-                        memes.remove(at: removeIndex)
-                    }
-                }
+        if !changedState {
+            if category.getIsForFavortie() {
+                memes.remove(at: editIndex)
+                videoManager.updateVideoOrder(using: memes, isFavoriteCategory: category.getIsForFavortie())
+            } else {
+                videoManager.updateVideosOrderInFavorites()
             }
         }
-        
-        if !editVideo.isFavorite && category.getIsForFavortie() {
-            updateVideoOrder(to: memes)
-        }
-        
     }
     
     func updateVideoOrder(to orderedVideos: [Video]) {
         self.memes = orderedVideos
-        
-        for (index, video) in orderedVideos.enumerated() {
-            if let willBeEditedVideo = database.read(of: RealmVideo.self, with: video.getId()) {
-                database.update { [unowned self] in
-                    if self.category.getIsForFavortie() {
-                        willBeEditedVideo.favoritesIndex = index
-                    } else {
-                        willBeEditedVideo.index = index
-                    }
-                }
-            }
-        }
+        videoManager.updateVideoOrder(using: orderedVideos, isFavoriteCategory: category.getIsForFavortie())
     }
  
+    /// Used when video is added from extension.
     func refreshMemes() {
         guard let realmCategory = database.read(of: RealmCategory.self, with: category.getId()) else { return }
         self.category = realmCategory.toStruct()

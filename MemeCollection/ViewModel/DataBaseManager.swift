@@ -93,6 +93,18 @@ final class DataBaseManager: DataBase {
         }
     }
     
+    func delete<T: Object>(_ object: T, completion: @escaping () -> ()) {
+        do {
+            try database.write {
+                database.delete(object)
+                completion()
+            }
+
+        } catch let error {
+            print(error)
+        }
+    }
+    
     func delete<T: Object>(_ objects: Results<T>) {
            do {
                try database.write {

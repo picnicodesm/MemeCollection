@@ -11,7 +11,7 @@ protocol CategoryViewModel {
     
     func addCategory(_ newCategory: Category)
     
-    func deleteCategory(_ deleteItem: Category)
+    func deleteCategory(_ deleteItem: IndexPath)
     
     func updateCategoryOrder(to orderedCategory: [Category])
 }

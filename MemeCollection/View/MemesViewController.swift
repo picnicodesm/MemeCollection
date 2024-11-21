@@ -33,9 +33,7 @@ class MemesViewController: UIViewController {
     
     // Combine
     private var subscriptions = Set<AnyCancellable>()
-    private let addVideoSubject = PassthroughSubject<Video, Never>()
     private let deleteVideoSubject = PassthroughSubject<IndexPath, Never>()
-    private let editVideoSubject = PassthroughSubject<Video, Never>()
     private let itemSelectedSubject = PassthroughSubject<IndexPath, Never>()
     
     override func viewDidLoad() {
@@ -70,20 +68,10 @@ class MemesViewController: UIViewController {
                 categoryUpdateHandler?(true)
             }.store(in: &subscriptions)
         
-        addVideoSubject
-            .sink { [unowned self] video in
-                self.memesVM.addVideo(video)
-            }.store(in: &subscriptions)
-        
         deleteVideoSubject
             .sink { [unowned self] indexPath in
                 let deleteItem = self.memesVM.memes[indexPath.item]
                 self.memesVM.deleteVideo(deleteItem)
-            }.store(in: &subscriptions)
-        
-        editVideoSubject
-            .sink { [unowned self] editedVideo in
-                self.memesVM.editVideo(editedVideo)
             }.store(in: &subscriptions)
         
         itemSelectedSubject
@@ -127,25 +115,25 @@ extension MemesViewController {
     
     private func openAddVideoPage() -> UIAction {
         return UIAction { [weak self] _ in
-            let destination = AddVideoViewController()
+            let destination = SetVideoViewController()
             destination.categoryId = self?.category.getId()
             destination.memesVM = self?.memesVM
-            destination.addAction = { [weak self] newVideo in
-                self?.addVideoSubject.send(newVideo)
-            }
+//            destination.addAction = { [weak self] newVideo in
+//                self?.addVideoSubject.send(newVideo)
+//            }
             let navigationVC = UINavigationController(rootViewController: destination)
             self?.present(navigationVC, animated: true)
         }
     }
     
     private func openEditVideoPage(of video: Video) {
-        let destination = AddVideoViewController()
+        let destination = SetVideoViewController()
         destination.categoryId = self.category.getId()
         destination.memesVM = self.memesVM
         destination.setToEditMode(with: video)
-        destination.addAction = { [weak self] editedVideo in
-            self?.editVideoSubject.send(editedVideo)
-        }
+//        destination.addAction = { [weak self] editedVideo in
+//            self?.editVideoSubject.send(editedVideo)
+//        }
         let navigationVC = UINavigationController(rootViewController: destination)
         self.present(navigationVC, animated: true)
     }
@@ -411,7 +399,7 @@ extension MemesViewController {
     }
 }
 
-
+// MARK: - Delegate
 extension MemesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.collectionView.deselectItem(at: indexPath, animated: false)

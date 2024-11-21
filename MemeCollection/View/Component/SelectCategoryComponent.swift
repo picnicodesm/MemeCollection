@@ -70,7 +70,7 @@ extension SelectCategoryComponent {
         
         let categories = database.read(RealmCategory.self)
         
-        if categories.count == 1 {
+        if categories.count == 1 && categories.first!.isForFavorites {
             return
         } else {
             if let firstIndex = categories.firstIndex(where: { $0.isForFavorites != true }) {
@@ -85,9 +85,7 @@ extension SelectCategoryComponent {
             let title = category.toStruct().getName()
             children.append(UIAction(title: title, handler: actionClosure))
         }
-    
-        
-            
+ 
         menuButton.menu = UIMenu(options: .displayInline, children: children)
         
         menuButton.showsMenuAsPrimaryAction = true

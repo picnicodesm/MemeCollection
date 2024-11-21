@@ -107,6 +107,13 @@ class ShareViewController: UIViewController {
         static let sideInsets: CGFloat = 24
         static let topInsets: CGFloat = 16
         static let stackSpacing: CGFloat = 16
+        static let cornerRadius: CGFloat = 20
+        static let titleSpacing: CGFloat = 3
+        static let multiplier: CGFloat = 1.0
+        
+        struct Font {
+            static let fontSize: CGFloat = 16
+        }
     }
 }
 
@@ -148,8 +155,7 @@ extension ShareViewController {
         self.extensionContext?.cancelRequest(withError: EndExtension.none)
     }
     
-    @objc func cancelTapped() { // -> change to Action
-        print("cacel tapped")
+    @objc func cancelTapped() {
         self.extensionContext?.cancelRequest(withError: EndExtension.none)
     }
 }
@@ -176,7 +182,7 @@ extension ShareViewController {
         if itemProvider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
             itemProvider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { (url, error) in
                 if let shareURL = url as? URL {
-                    print("공유된 URL: \(shareURL)")
+//                    print("공유된 URL: \(shareURL)")
                     DispatchQueue.main.async {
                         self.linkField.setText(to: shareURL.absoluteString)
                     }
@@ -189,11 +195,11 @@ extension ShareViewController {
     }
     
     private func testLink(_ link: String) {
+        linkField.removeErrorUI()
         if !link.isEmpty {
             let (isSuccess, error, _, _, key) = addVideoVM.testLink(with: link)
             
             if isSuccess {
-                linkField.removeErrorUI()
                 Task {
                     await addVideoVM.setThumbnail(with: key!)
                 }
@@ -212,16 +218,13 @@ extension ShareViewController {
     private func testCanSave() {
         guard let titleText = self.titleField.getText() else { return }
         if !titleText.isEmpty && linkFlag {
-            print("can save")
             navigationBar.items?[0].rightBarButtonItem?.isEnabled = true
         } else {
-            print("can't save")
             navigationBar.items?[0].rightBarButtonItem?.isEnabled = false
         }
     }
     
     private func testFailedByEmptyText() {
-        linkField.removeErrorUI()
         removeThumbnail()
         startTimeField.disableTextField()
         linkFlag = false
@@ -229,11 +232,8 @@ extension ShareViewController {
     }
     
     private func testFailedByInvalidLink(error: LinkError) {
-        removeThumbnail()
         linkField.setErrorUI(message: error.rawValue)
-        startTimeField.disableTextField()
-        linkFlag = false
-        testCanSave()
+        testFailedByEmptyText()
     }
     
     private func succeededGettingThumbnail(of thumbnailData: Data?) {
@@ -248,11 +248,8 @@ extension ShareViewController {
     }
     
     private func failedGettingThumbnail() {
-        removeThumbnail()
         linkField.setErrorUI(message: LinkError.keyError.rawValue)
-        self.startTimeField.disableTextField()
-        linkFlag = false
-        testCanSave()
+        testFailedByEmptyText()
     }
 }
 
@@ -312,7 +309,7 @@ extension ShareViewController {
         thumbnailVStack = UIStackView()
         thumbnailVStack.translatesAutoresizingMaskIntoConstraints = false
         thumbnailVStack.axis = .vertical
-        thumbnailVStack.spacing = 3
+        thumbnailVStack.spacing = Constants.titleSpacing
         
         view.addSubview(thumbnailVStack)
         
@@ -325,14 +322,14 @@ extension ShareViewController {
             thumbnailVStack.topAnchor.constraint(equalTo: menuButton.bottomAnchor, constant: Constants.stackSpacing),
             thumbnailVStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
             thumbnailVStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideInsets),
-            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: 1.0)
+            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: Constants.multiplier)
         ])
     }
     
     private func configureThumbnailLabel() {
         thumbnailLabel = UILabel()
         thumbnailLabel.text = "THUMBNAIL"
-        thumbnailLabel.font = .systemFont(ofSize: 16)
+        thumbnailLabel.font = .systemFont(ofSize: Constants.Font.fontSize)
         thumbnailLabel.textColor = .lightGray
     }
     
@@ -340,7 +337,7 @@ extension ShareViewController {
         thumbnailImageView = UIImageView()
         thumbnailImageView.image = nil
         thumbnailImageView.backgroundColor = .lightGray
-        thumbnailImageView.layer.cornerRadius = 20
+        thumbnailImageView.layer.cornerRadius = Constants.multiplier
         thumbnailImageView.clipsToBounds = true
     }
     

@@ -7,12 +7,10 @@
 
 import UIKit
 
-class AddCategoryViewController: UIViewController {
+class SetCategoryViewController: UIViewController {
     
     private var textField: UITextField!
-    private var isEditMode = false
     var viewModel: MainViewModel?
-    var editingCategoryId: UUID?
     private lazy var textFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let categoryText = self.textField.text else { return }
         if categoryText == "" {
@@ -22,14 +20,19 @@ class AddCategoryViewController: UIViewController {
         }
     }
 
+    // For edit
+    private var isEditMode = false
+    var editingCategoryId: UUID?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+       
         configureView()
         textField.becomeFirstResponder()
     }
     
-    func setToEditMode(with id: UUID) {
+    func setToEditMode(of id: UUID) {
         isEditMode = true
         editingCategoryId = id
     }
@@ -37,7 +40,7 @@ class AddCategoryViewController: UIViewController {
 }
 
 // MARK: - Actions
-extension AddCategoryViewController {
+extension SetCategoryViewController {
     @objc func doneTapped() {
         guard let vm = viewModel else {
             print("viewmodel doesn't exsist")
@@ -47,7 +50,6 @@ extension AddCategoryViewController {
             let newCategory = Category(name: textField.text!, index: vm.categories.count)
             vm.addCategory(newCategory)
         } else {
-            // Edit
             let newName = textField.text!
             if let id = editingCategoryId {
                 vm.editCategoryName(of: id, to: newName)
@@ -62,7 +64,7 @@ extension AddCategoryViewController {
 }
 
 // MARK: - View
-extension AddCategoryViewController {
+extension SetCategoryViewController {
     private func configureView() {
         view.backgroundColor = .systemGray6
         self.navigationItem.title = isEditMode ? "Edit Category" : "New Category"
@@ -87,7 +89,7 @@ extension AddCategoryViewController {
         textField.font = textFieldFont
         textField.clearButtonMode = .whileEditing
         textField.addAction(textFieldDidChanged, for: .editingChanged)
-        textField.delegate = self
+//        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(textField)
@@ -101,8 +103,8 @@ extension AddCategoryViewController {
     }
 }
 
-extension AddCategoryViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return true
-    }
-}
+//extension SetCategoryViewController: UITextFieldDelegate {
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        return true
+//    }
+//}

@@ -27,10 +27,12 @@ class TextInputComponent: UIStackView {
     private var title: String
     private var placeholder: String
     private let errorLabel = UILabel()
+    private let inputType: InputType
     
     init(title: String, placeholder: String, type: InputType) {
         self.title = title
         self.placeholder = placeholder
+        self.inputType = type
         super.init(frame: .zero)
         configureView(title: title, placeholder: placeholder, type: type)
     }
@@ -59,14 +61,18 @@ class TextInputComponent: UIStackView {
         textField.backgroundColor = .white
         textField.isEnabled = true
         textField.placeholder = placeholder
-        setErrorUI(message: "if the time is over length of video, it will be blocked")
+        if inputType == .startTime {
+            setErrorUI(message: "if the time is over length of video, it will be blocked")
+        }
     }
-    
+ 
     func disableTextField() {
         textField.text = ""
         textField.backgroundColor = .systemGray5
         textField.isEnabled = false
-        textField.placeholder = "This will be opened when the link is video"
+        if inputType == .startTime {
+            textField.placeholder = "This will be opened when the link is video"
+        }
         removeErrorUI()
     }
     

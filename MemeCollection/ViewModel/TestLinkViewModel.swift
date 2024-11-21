@@ -14,7 +14,8 @@ enum LinkError: String {
     case keyError = "The key is incorrect."
 }
 
-class AddVideoViewModel {
+/// Test for given link and have video information and thumbnailData from the link
+class TestLinkViewModel {
     typealias LinkTestResult = (Bool, LinkError?, VideoType?, LinkType?, String?)
     typealias VideoInfo = (key: String?, videoType: VideoType?, linkType: LinkType?)
     
@@ -89,7 +90,7 @@ class AddVideoViewModel {
     
 }
 
-extension AddVideoViewModel {
+extension TestLinkViewModel {
     private func getLinkType(of urlString: String) -> LinkType? {
         if urlString.contains("https://www.youtube.com") {
             return .web

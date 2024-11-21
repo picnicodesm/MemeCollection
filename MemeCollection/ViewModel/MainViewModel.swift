@@ -34,27 +34,35 @@ class MainViewModel: CategoryViewModel {
         database.write(newCategory.managedObject())
     }
         
-    func deleteCategory(_ deleteItem: Category) {
-        if let deleteIndex = categories.firstIndex(of: deleteItem) {
-            let deleteItemId = categories[deleteIndex].getId()
-            categories.remove(at: deleteIndex)
-            guard let deleteRealmItem = database.read(of: RealmCategory.self, with: deleteItemId) else { return }
-            database.delete(deleteRealmItem)
+    func deleteCategory(_ deleteIndex: IndexPath) {
+        let deleteItemId = categories[deleteIndex.item].getId()
+        categories.remove(at: deleteIndex.item)
+        if let deleteRealmCategory = database.read(of: RealmCategory.self, with: deleteItemId) {
+            let deleteRealmVideos = deleteRealmCategory.videos
+            for video in deleteRealmVideos {
+                ImageManager.shared.removeImage(of: video.thumbnailIdentifier)
+                database.delete(video)
+            }
+            database.delete(deleteRealmCategory)
+            refreshCategory()
         }
     }
     
     func editCategoryName(of id: UUID, to name: String) {
-        categories = categories.map { editItem in
-            var editItem = editItem
-            if editItem.getId() == id {
-                editItem.setName(to: name)
-            }
-            return editItem
-        }
+        guard let editIndex = categories.firstIndex(where: { $0.getId() == id }) else { return }
+        categories[editIndex].setName(to: name)
+        
+//        categories = categories.map { editItem in
+//            var editItem = editItem
+//            if editItem.getId() == id {
+//                editItem.setName(to: name)
+//            }
+//            return editItem
+//        }
         
         guard let editableCategory = database.read(of: RealmCategory.self, with: id) else { return }
-        database.update(editableCategory) { editObject in
-            editObject.setName(to: name)
+        database.update {
+            editableCategory.setName(to: name)
         }
     }
     

@@ -24,10 +24,6 @@ class MainViewController: UIViewController {
         case main
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("MainViewController will appear")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
@@ -50,17 +46,16 @@ class MainViewController: UIViewController {
         .store(in: &subscriptions)
         
         deleteItem.sink { [unowned self] indexPath in
-            let deleteItem = self.viewModel.categories[indexPath.item]
-            self.viewModel.deleteCategory(deleteItem)
+            self.viewModel.deleteCategory(indexPath)
         }
         .store(in: &subscriptions)
         
         cellSelectEvent
             .receive(on: RunLoop.main)
             .sink { [unowned self] category in
-                let vm = MemesViewModel(with: category)
+                let vm = MemesViewModel(of: category)
                 let destination = MemesViewController()
-                destination.initialSetup(memesVM: vm) { isUpdated in
+                destination.initialSetup(memesVM: vm) { isUpdated in // 로직 수정 생각해보기
                     if isUpdated {
                         self.viewModel.refreshCategory()
                     }
@@ -78,18 +73,18 @@ class MainViewController: UIViewController {
 // MARK: - DataSource
 extension MainViewController {
     private func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { [unowned self] collectionView, indexPath, item in
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewListCell", for: indexPath) as? UICollectionViewListCell else { return UICollectionViewCell() }
             
             var config = cell.defaultContentConfiguration()
             config.text = item.getName()
             cell.contentConfiguration = config
             
-            if item.getIsForFavortie() == true {
+            if item.getIsForFavortie() {
                 cell.accessories = [
                     .reorder(displayed: .whenEditing),
                     .disclosureIndicator(displayed: .whenNotEditing),
-                    .label(text: "\(self.viewModel.getVideoNums(of: item))")
+                    .label(text: "\(self.viewModel.getVideoNums(of: item))", displayed: .whenNotEditing)
                 ]
             } else {
                 cell.accessories = [
@@ -99,7 +94,7 @@ extension MainViewController {
                         self.openEditCategoryView(with: indexPath)
                     }),
                     .disclosureIndicator(displayed: .whenNotEditing),
-                    .label(text: "\(self.viewModel.getVideoNums(of: item))")
+                    .label(text: "\(self.viewModel.getVideoNums(of: item))", displayed: .whenNotEditing)
                 ]
             }
             
@@ -129,9 +124,9 @@ extension MainViewController {
 // MARK: - Actions
 extension MainViewController {
     private func swipeAction(_ indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if viewModel.categories[indexPath.item].getIsForFavortie() == true { return nil }
+        if viewModel.categories[indexPath.item].getIsForFavortie() { return nil }
         
-        let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] deleteAction, view, completion in
+        let deleteAction = UIContextualAction(style: .destructive, title: "deleteCategory") { [weak self] deleteAction, view, completion in
             
             guard let self = self else { return }
             self.deleteItem.send(indexPath)
@@ -147,43 +142,36 @@ extension MainViewController {
         editAction.image = UIImage(systemName: "info.circle.fill")
         editAction.backgroundColor = .lightGray
         
-        if collectionView.isEditing == true {
+        if collectionView.isEditing {
             return UISwipeActionsConfiguration(actions: [deleteAction])
         }
         
         return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }
     
-    private func deleteItem(at indexPath: IndexPath) {
-        guard var snapshot = dataSource?.snapshot() else { return }
-        if let item = dataSource.itemIdentifier(for: indexPath) {
-            snapshot.deleteItems([item])
-            dataSource.apply(snapshot, animatingDifferences: true)
-        }
-    }
-    
     private func openEditCategoryView(with indexPath: IndexPath) {
-        let newCategoryView = AddCategoryViewController()
+        let newCategoryView = SetCategoryViewController()
         newCategoryView.viewModel = self.viewModel
         let editingCategoryId = viewModel.categories[indexPath.item].getId()
-        newCategoryView.setToEditMode(with: editingCategoryId)
+        newCategoryView.setToEditMode(of: editingCategoryId)
         let navigationViewController = UINavigationController(rootViewController: newCategoryView)
         self.present(navigationViewController, animated: true)
     }
     
     @objc private func openNewCategoryView() {
-        let newCategoryView = AddCategoryViewController()
+        let newCategoryView = SetCategoryViewController()
         newCategoryView.viewModel = self.viewModel
         let navigationViewController = UINavigationController(rootViewController: newCategoryView)
         self.present(navigationViewController, animated: true)
     }
     
-    
+    /*
     @objc func testOrder() {
         let db = DataBaseManager.shared
         print(db.read(RealmCategory.self))
  
     }
+    */
     
 }
 
@@ -214,7 +202,7 @@ extension MainViewController {
         self.navigationItem.title = "MemeCollection"
         self.navigationItem.backButtonTitle = "Back"
         self.navigationItem.rightBarButtonItem = editButtonItem
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Order", style: .plain, target: self, action: #selector(testOrder))
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Order", style: .plain, target: self, action: #selector(testOrder))
     }
     
     private func configureToolbar() {
@@ -239,8 +227,6 @@ extension MainViewController {
         self.toolbarItems = [flexibleSpaceBarButtonItem, rightToolbarButtonItem]
     }
 }
-
-
 
 // MARK: - Delegate
 extension MainViewController: UICollectionViewDelegate {
