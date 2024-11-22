@@ -110,14 +110,13 @@ extension MainViewController {
                 self?.viewModel.updateCategoryOrder(to: updatedBackingStore)
             }
         }
-        
     }
     
     private func updateSnapshot(_ items: [Category]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items)
-        dataSource.apply(snapshot)
+        dataSource.applySnapshotUsingReloadData(snapshot)
     }
 }
 

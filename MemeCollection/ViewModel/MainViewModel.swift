@@ -52,14 +52,6 @@ class MainViewModel: CategoryViewModel {
         guard let editIndex = categories.firstIndex(where: { $0.getId() == id }) else { return }
         categories[editIndex].setName(to: name)
         
-//        categories = categories.map { editItem in
-//            var editItem = editItem
-//            if editItem.getId() == id {
-//                editItem.setName(to: name)
-//            }
-//            return editItem
-//        }
-        
         guard let editableCategory = database.read(of: RealmCategory.self, with: id) else { return }
         database.update {
             editableCategory.setName(to: name)

@@ -118,9 +118,6 @@ extension MemesViewController {
             let destination = SetVideoViewController()
             destination.categoryId = self?.category.getId()
             destination.memesVM = self?.memesVM
-//            destination.addAction = { [weak self] newVideo in
-//                self?.addVideoSubject.send(newVideo)
-//            }
             let navigationVC = UINavigationController(rootViewController: destination)
             self?.present(navigationVC, animated: true)
         }
@@ -131,9 +128,6 @@ extension MemesViewController {
         destination.categoryId = self.category.getId()
         destination.memesVM = self.memesVM
         destination.setToEditMode(with: video)
-//        destination.addAction = { [weak self] editedVideo in
-//            self?.editVideoSubject.send(editedVideo)
-//        }
         let navigationVC = UINavigationController(rootViewController: destination)
         self.present(navigationVC, animated: true)
     }
@@ -265,8 +259,7 @@ extension MemesViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items)
-        snapshot.reloadSections([.main]) // reorder에서 최신 상태를 유지하기 위함
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dataSource.applySnapshotUsingReloadData(snapshot)
     }
 }
 
