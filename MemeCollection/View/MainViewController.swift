@@ -112,6 +112,7 @@ extension MainViewController {
         }
     }
     
+    
     private func updateSnapshot(_ items: [Category]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])

@@ -157,6 +157,7 @@ extension MemesViewController {
         updateSnapshot(memesVM.memes)
     }
     
+    
     private func configureEditListDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { [unowned self] collectionView, indexPath, item in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeEditListCell.identifier, for: indexPath) as? MemeEditListCell else { return UICollectionViewCell() }
@@ -194,6 +195,7 @@ extension MemesViewController {
         updateSnapshot(memesVM.memes)
     }
     
+    
     private func configureListDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView, cellProvider: { [unowned self] collectionView, indexPath, item in
             
@@ -204,7 +206,6 @@ extension MemesViewController {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeListCell.identifier, for: indexPath) as? MemeListCell else { return UICollectionViewCell() }
             
             let deleteHandler = { [unowned self] in
-                // need alert
                 let alert = UIAlertController(title: "Delete Video", message: "Do you want to remove this video?", preferredStyle: .alert)
                 let success = UIAlertAction(title: "Remove", style: .default) { _ in
                     self.deleteVideoSubject.send(indexPath)
@@ -254,6 +255,7 @@ extension MemesViewController {
         
         updateSnapshot(memesVM.memes)
     }
+    
     
     private func updateSnapshot(_ items: [Video]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()

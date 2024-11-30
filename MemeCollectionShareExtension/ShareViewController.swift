@@ -166,10 +166,9 @@ extension ShareViewController {
         guard let extensionItem = extensionContext?.inputItems.first as? NSExtensionItem else { return }
         guard let itemProvider = extensionItem.attachments?.first else { return }
         
-        if itemProvider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+        if itemProvider.hasItemConformingToTypeIdentifier(UTType.url.identifier) { // Youtube Web에서 동작
             itemProvider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { (url, error) in
                 if let shareURL = url as? URL {
-//                    print("공유된 URL: \(shareURL)")
                     DispatchQueue.main.async {
                         self.linkField.setText(to: shareURL.absoluteString)
                     }
@@ -178,8 +177,19 @@ extension ShareViewController {
                     print("URL 읽기 실패: \(String(describing: error))")
                 }
             }
-        }
+        } else if itemProvider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) { // Youtbue App에서 동작
+            itemProvider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { (text, error) in
+                if let string = text as? String, let shareURL = URL(string: string) {
+                    DispatchQueue.main.async {
+                        self.linkField.setText(to: shareURL.absoluteString)
+                    }
+                    self.testLink(shareURL.absoluteString)
+                } else {
+                    print("URL 읽기 실패: \(String(describing: error))")
+                }
+            }
     }
+                                  }
     
     private func testLink(_ link: String) {
         linkField.removeErrorUI()
