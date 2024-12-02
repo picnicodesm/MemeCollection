@@ -17,6 +17,8 @@ enum EndExtension: Error {
 }
 
 class ShareViewController: UIViewController {
+    private var containerScrollView: UIScrollView!
+    private var contentView: UIView!
     private var navigationBar: UINavigationBar!
     private var textFieldsVStack: UIStackView!
     private var thumbnailVStack: UIStackView!
@@ -255,10 +257,40 @@ extension ShareViewController {
     private func configureView() {
         view.backgroundColor = .systemGray6
         configreNavBarItem()
+        configureScrollView()
+        configureContentView()
         configureTextFieldStackView()
         configureMenuButton()
         configureThumbnailVStack()
     }
+    
+    private func configureScrollView() {
+        containerScrollView = UIScrollView()
+        containerScrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(containerScrollView)
+        
+        NSLayoutConstraint.activate([
+            containerScrollView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor),
+            containerScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            containerScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            containerScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    
+    private func configureContentView() {
+        contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        containerScrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: containerScrollView.topAnchor),
+            contentView.centerXAnchor.constraint(equalTo: containerScrollView.centerXAnchor),
+            contentView.widthAnchor.constraint(equalTo: containerScrollView.widthAnchor),
+            contentView.bottomAnchor.constraint(equalTo: containerScrollView.bottomAnchor)
+        ])
+    }
+    
     
     private func configreNavBarItem() {
         navigationBar = UINavigationBar()
@@ -279,6 +311,7 @@ extension ShareViewController {
         ])
     }
     
+    
     private func configureTextFieldStackView() {
         textFieldsVStack = UIStackView()
         textFieldsVStack.translatesAutoresizingMaskIntoConstraints = false
@@ -293,14 +326,15 @@ extension ShareViewController {
         let _ = [titleField, linkField, startTimeField].map {
             textFieldsVStack.addArrangedSubview($0)
         }
-        view.addSubview(textFieldsVStack)
+        contentView.addSubview(textFieldsVStack)
         
         NSLayoutConstraint.activate([
-            textFieldsVStack.topAnchor.constraint(equalTo: navigationBar.bottomAnchor, constant: Constants.topInsets),
-            textFieldsVStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
-            textFieldsVStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideInsets)
+            textFieldsVStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topInsets),
+            textFieldsVStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideInsets),
+            textFieldsVStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.sideInsets)
         ])
     }
+    
     
     private func configureThumbnailVStack() {
         thumbnailVStack = UIStackView()
@@ -308,7 +342,7 @@ extension ShareViewController {
         thumbnailVStack.axis = .vertical
         thumbnailVStack.spacing = Constants.titleSpacing
         
-        view.addSubview(thumbnailVStack)
+        contentView.addSubview(thumbnailVStack)
         
         configureThumbnailLabel()
         configureThumbnailImageView()
@@ -317,11 +351,13 @@ extension ShareViewController {
         
         NSLayoutConstraint.activate([
             thumbnailVStack.topAnchor.constraint(equalTo: menuButton.bottomAnchor, constant: Constants.stackSpacing),
-            thumbnailVStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
-            thumbnailVStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideInsets),
+            thumbnailVStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideInsets),
+            thumbnailVStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.sideInsets),
+            thumbnailVStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: Constants.multiplier)
         ])
     }
+    
     
     private func configureThumbnailLabel() {
         thumbnailLabel = UILabel()
@@ -330,21 +366,23 @@ extension ShareViewController {
         thumbnailLabel.textColor = .lightGray
     }
     
+    
     private func configureThumbnailImageView() {
         thumbnailImageView = UIImageView()
         thumbnailImageView.image = nil
         thumbnailImageView.backgroundColor = .lightGray
-        thumbnailImageView.layer.cornerRadius = Constants.multiplier
+        thumbnailImageView.layer.cornerRadius = Constants.cornerRadius
         thumbnailImageView.clipsToBounds = true
     }
     
+    
     private func configureMenuButton() {
-        view.addSubview(menuButton)
+        contentView.addSubview(menuButton)
         
         NSLayoutConstraint.activate([
             menuButton.topAnchor.constraint(equalTo: textFieldsVStack.bottomAnchor,constant: Constants.stackSpacing),
-            menuButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
-            menuButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideInsets),
+            menuButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideInsets),
+            menuButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.sideInsets),
         ])
     }
 }

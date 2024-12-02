@@ -9,7 +9,8 @@ import UIKit
 import Combine
 
 class SetVideoViewController: UIViewController {
-    
+    private var containerScrollView: UIScrollView!
+    private var contentView: UIView!
     private var textFieldsVStack: UIStackView!
     private var thumbnailVStack: UIStackView!
     private var thumbnailLabel: UILabel!
@@ -207,14 +208,44 @@ extension SetVideoViewController {
 // MARK: - View
 extension SetVideoViewController {
     private func configureView() {
-        view.backgroundColor = .systemGray6
         self.navigationItem.title = isEditMode ? "Edit Video" : "New Video"
+        view.backgroundColor = .systemGray6
+        configureScrollView()
+        configureContentView()
         configreNavBarItem()
         configureTextFieldStackView()
         configureThumbnailVStack()
     }
     
+    
+    private func configureScrollView() {
+        containerScrollView = UIScrollView()
+        containerScrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(containerScrollView)
+        
+        NSLayoutConstraint.activate([
+            containerScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            containerScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            containerScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            containerScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    
+    private func configureContentView() {
+        contentView = UIView()
+        contentView.backgroundColor = .blue
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        containerScrollView.addSubview(contentView)
 
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: containerScrollView.topAnchor),
+            contentView.centerXAnchor.constraint(equalTo: containerScrollView.centerXAnchor),
+            contentView.widthAnchor.constraint(equalTo: containerScrollView.widthAnchor),
+            contentView.bottomAnchor.constraint(equalTo: containerScrollView.bottomAnchor),
+        ])
+    }
+    
     
     private func configreNavBarItem() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
@@ -222,6 +253,7 @@ extension SetVideoViewController {
         rightBarButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
+    
     
     private func configureTextFieldStackView() {
         textFieldsVStack = UIStackView()
@@ -252,14 +284,15 @@ extension SetVideoViewController {
         let _ = [titleField, linkField, startTimeField].map {
             textFieldsVStack.addArrangedSubview($0)
         }
-        view.addSubview(textFieldsVStack)
+        contentView.addSubview(textFieldsVStack)
         
         NSLayoutConstraint.activate([
-            textFieldsVStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.topInsets),
-            textFieldsVStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
-            textFieldsVStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideInsets)
+            textFieldsVStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.topInsets),
+            textFieldsVStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideInsets),
+            textFieldsVStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.sideInsets),
         ])
     }
+    
     
     private func configureThumbnailVStack() {
         thumbnailVStack = UIStackView()
@@ -267,7 +300,7 @@ extension SetVideoViewController {
         thumbnailVStack.axis = .vertical
         thumbnailVStack.spacing = Constants.titleSpacing
         
-        view.addSubview(thumbnailVStack)
+        contentView.addSubview(thumbnailVStack)
         
         configureThumbnailLabel()
         configureThumbnailImageView()
@@ -276,11 +309,13 @@ extension SetVideoViewController {
         
         NSLayoutConstraint.activate([
             thumbnailVStack.topAnchor.constraint(equalTo: textFieldsVStack.bottomAnchor, constant: Constants.stackSpacing),
-            thumbnailVStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.sideInsets),
-            thumbnailVStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideInsets),
-            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: Constants.multiplier)
+            thumbnailVStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideInsets),
+            thumbnailVStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.sideInsets),
+            thumbnailVStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: Constants.multiplier),
         ])
     }
+    
     
     private func configureThumbnailLabel() {
         thumbnailLabel = UILabel()
@@ -288,6 +323,7 @@ extension SetVideoViewController {
         thumbnailLabel.font = .systemFont(ofSize: Constants.Font.fontSize)
         thumbnailLabel.textColor = .lightGray
     }
+    
     
     private func configureThumbnailImageView() {
         thumbnailImageView = UIImageView()
