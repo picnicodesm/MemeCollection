@@ -5,15 +5,6 @@
 //  Created by 김상민 on 11/12/24.
 //
 
-// TODO: 1. 네트워크 권한, 와이파이 권한 <- 필요없음 ✅
-// TODO: 2. Add 또는 edit시 /키보드 내릴 수 있게. 아니면 키보드가 나타나면 화면을 올릴 수 있게 ✅
-// TODO: 3. 삭제시 Alert ✅
-// TODO: 4. 에러처리
-// TODO: 5. starttime disable paste ✅
-// TODO: 6. scrollRectToVisible 안되는거 확인하기 -> 새로운 방법으로 한거 적용해보기(responser로 어느 textfield인지만 알면 됨 <- 할 필요가 없었지만 방법은 알았다. ✅
-// TODO: 7. 한글이름 이미지 저장 ✅
-// TODO: 8. 필요없는 print문 삭제
-
 import UIKit
 import Social
 import RealmSwift
@@ -238,17 +229,19 @@ extension ShareViewController {
                     self.testLink(shareURL.absoluteString)
                 } else {
                     print("URL 읽기 실패: \(String(describing: error))")
+                    self.linkField.setErrorUI(message: "링크를 읽어올 수 없습니다.")
                 }
             }
         } else if itemProvider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) { // Youtbue App에서 동작
-            itemProvider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { (text, error) in
+            itemProvider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { [weak self] (text, error) in
                 if let string = text as? String, let shareURL = URL(string: string) {
                     DispatchQueue.main.async {
-                        self.linkField.setText(to: shareURL.absoluteString)
+                        self?.linkField.setText(to: shareURL.absoluteString)
                     }
-                    self.testLink(shareURL.absoluteString)
+                    self?.testLink(shareURL.absoluteString)
                 } else {
                     print("URL 읽기 실패: \(String(describing: error))")
+                    self?.linkField.setErrorUI(message: "링크를 읽어올 수 없습니다.")
                 }
             }
     }

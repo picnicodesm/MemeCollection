@@ -64,8 +64,9 @@ extension SelectCategoryComponent {
         
         var children: [UIMenuElement] = []
         let actionClosure = { [weak self] (action: UIAction) in
-            print(action.title)
-            self?.selectedItem = action.title
+//            print(action.title)
+            guard let self = self else { return }
+            self.selectedItem = action.title
         }
         
         let categories = database.read(RealmCategory.self)

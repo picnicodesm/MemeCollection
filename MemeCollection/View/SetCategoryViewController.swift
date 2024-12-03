@@ -44,7 +44,13 @@ extension SetCategoryViewController {
     @objc func doneTapped() {
         guard let vm = viewModel else {
             print("viewmodel doesn't exsist")
-            return}
+            let alert = UIAlertController(title: "저장 실패", message: "해당 카테고리를 저장할 수 없습니다.", preferredStyle: .alert)
+            let checkAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+                self?.dismiss(animated: true)
+                return
+            }
+            return 
+        }
         
         if !isEditMode {
             let newCategory = Category(name: textField.text!, index: vm.categories.count)

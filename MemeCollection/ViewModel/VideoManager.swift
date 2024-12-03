@@ -92,8 +92,8 @@ class VideoManager {
         guard let videosInFavorites = database.read(RealmCategory.self).first(where: { $0.isForFavorites })?.videos else { return }
         database.update {
             for (index, video) in videosInFavorites.sorted(byKeyPath: "favoritesIndex", ascending: true).enumerated() {
-                print("current video's favorite index: \(index)")
-                print("set to \(index)\n")
+//                print("current video's favorite index: \(index)")
+//                print("set to \(index)\n")
                 video.favoritesIndex = index
             }
         }

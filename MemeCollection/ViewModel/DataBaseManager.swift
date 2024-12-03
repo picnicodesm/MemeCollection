@@ -131,15 +131,15 @@ extension DataBaseManager {
     func shareRealm() {
         let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.MemeCollection.Share")?.appendingPathComponent("shared.realm")
         let sharedConfig = Realm.Configuration(fileURL: directory)
-        if let bundleUrl = Bundle.main.url(forResource: "bundle", withExtension: "realm") {
-            if !FileManager.default.fileExists(atPath: directory!.path) {
-                try! FileManager.default.copyItem(at: bundleUrl, to: sharedConfig.fileURL!)
-                print(sharedConfig.fileURL!)
-            }
-            else{
-                print("file exist")
-            }
-        }
+//        if let bundleUrl = Bundle.main.url(forResource: "bundle", withExtension: "realm") {
+//            if !FileManager.default.fileExists(atPath: directory!.path) {
+//                try! FileManager.default.copyItem(at: bundleUrl, to: sharedConfig.fileURL!)
+//                print(sharedConfig.fileURL!)
+//            }
+//            else{
+//                print("file exist")
+//            }
+//        }
         
         database = try! Realm(configuration: sharedConfig)
     }
