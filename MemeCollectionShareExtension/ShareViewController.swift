@@ -5,12 +5,12 @@
 //  Created by 김상민 on 11/12/24.
 //
 
-// TODO: 1. 네트워크 권한, 와이파이 권한 <- 필요없음
+// TODO: 1. 네트워크 권한, 와이파이 권한 <- 필요없음 ✅
 // TODO: 2. Add 또는 edit시 /키보드 내릴 수 있게. 아니면 키보드가 나타나면 화면을 올릴 수 있게 ✅
 // TODO: 3. 삭제시 Alert ✅
 // TODO: 4. 에러처리
 // TODO: 5. starttime disable paste ✅
-// TODO: 6. scrollRectToVisible 안되는거 확인하기 -> 새로운 방법으로 한거 적용해보기(responser로 어느 textfield인지만 알면 됨
+// TODO: 6. scrollRectToVisible 안되는거 확인하기 -> 새로운 방법으로 한거 적용해보기(responser로 어느 textfield인지만 알면 됨 <- 할 필요가 없었지만 방법은 알았다. ✅
 // TODO: 7. 한글이름 이미지 저장 ✅
 // TODO: 8. 필요없는 print문 삭제
 
@@ -28,6 +28,7 @@ enum EndExtension: Error {
 class ShareViewController: UIViewController {
     
     let testField = UITextField()
+    private var activeTextField: UITextField?
     
     private var containerScrollView: UIScrollView!
     private var contentView: UIView!
@@ -178,22 +179,24 @@ extension ShareViewController {
             return
         }
         containerScrollView.contentInset.bottom = keyboardFrame.size.height
-
-//        containerScrollView.scrollRectToVisible(testField.frame, animated: true)
-//        containerScrollView.contentOffset.y = testField.frame.origin.y - (containerScrollView.frame.size.height - keyboardFrame.size.height) + testField.frame.size.height
-        let keyboardFrameInScrollView = containerScrollView.convert(keyboardFrame.origin, from: nil)
-        if titleField.frame.origin.y > keyboardFrameInScrollView.y {
-            containerScrollView.contentOffset.y = testField.frame.origin.y - (containerScrollView.frame.size.height - keyboardFrame.size.height) + testField.frame.size.height
-        }
-        print(keyboardFrameInScrollView.y)
+//        scrollToView(keyboardFrame)
     }
-
+    
+    /*
+    private func scrollToView(_ keyboardFrame: CGRect) {
+        if let activeField = activeTextField {
+            let activeFieldPointInWindow = activeField.convert(activeField.bounds.origin, to: nil)
+            let activeFieldBottomPosition = activeFieldPointInWindow.y + activeField.frame.size.height
+            if activeFieldBottomPosition > keyboardFrame.origin.y {
+                containerScrollView.contentOffset.y += activeFieldBottomPosition - keyboardFrame.origin.y + 10
+            }
+        }
+    }
+     */
     
     @objc func keyboardWillHide() {
         let contentInset = UIEdgeInsets.zero
         containerScrollView.contentInset = contentInset
-        containerScrollView.horizontalScrollIndicatorInsets = contentInset
-        containerScrollView.verticalScrollIndicatorInsets = contentInset
     }
 }
 
@@ -310,18 +313,6 @@ extension ShareViewController {
         configureTextFieldStackView()
         configureMenuButton()
         configureThumbnailVStack()
-    
-        testField.translatesAutoresizingMaskIntoConstraints = false
-        testField.backgroundColor = .blue
-        contentView.addSubview(testField)
-        
-        NSLayoutConstraint.activate([
-            testField.topAnchor.constraint(equalTo: thumbnailVStack.bottomAnchor, constant: 20),
-            testField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            testField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            testField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            testField.heightAnchor.constraint(equalToConstant: 50)
-        ])
     }
     
     
@@ -416,7 +407,7 @@ extension ShareViewController {
             thumbnailVStack.topAnchor.constraint(equalTo: menuButton.bottomAnchor, constant: Constants.stackSpacing),
             thumbnailVStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideInsets),
             thumbnailVStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.sideInsets),
-//            thumbnailVStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            thumbnailVStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: Constants.multiplier)
         ])
     }
@@ -456,5 +447,10 @@ extension ShareViewController: UITextFieldDelegate {
         guard string.isEmpty || Int(string) != nil else { return false }
         return true
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextField = textField
+    }
 }
+
 

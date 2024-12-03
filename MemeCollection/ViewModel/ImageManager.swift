@@ -19,9 +19,7 @@ class ImageManager {
             return false
         }
         do {
-//            print("directoryPath: \(directoryPath)")
             let encodedIdentifier = identifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-//            print("saving identifier: \(identifier)")
             try imageData.write(to: directoryPath.appendingPathComponent(encodedIdentifier))
             return true
         } catch {

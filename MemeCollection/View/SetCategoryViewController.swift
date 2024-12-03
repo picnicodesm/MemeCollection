@@ -89,7 +89,6 @@ extension SetCategoryViewController {
         textField.font = textFieldFont
         textField.clearButtonMode = .whileEditing
         textField.addAction(textFieldDidChanged, for: .editingChanged)
-//        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(textField)
@@ -102,9 +101,3 @@ extension SetCategoryViewController {
         ])
     }
 }
-
-//extension SetCategoryViewController: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        return true
-//    }
-//}
