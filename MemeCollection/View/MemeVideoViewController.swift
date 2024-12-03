@@ -61,6 +61,7 @@ extension MemeVideoViewController {
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
         webView.scrollView.isScrollEnabled = false
+        webView.navigationDelegate = self
         view.addSubview(webView)
         self.webView = webView
         
@@ -167,5 +168,27 @@ extension MemeVideoViewController {
                 loadWebView(to: currentVideoURL)
             }
         }
+    }
+}
+
+extension MemeVideoViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
+        // 초기 로딩 에러
+        let alert = UIAlertController(title: "네트워크 오류", message: "네트워크 연결 중 문제가 발생했습니다.", preferredStyle: .alert)
+        let checkAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        alert.addAction(checkAction)
+        present(alert, animated: true)
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {
+        // 초기 로딩 이후 에러
+        let alert = UIAlertController(title: "네트워크 오류", message: "네트워크 연결 중 문제가 발생했습니다.", preferredStyle: .alert)
+        let checkAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        alert.addAction(checkAction)
+        present(alert, animated: true)
     }
 }

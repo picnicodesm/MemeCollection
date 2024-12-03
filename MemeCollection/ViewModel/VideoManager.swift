@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class VideoManager {
     let database = DataBaseManager.shared
@@ -17,11 +18,16 @@ class VideoManager {
         }
     }
     
-    func deleteVideo(_ video: Video) {
+    func deleteVideo(_ video: Video) -> Bool {
+        if !ImageManager.shared.removeImage(of: video.getThumbnailIdentifier()) {
+            return false
+        }
         if let deleteItem = database.read(of: RealmVideo.self, with: video.getId()) {
             database.delete(deleteItem)
+            return true
+        } else {
+            return false
         }
-        ImageManager.shared.removeImage(of: video.getThumbnailIdentifier())
     }
     
     func editVideo(_ video: Video, in categoryId: UUID) {

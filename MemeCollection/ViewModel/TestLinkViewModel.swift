@@ -48,6 +48,7 @@ class TestLinkViewModel {
             let (data, _) = try await URLSession.shared.data(from: url)
             self.thumbnailData = data
         } catch {
+            self.thumbnailData = nil
             return
         }
     }
@@ -68,7 +69,7 @@ class TestLinkViewModel {
         let videoType = getVideoType(of: link)
         if videoType == .shorts { return "https://m.youtube.com/shorts/\(key)" }
         else {
-            print("gived time: \(time)")
+//            print("gived time: \(time)")
             return "https://m.youtube.com/watch?v=\(key)&t=\(time)s"
         }
     }
@@ -85,7 +86,6 @@ class TestLinkViewModel {
     func getVideoInfo() -> VideoInfo {
         return videoInfo
     }
-    
 }
 
 extension TestLinkViewModel {

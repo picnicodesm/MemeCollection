@@ -34,13 +34,14 @@ class MainViewModel: CategoryViewModel {
         database.write(newCategory.managedObject())
     }
         
+    // Video Manager로 바꾸기
     func deleteCategory(_ deleteIndex: IndexPath) {
         let deleteItemId = categories[deleteIndex.item].getId()
         categories.remove(at: deleteIndex.item)
         if let deleteRealmCategory = database.read(of: RealmCategory.self, with: deleteItemId) {
             let deleteRealmVideos = deleteRealmCategory.videos
             for video in deleteRealmVideos {
-                ImageManager.shared.removeImage(of: video.thumbnailIdentifier)
+                let _ = ImageManager.shared.removeImage(of: video.thumbnailIdentifier)
                 database.delete(video)
             }
             database.delete(deleteRealmCategory)

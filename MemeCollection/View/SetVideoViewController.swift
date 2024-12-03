@@ -120,17 +120,43 @@ extension SetVideoViewController {
         if let currentVideo = currentVideo, isEditMode {
             let editVideo = Video(id: currentVideo.getId(), name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: currentVideo.getIsFavorite(), thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: currentVideo.getIndex(), favoriteIndex: currentVideo.getFavoriteIndex(), startTime: startTime)
             
-            imageManager.removeImage(of: currentVideo.getThumbnailIdentifier())
+            if !imageManager.removeImage(of: currentVideo.getThumbnailIdentifier()) {
+                
+                let checkAction = UIAlertAction(title: "확인", style: .default) { _ in
+                    self.dismiss(animated: true)
+                    return
+                }
+                let alert = imageManager.getErrorAlert(error: .removeFailed, action: checkAction)
+                
+                present(alert, animated: true)
+            }
+            
+            
+            if !imageManager.saveImage(imageData: compressedImage, as: imageIdentifier) {
+                let checkAction = UIAlertAction(title: "확인", style: .default) { _ in
+                    self.dismiss(animated: true)
+                    return
+                }
+                let alert = imageManager.getErrorAlert(error: .saveFailed, action: checkAction)
+                
+                present(alert, animated: true)
+            }
+            
             memesVM.editVideo(editVideo)
-            let _ = imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
+            
             self.dismiss(animated: true)
             return
         }
         
-        guard imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
-        else {
-            // Alert with message "save failed"
-            return
+        if !imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
+        {
+            let checkAction = UIAlertAction(title: "확인", style: .default) { _ in
+                self.dismiss(animated: true)
+                return
+            }
+            let alert = imageManager.getErrorAlert(error: .saveFailed, action: checkAction)
+            
+            present(alert, animated: true)
         }
         
         let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: memesVM.memes.count, startTime: startTime)

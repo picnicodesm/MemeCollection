@@ -29,11 +29,12 @@ class MemesViewModel {
         videoManager.addVideo(video, to: category.getId())
     }
     
-    func deleteVideo(_ video: Video) {
-        guard let deleteIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return }
+    func deleteVideo(_ video: Video) -> Bool {
+        guard let deleteIndex = memes.firstIndex(where: { $0.getId() == video.getId() }) else { return false }
         memes.remove(at: deleteIndex)
-        videoManager.deleteVideo(video)
+        let isSuccess = videoManager.deleteVideo(video)
         updateVideoOrder(to: memes)
+        return isSuccess
     }
     
     func editVideo(_ video: Video) {
@@ -71,5 +72,4 @@ class MemesViewModel {
         self.category = realmCategory.toStruct()
         self.memes = self.category.getVideos(isFavorites: self.category.getIsForFavortie())
     }
-    
 }

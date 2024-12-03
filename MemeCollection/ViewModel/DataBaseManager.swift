@@ -8,6 +8,8 @@
 import Foundation
 import RealmSwift
 
+// TODO: Notification으로 error 알리기
+
 protocol DataBase {
     func read<T: Object>(_ object: T.Type) -> Results<T>
     func write<T: Object>(_ object: T)
@@ -42,7 +44,6 @@ final class DataBaseManager: DataBase {
         do {
             try database.write {
                 database.add(object, update: .modified)
-                print("New object id added")
             }
 
         } catch let error {

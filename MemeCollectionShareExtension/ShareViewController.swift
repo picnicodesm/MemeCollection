@@ -137,16 +137,26 @@ extension ShareViewController {
         let videoInfo = testLinkVM.getVideoInfo()
         
         guard let (imageIdentifier, compressedImage) = imageManager.getCompleteIdentifier(of: thumbnailData, with: title) else {
-            // comopressed failed
-            print("failed get compressed Image")
+            
+            let checkAction = UIAlertAction(title: "확인", style: .default) { _ in
+                self.dismiss(animated: true)
+                return
+            }
+            let alert = imageManager.getErrorAlert(error: .compressFailed, action: checkAction)
+            
+            present(alert, animated: true)
             return
         }
         
-        guard imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
-        else {
-            print("failed")
-            // Alert with message "save failed"
-            return
+        if !imageManager.saveImage(imageData: compressedImage, as: imageIdentifier)
+        {
+            let checkAction = UIAlertAction(title: "확인", style: .default) { _ in
+                self.dismiss(animated: true)
+                return
+            }
+            let alert = imageManager.getErrorAlert(error: .saveFailed, action: checkAction)
+            
+            present(alert, animated: true)
         }
         
         let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: index, startTime: startTime)

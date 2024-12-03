@@ -8,6 +8,23 @@
 import Foundation
 import UIKit
 
+enum ImageError: String, Error {
+    case removeFailed = "이미지 수정 실패"
+    case saveFailed = "이미지 저장 실패"
+    case compressFailed = "이미지 압축 실패"
+    
+    var description: String {
+        switch self {
+        case .removeFailed:
+            return "이미지를 수정하는데 문제가 발생했습니다."
+        case .saveFailed:
+            return "이미지를 저장하는데 문제가 발생했습니다."
+        case .compressFailed:
+            return "이미지를 압축하는데 문제가 발생했습니다."
+        }
+    }
+}
+
 class ImageManager {
     typealias CompressedImage = (String, Data)
     
@@ -28,19 +45,23 @@ class ImageManager {
         }
     }
     
-    func removeImage(of identifier: String) {
-        guard let fileURL = getFileURL(of: identifier) else { return }
+    func removeImage(of identifier: String) -> Bool {
+        guard let fileURL = getFileURL(of: identifier) else { return false }
+        
         if isImageNameExist(identifier: identifier) {
             do {
                 try fileManager.removeItem(atPath: fileURL.path())
+                return true
                 // why wasn't image removed with removeItem(url:)???
             } catch {
                 print("Error: \(error.localizedDescription)")
+                return false
             }
+        } else {
+            return false
         }
     }
 
-    /// If you encode the identifier, filemanager can't find a file cottectly. DON'T KNOW WHY
     func getSavedImage(of identifier: String) -> UIImage? {
         let encodedIdentifier = identifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
         guard let fileURL = getFileURL(of: encodedIdentifier) else {
@@ -53,30 +74,21 @@ class ImageManager {
         }
     }
     
-    func isImageNameExist(identifier: String) -> Bool {
-        guard let fileURL = getFileURL(of: identifier) else { return false }
-                
-        if fileManager.fileExists(atPath: fileURL.path()) {
-            return true
-        } else {
-            return false
-        }
-    }
-    
    func getCompleteIdentifier(of thumbnailData: Data, with title: String) -> CompressedImage? {
         var imageIdentifierNumber = 0
         let thumbnailImage = UIImage(data: thumbnailData)!
         var imageExtension = ""
         var imageIdentifier = ""
         var compressedImageData: Data = Data()
-        
-        if let data = thumbnailImage.jpegData(compressionQuality: 1) {
-            imageExtension = "jpeg"
-            compressedImageData = data
-        } else if let data = thumbnailImage.pngData() {
-            imageExtension = "png"
-            compressedImageData = data
-        } else {
+       
+       
+       if let data = thumbnailImage.pngData() {
+           imageExtension = "png"
+           compressedImageData = data
+       } else if let data = thumbnailImage.jpegData(compressionQuality: 1) {
+           imageExtension = "jpeg"
+           compressedImageData = data
+       } else {
             return nil
         }
         
@@ -86,13 +98,33 @@ class ImageManager {
             imageIdentifierNumber += 1
             imageIdentifier = "\(title) \(imageIdentifierNumber).\(imageExtension)"
         }
+       
+       return CompressedImage(imageIdentifier, compressedImageData)
+   }
     
-        return CompressedImage(imageIdentifier, compressedImageData)
+    func getErrorAlert(error: ImageError, action: UIAlertAction) -> UIAlertController {
+        let alert = UIAlertController(
+            title: "\(error.rawValue)",
+            message: "\(error.description)",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(action)
+        return alert
     }
-    
 }
 
 extension ImageManager {
+    private func isImageNameExist(identifier: String) -> Bool {
+        guard let fileURL = getFileURL(of: identifier) else { return false }
+                
+        if fileManager.fileExists(atPath: fileURL.path()) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     private func getFileURL(of identifier: String) -> URL? {
         guard let dir = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.MemeCollection.Share") else { return nil }
         if #available(iOS 17, *) {
@@ -103,4 +135,5 @@ extension ImageManager {
 //            return dir.appending(path: identifier) <- 이걸 사용하면 또 자동인코딩됨
         }
     }
+
 }
