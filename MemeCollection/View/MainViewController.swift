@@ -129,7 +129,16 @@ extension MainViewController {
         let deleteAction = UIContextualAction(style: .destructive, title: "deleteCategory") { [weak self] deleteAction, view, completion in
             
             guard let self = self else { return }
-            self.deleteItem.send(indexPath)
+        
+            let alert = UIAlertController(title: "해당 카테고리를 삭제하시겠습니까?", message: "삭제한 카테고리는 복구할 수 없습니다. 또한, 해당 카테고리 안의 영상들이 모두 삭제됩니다.", preferredStyle: .alert)
+            let success = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                self.deleteItem.send(indexPath)
+            }
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            alert.addAction(success)
+            alert.addAction(cancel)
+            
+            present(alert, animated: true)
             completion(true)
         }
         deleteAction.image = UIImage(systemName: "trash.fill")

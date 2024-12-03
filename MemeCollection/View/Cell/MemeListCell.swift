@@ -49,6 +49,14 @@ class MemeListCell: UICollectionViewListCell, MemeCell {
     func addAction(_ action: ButtonAction?) {
         self.buttonAction = action
     }
+    
+    func hideFavoriteBtn() {
+        favoriteButton.isHidden = true
+    }
+    
+    func showFavoriteBtn() {
+        favoriteButton.isHidden = false
+    }
 
     @objc func toggleFavorite() {
         buttonAction?()

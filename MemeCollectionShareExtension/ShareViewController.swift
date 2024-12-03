@@ -5,6 +5,14 @@
 //  Created by 김상민 on 11/12/24.
 //
 
+// TODO: 1. 네트워크 권한, 와이파이 권한
+// TODO: 2. Add 또는 edit시 키보드 내릴 수 있게. 아니면 키보드가 나타나면 화면을 올릴 수 있게 ✅
+// TODO: 3. 삭제시 Alert ✅
+// TODO: 4. 에러처리
+// TODO: 5. starttime disable paste ✅
+// TODO: 6. scrollRectToVisible 안되는거 확인하기 -> 새로운 방법으로 한거 적용해보기(responser로 어느 textfield인지만 알면 됨
+// TODO: 7. 한글이름 이미지 저장
+
 import UIKit
 import Social
 import RealmSwift
@@ -17,6 +25,9 @@ enum EndExtension: Error {
 }
 
 class ShareViewController: UIViewController {
+    
+    let testField = UITextField()
+    
     private var containerScrollView: UIScrollView!
     private var contentView: UIView!
     private var navigationBar: UINavigationBar!
@@ -108,7 +119,6 @@ class ShareViewController: UIViewController {
 
 // MARK: - Actions
 extension ShareViewController {
-    
     @objc func doneTapped() {
         guard let title = titleField.getText(),
               let startTimeText = startTimeField.getText(),
@@ -147,13 +157,50 @@ extension ShareViewController {
     @objc func cancelTapped() {
         self.extensionContext?.cancelRequest(withError: EndExtension.none)
     }
+    
+    private func addObserverToTextFileds() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        containerScrollView.contentInset.bottom = keyboardFrame.size.height
+
+//        containerScrollView.scrollRectToVisible(testField.frame, animated: true)
+//        containerScrollView.contentOffset.y = testField.frame.origin.y - (containerScrollView.frame.size.height - keyboardFrame.size.height) + testField.frame.size.height
+        let keyboardFrameInScrollView = containerScrollView.convert(keyboardFrame.origin, from: nil)
+        if titleField.frame.origin.y > keyboardFrameInScrollView.y {
+            containerScrollView.contentOffset.y = testField.frame.origin.y - (containerScrollView.frame.size.height - keyboardFrame.size.height) + testField.frame.size.height
+        }
+        print(keyboardFrameInScrollView.y)
+    }
+
+    
+    @objc func keyboardWillHide() {
+        let contentInset = UIEdgeInsets.zero
+        containerScrollView.contentInset = contentInset
+        containerScrollView.horizontalScrollIndicatorInsets = contentInset
+        containerScrollView.verticalScrollIndicatorInsets = contentInset
+    }
 }
 
 extension ShareViewController {
     private func showAlert() {
         let alert = UIAlertController(
-            title: "Empty Category",
-            message: "There is no category, create your new category first.",
+            title: "카테고리가 없습니다",
+            message: "영상을 저장하기 위한 카테고리를 먼저 만들어주세요.",
             preferredStyle: .alert
         )
         
@@ -262,7 +309,20 @@ extension ShareViewController {
         configureTextFieldStackView()
         configureMenuButton()
         configureThumbnailVStack()
+    
+        testField.translatesAutoresizingMaskIntoConstraints = false
+        testField.backgroundColor = .blue
+        contentView.addSubview(testField)
+        
+        NSLayoutConstraint.activate([
+            testField.topAnchor.constraint(equalTo: thumbnailVStack.bottomAnchor, constant: 20),
+            testField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            testField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            testField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            testField.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
+    
     
     private func configureScrollView() {
         containerScrollView = UIScrollView()
@@ -287,7 +347,7 @@ extension ShareViewController {
             contentView.topAnchor.constraint(equalTo: containerScrollView.topAnchor),
             contentView.centerXAnchor.constraint(equalTo: containerScrollView.centerXAnchor),
             contentView.widthAnchor.constraint(equalTo: containerScrollView.widthAnchor),
-            contentView.bottomAnchor.constraint(equalTo: containerScrollView.bottomAnchor)
+            contentView.bottomAnchor.constraint(equalTo: containerScrollView.bottomAnchor),
         ])
     }
     
@@ -322,6 +382,8 @@ extension ShareViewController {
         startTimeField.addAction(startTextFieldDidChanged)
         startTimeField.setKeyboartType(to: .numberPad)
         startTimeField.disableTextField()
+        addObserverToTextFileds()
+        startTimeField.delegate = self
         
         let _ = [titleField, linkField, startTimeField].map {
             textFieldsVStack.addArrangedSubview($0)
@@ -353,7 +415,7 @@ extension ShareViewController {
             thumbnailVStack.topAnchor.constraint(equalTo: menuButton.bottomAnchor, constant: Constants.stackSpacing),
             thumbnailVStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideInsets),
             thumbnailVStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.sideInsets),
-            thumbnailVStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+//            thumbnailVStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: Constants.multiplier)
         ])
     }
@@ -386,3 +448,12 @@ extension ShareViewController {
         ])
     }
 }
+
+// MARK: - Delegate
+extension ShareViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard string.isEmpty || Int(string) != nil else { return false }
+        return true
+    }
+}
+

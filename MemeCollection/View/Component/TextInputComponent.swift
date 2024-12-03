@@ -28,6 +28,11 @@ class TextInputComponent: UIStackView {
     private var placeholder: String
     private let errorLabel = UILabel()
     private let inputType: InputType
+    var delegate: UITextFieldDelegate? {
+        didSet {
+            textField.delegate = delegate
+        }
+    }
     
     init(title: String, placeholder: String, type: InputType) {
         self.title = title

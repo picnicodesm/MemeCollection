@@ -98,7 +98,6 @@ class SetVideoViewController: UIViewController {
 
 // MARK: - Actions
 extension SetVideoViewController {
-    
     @objc func doneTapped() {
         guard let title = titleField.getText(),
               let startTimeText = startTimeField.getText(),
@@ -142,6 +141,35 @@ extension SetVideoViewController {
     
     @objc func cancelTapped() {
         self.dismiss(animated: true)
+    }
+    
+    private func addObserverToTextFileds() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        containerScrollView.contentInset.bottom = keyboardFrame.size.height
+    }
+
+    
+    @objc func keyboardWillHide() {
+        let contentInset = UIEdgeInsets.zero
+        containerScrollView.contentInset = contentInset
+        containerScrollView.horizontalScrollIndicatorInsets = contentInset
+        containerScrollView.verticalScrollIndicatorInsets = contentInset
     }
 }
 
@@ -234,7 +262,6 @@ extension SetVideoViewController {
     
     private func configureContentView() {
         contentView = UIView()
-        contentView.backgroundColor = .blue
         contentView.translatesAutoresizingMaskIntoConstraints = false
         containerScrollView.addSubview(contentView)
 
@@ -265,6 +292,8 @@ extension SetVideoViewController {
         startTimeField.addAction(startTextFieldDidChanged)
         startTimeField.setKeyboartType(to: .numberPad)
         startTimeField.disableTextField()
+        addObserverToTextFileds()
+        startTimeField.delegate = self
         
         if let currentVideo = currentVideo {
             if isEditMode {
@@ -331,5 +360,13 @@ extension SetVideoViewController {
         thumbnailImageView.backgroundColor = .lightGray
         thumbnailImageView.layer.cornerRadius = Constants.cornerRadius
         thumbnailImageView.clipsToBounds = true
+    }
+}
+
+// MARK: - Delegate
+extension SetVideoViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard string.isEmpty || Int(string) != nil else { return false }
+        return true
     }
 }

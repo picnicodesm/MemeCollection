@@ -17,6 +17,7 @@ enum CellMode {
 class MemesViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var enterToEditing = false
     var memesVM: MemesViewModel!
     var category: Category!
     var categoryUpdateHandler: ((Bool) -> Void)?
@@ -45,6 +46,11 @@ class MemesViewController: UIViewController {
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
+        enterToEditing = editing
+        if cellMode == .list {
+            configureListDataSource()
+        }
+        
         super.setEditing(editing, animated: animated)
         collectionView.isEditing = editing
         if cellMode == .grid {
@@ -97,18 +103,19 @@ extension MemesViewController {
     private func swipeAction(_ indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] deleteAction, view, completion in
             guard let self = self else { return }
-            deleteVideoSubject.send(indexPath)
+            
+            let alert = UIAlertController(title: "해당 영상을 삭제하시겠습니까?", message: "삭제한 영상은 복구할 수 없습니다.", preferredStyle: .alert)
+            let success = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                self.deleteVideoSubject.send(indexPath)
+            }
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            alert.addAction(success)
+            alert.addAction(cancel)
+            
+            present(alert, animated: true)
             completion(true)
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
-        
-        let editAction = UIContextualAction(style: .normal, title: "") { (action, view, completion) in
-            
-            print("editAction!")
-            completion(true)
-        }
-        editAction.image = UIImage(systemName: "info.circle.fill")
-        editAction.backgroundColor = .lightGray
         
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
@@ -206,11 +213,11 @@ extension MemesViewController {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeListCell.identifier, for: indexPath) as? MemeListCell else { return UICollectionViewCell() }
             
             let deleteHandler = { [unowned self] in
-                let alert = UIAlertController(title: "Delete Video", message: "Do you want to remove this video?", preferredStyle: .alert)
-                let success = UIAlertAction(title: "Remove", style: .default) { _ in
+                let alert = UIAlertController(title: "\(item.getName())", message: "해당 영상을 삭제하시겠습니까?\n(삭제한 영상은 복구할 수 없습니다.)", preferredStyle: .alert)
+                let success = UIAlertAction(title: "삭제", style: .destructive) { _ in
                     self.deleteVideoSubject.send(indexPath)
                 }
-                let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+                let cancel = UIAlertAction(title: "취소", style: .cancel)
                 alert.addAction(success)
                 alert.addAction(cancel)
                 
@@ -220,6 +227,11 @@ extension MemesViewController {
             cell.configureCell(title: item.getName(), isFavorite: item.getIsFavorite())
             cell.startIndicatorAnimation()
             cell.addAction(toggleFavoriteAction)
+            if enterToEditing {
+                cell.hideFavoriteBtn()
+            } else {
+                cell.showFavoriteBtn()
+            }
             
             if self.category.getIsForFavortie() {
                 cell.accessories = [.reorder(displayed: .whenEditing),
@@ -255,7 +267,6 @@ extension MemesViewController {
         
         updateSnapshot(memesVM.memes)
     }
-    
     
     private func updateSnapshot(_ items: [Video]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
