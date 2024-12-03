@@ -44,7 +44,8 @@ class ImageManager {
 
     /// If you encode the identifier, filemanager can't find a file cottectly. DON'T KNOW WHY
     func getSavedImage(of identifier: String) -> UIImage? {
-        guard let fileURL = getFileURL(of: identifier) else {
+        let encodedIdentifier = identifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        guard let fileURL = getFileURL(of: encodedIdentifier) else {
             return nil }
                 
         if fileManager.fileExists(atPath: fileURL.path()) {
@@ -96,6 +97,12 @@ class ImageManager {
 extension ImageManager {
     private func getFileURL(of identifier: String) -> URL? {
         guard let dir = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.MemeCollection.Share") else { return nil }
-        return dir.appending(path: identifier)
+        if #available(iOS 17, *) {
+            return URL(string: "\(dir)/\(identifier)", encodingInvalidCharacters: false)
+        }
+        else {
+            return URL(string: "\(dir)/\(identifier)")
+//            return dir.appending(path: identifier) <- 이걸 사용하면 또 자동인코딩됨
+        }
     }
 }

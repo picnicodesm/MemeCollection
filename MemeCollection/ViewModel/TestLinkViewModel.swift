@@ -48,7 +48,6 @@ class TestLinkViewModel {
             let (data, _) = try await URLSession.shared.data(from: url)
             self.thumbnailData = data
         } catch {
-            print("Error fetching thumbnail data: \(error)")
             return
         }
     }
@@ -61,7 +60,6 @@ class TestLinkViewModel {
             let (data, _) = try await URLSession.shared.data(from: url)
             return data
         } catch {
-            print("Error fetching thumbnail data: \(error)")
             return nil
         }
     }
@@ -92,11 +90,11 @@ class TestLinkViewModel {
 
 extension TestLinkViewModel {
     private func getLinkType(of urlString: String) -> LinkType? {
-        if urlString.contains("https://www.youtube.com") {
+        if urlString.contains("https://www.youtube.com/") {
             return .web
-        } else if urlString.contains("https://m.youtube.com") {
+        } else if urlString.contains("https://m.youtube.com/") {
             return .mobile
-        } else if urlString.contains("https://youtube.com") || urlString.contains("https://youtu.be") {
+        } else if urlString.contains("https://youtube.com/") || urlString.contains("https://youtu.be/") {
             return .share
         } else {
             return nil
@@ -115,11 +113,11 @@ extension TestLinkViewModel {
         if let firstDividerRange = urlString.range(of: "\(firstDivider)") {
             if let secondDividerIndex = urlString.firstIndex(of: secondDivider) {
                 let key = urlString[firstDividerRange.upperBound..<secondDividerIndex]
-                print("key: \(key) with divider \(secondDivider)")
+//                print("key: \(key) with divider \(firstDivider) and \(secondDivider)")
                 return String(key)
             } else {
                 let key = urlString[firstDividerRange.upperBound...]
-                print("key: \(key) with divider \(firstDivider)")
+//                print("key: \(key) with divider \(firstDivider)")
                 return String(key)
             }
         }
