@@ -49,7 +49,9 @@ extension SetCategoryViewController {
                 self?.dismiss(animated: true)
                 return
             }
-            return 
+            alert.addAction(checkAction)
+            present(alert, animated: true)
+            return
         }
         
         if !isEditMode {
@@ -91,7 +93,7 @@ extension SetCategoryViewController {
         textField.borderStyle = .roundedRect
         textField.backgroundColor = .systemGray5
         textField.textAlignment = .center
-        textField.placeholder = "Category Name"
+        textField.placeholder = "카테고리 이름"
         textField.font = textFieldFont
         textField.clearButtonMode = .whileEditing
         textField.addAction(textFieldDidChanged, for: .editingChanged)

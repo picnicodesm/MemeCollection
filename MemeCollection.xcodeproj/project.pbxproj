@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0464780B2CE330D100C94744 /* MemeCollectionShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 046478012CE330D100C94744 /* MemeCollectionShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		046478172CE3553B00C94744 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 046478162CE3553B00C94744 /* RealmSwift */; };
-		046478182CE3553B00C94744 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 046478162CE3553B00C94744 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		046478232CE358AA00C94744 /* SetVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B775E2CDDF69B0079F951 /* SetVideoViewController.swift */; };
 		046478242CE358AF00C94744 /* MemesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77682CDDF69B0079F951 /* MemesViewModel.swift */; };
 		046478252CE358B700C94744 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77652CDDF69B0079F951 /* DataBaseManager.swift */; };
@@ -27,6 +26,7 @@
 		046478442CE728E500C94744 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478422CE728E500C94744 /* NotificationName.swift */; };
 		046478642CEF115900C94744 /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478632CEF115900C94744 /* VideoManager.swift */; };
 		046478652CEF115900C94744 /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046478632CEF115900C94744 /* VideoManager.swift */; };
+		048BF8BD2D01A1CD00FB5FFA /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04B23EB02CCC9E5B0047DCAE /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		049B77732CDDF69B0079F951 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77512CDDF69B0079F951 /* Category.swift */; };
 		049B77742CDDF69B0079F951 /* ModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77522CDDF69B0079F951 /* ModelProtocol.swift */; };
 		049B77762CDDF69B0079F951 /* RealmCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B77542CDDF69B0079F951 /* RealmCategory.swift */; };
@@ -54,7 +54,6 @@
 		049B778E2CDDF69B0079F951 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049B776F2CDDF69B0079F951 /* LaunchScreen.storyboard */; };
 		049B77912CDE77310079F951 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049B77902CDE77310079F951 /* Storyboard.storyboard */; };
 		04B23EB12CCC9E5B0047DCAE /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04B23EB02CCC9E5B0047DCAE /* RealmSwift */; };
-		04B23EB22CCC9F0C0047DCAE /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04B23EB02CCC9E5B0047DCAE /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +84,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				046478182CE3553B00C94744 /* RealmSwift in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,7 +94,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				04B23EB22CCC9F0C0047DCAE /* RealmSwift in Embed Frameworks */,
+				048BF8BD2D01A1CD00FB5FFA /* RealmSwift in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;

@@ -77,7 +77,7 @@ class MemesViewController: UIViewController {
         deleteVideoSubject
             .sink { [unowned self] indexPath in
                 let deleteItem = self.memesVM.memes[indexPath.item]
-                self.memesVM.deleteVideo(deleteItem)
+                let _ = self.memesVM.deleteVideo(deleteItem)
             }.store(in: &subscriptions)
         
         itemSelectedSubject

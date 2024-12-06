@@ -16,13 +16,13 @@ class SetVideoViewController: UIViewController {
     private var thumbnailLabel: UILabel!
     private var thumbnailImageView: UIImageView!
     private let titleField = TextInputComponent(title: "TITLE",
-                                                placeholder: "Write the title of the video",
+                                                placeholder: "영상의 제목을 입력해주세요.",
                                                 type: .title)
     private let linkField = TextInputComponent(title: "LINK",
-                                               placeholder: "Input video link",
+                                               placeholder: "영상의 링크를 입력해주세요.",
                                                type: .link)
     private let startTimeField = TextInputComponent(title: "START TIME",
-                                                    placeholder: "Start time of video",
+                                                    placeholder: "(선택) 영상의 시작 시간(초)을 정해주세요.",
                                                     type: .startTime)
     
     private lazy var titleTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
@@ -32,6 +32,7 @@ class SetVideoViewController: UIViewController {
         guard let titleText = self.titleField.getText(),
               let linkText = self.linkField.getText() else { return }
         testLink(linkText)
+        print("tesing...")
     }
     private lazy var startTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let startTimeText = self.startTimeField.getText() else { return }
@@ -129,6 +130,7 @@ extension SetVideoViewController {
                 let alert = imageManager.getErrorAlert(error: .removeFailed, action: checkAction)
                 
                 present(alert, animated: true)
+                return
             }
             
             
@@ -140,6 +142,7 @@ extension SetVideoViewController {
                 let alert = imageManager.getErrorAlert(error: .saveFailed, action: checkAction)
                 
                 present(alert, animated: true)
+                return
             }
             
             memesVM.editVideo(editVideo)
@@ -157,6 +160,7 @@ extension SetVideoViewController {
             let alert = imageManager.getErrorAlert(error: .saveFailed, action: checkAction)
             
             present(alert, animated: true)
+            return
         }
         
         let newVideo = Video(name: title, urlString: mobileLink, type: videoInfo.videoType!.rawValue, isFavorite: false, thumbnailIdentifier: imageIdentifier, categoryId: categoryId, index: memesVM.memes.count, startTime: startTime)
@@ -204,7 +208,6 @@ extension SetVideoViewController {
         linkField.removeErrorUI()
         if !link.isEmpty {
             let (isSuccess, error, _, _, key) = testLinkVM.testLink(with: link)
-            
             if isSuccess {
                 Task {
                     await testLinkVM.setThumbnail(with: key!)

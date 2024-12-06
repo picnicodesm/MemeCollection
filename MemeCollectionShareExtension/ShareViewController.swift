@@ -29,13 +29,13 @@ class ShareViewController: UIViewController {
     private var thumbnailLabel: UILabel!
     private var thumbnailImageView: UIImageView!
     private let titleField = TextInputComponent(title: "TITLE",
-                                                placeholder: "Write the title of the video",
+                                                placeholder: "영상의 제목을 입력해주세요.",
                                                 type: .title)
     private let linkField = TextInputComponent(title: "LINK",
-                                               placeholder: "Input video link",
+                                               placeholder: "영상의 링크를 입력해주세요.",
                                                type: .link)
     private let startTimeField = TextInputComponent(title: "START TIME",
-                                                    placeholder: "Start time of video",
+                                                    placeholder: "(선택) 영상의 시작 시간(초)을 정해주세요.",
                                                     type: .startTime)
     private let menuButton = SelectCategoryComponent(title: "Category")
     
@@ -223,25 +223,21 @@ extension ShareViewController {
         if itemProvider.hasItemConformingToTypeIdentifier(UTType.url.identifier) { // Youtube Web에서 동작
             itemProvider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { (url, error) in
                 if let shareURL = url as? URL {
-                    DispatchQueue.main.async {
-                        self.linkField.setText(to: shareURL.absoluteString)
-                    }
+                    self.linkField.setText(to: shareURL.absoluteString)
                     self.testLink(shareURL.absoluteString)
                 } else {
                     print("URL 읽기 실패: \(String(describing: error))")
-                    self.linkField.setErrorUI(message: "링크를 읽어올 수 없습니다.")
+                        self.linkField.setErrorUI(message: "링크를 읽어올 수 없습니다.")
                 }
             }
         } else if itemProvider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) { // Youtbue App에서 동작
             itemProvider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { [weak self] (text, error) in
                 if let string = text as? String, let shareURL = URL(string: string) {
-                    DispatchQueue.main.async {
                         self?.linkField.setText(to: shareURL.absoluteString)
-                    }
                     self?.testLink(shareURL.absoluteString)
                 } else {
                     print("URL 읽기 실패: \(String(describing: error))")
-                    self?.linkField.setErrorUI(message: "링크를 읽어올 수 없습니다.")
+                        self?.linkField.setErrorUI(message: "링크를 읽어올 수 없습니다.")
                 }
             }
     }

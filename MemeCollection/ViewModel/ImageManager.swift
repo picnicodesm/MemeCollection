@@ -46,9 +46,10 @@ class ImageManager {
     }
     
     func removeImage(of identifier: String) -> Bool {
-        guard let fileURL = getFileURL(of: identifier) else { return false }
+        let encodedIdentifier = identifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        guard let fileURL = getFileURL(of: encodedIdentifier) else { return false }
         
-        if isImageNameExist(identifier: identifier) {
+        if isImageNameExist(identifier: encodedIdentifier) {
             do {
                 try fileManager.removeItem(atPath: fileURL.path())
                 return true

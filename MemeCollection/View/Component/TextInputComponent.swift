@@ -67,7 +67,7 @@ class TextInputComponent: UIStackView {
         textField.isEnabled = true
         textField.placeholder = placeholder
         if inputType == .startTime {
-            setErrorUI(message: "if the time is over length of video, it will be blocked")
+            setErrorUI(message: "시작 시간이 영상의 길이보가 길 경우, 영상이 재생되지 않을 수 있습니다.")
         }
     }
  
@@ -76,22 +76,27 @@ class TextInputComponent: UIStackView {
         textField.backgroundColor = .systemGray5
         textField.isEnabled = false
         if inputType == .startTime {
-            textField.placeholder = "This will be opened when the link is video"
+            textField.placeholder = "쇼츠가 아닐 경우 입력할 수 있습니다."
         }
         removeErrorUI()
     }
     
     func setErrorUI(message: String) {
         errorLabel.text = message
+        errorLabel.font = UIFont.systemFont(ofSize: 12)
         errorLabel.textColor = .red
         errorLabel.numberOfLines = 2
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.addArrangedSubview(errorLabel)
+        DispatchQueue.main.async {
+            self.addArrangedSubview(self.errorLabel)
+        }
     }
     
     func removeErrorUI() {
-        self.removeArrangedSubview(errorLabel)
-        errorLabel.removeFromSuperview()
+        DispatchQueue.main.async {
+            self.removeArrangedSubview(self.errorLabel)
+            self.errorLabel.removeFromSuperview()
+        }
     }
     
 }

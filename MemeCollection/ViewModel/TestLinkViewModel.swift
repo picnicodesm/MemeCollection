@@ -8,10 +8,10 @@
 import Foundation
 
 enum LinkError: String {
-    case linkTypeError = "Link isn't matched with correct type."
-    case videoTypeError = "Link isn't matched with correct video type."
-    case strangeLinkError = "This is incorrect link."
-    case keyError = "The key is incorrect."
+    case linkTypeError = "올바른 주소 형식이 아닙니다."
+    case videoTypeError = "주소가 영상의 주소 형식과 맞지 않습니다."
+    case strangeLinkError = "올바른 주소가 아닙니다."
+    case keyError = "잘못된 주소입니다."
 }
 
 /// Test for given link and have video information and thumbnailData from the link
@@ -110,14 +110,15 @@ extension TestLinkViewModel {
     }
     
     private func getKey(of urlString: String, firstDivider: String, secondDivider: Character) -> String? {
+        print("sent divider: \(firstDivider), and \(secondDivider)")
         if let firstDividerRange = urlString.range(of: "\(firstDivider)") {
             if let secondDividerIndex = urlString.firstIndex(of: secondDivider) {
                 let key = urlString[firstDividerRange.upperBound..<secondDividerIndex]
-//                print("key: \(key) with divider \(firstDivider) and \(secondDivider)")
+                print("key: \(key) with divider \(firstDivider) and \(secondDivider)")
                 return String(key)
             } else {
                 let key = urlString[firstDividerRange.upperBound...]
-//                print("key: \(key) with divider \(firstDivider)")
+                print("key: \(key) with divider \(firstDivider)")
                 return String(key)
             }
         }
@@ -138,7 +139,12 @@ extension TestLinkViewModel {
             if videoType == .shorts {
                 return getKey(of: urlString, firstDivider: "shorts/", secondDivider: "?")
             } else {
-                return getKey(of: urlString, firstDivider: ".be/", secondDivider: "?")
+                let key = getKey(of: urlString, firstDivider: ".be/", secondDivider: "?")
+                if key != nil {
+                    return key
+                } else {
+                    return getKey(of: urlString, firstDivider: "watch?v=", secondDivider: "&")
+                }
             }
         }
     }
