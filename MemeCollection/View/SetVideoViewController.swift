@@ -32,7 +32,6 @@ class SetVideoViewController: UIViewController {
         guard let titleText = self.titleField.getText(),
               let linkText = self.linkField.getText() else { return }
         testLink(linkText)
-        print("tesing...")
     }
     private lazy var startTextFieldDidChanged: UIAction = UIAction { [unowned self] _ in
         guard let startTimeText = self.startTimeField.getText() else { return }
@@ -72,7 +71,7 @@ class SetVideoViewController: UIViewController {
                 if (thumbnailData != nil && thumbnailData == errorData) {
                     failedGettingThumbnail()
                 }
-                else { // thumbnailData는 nil이 되지 않는가?
+                else {
                     succeededGettingThumbnail(of: thumbnailData)
                 }
             }).store(in: &subscriptions)

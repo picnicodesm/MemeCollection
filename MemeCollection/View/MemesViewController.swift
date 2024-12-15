@@ -170,7 +170,7 @@ extension MemesViewController {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeEditListCell.identifier, for: indexPath) as? MemeEditListCell else { return UICollectionViewCell() }
             
             cell.configureCell(title: item.getName())
-            
+
             if self.category.getIsForFavortie() {
                 cell.accessories = [.reorder(displayed: .whenEditing),
                                     .detail(displayed: .whenEditing, actionHandler: { [unowned self] in

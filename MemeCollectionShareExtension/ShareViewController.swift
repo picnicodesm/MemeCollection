@@ -242,7 +242,7 @@ extension ShareViewController {
             }
     }
                                   }
-    
+
     private func testLink(_ link: String) {
         linkField.removeErrorUI()
         if !link.isEmpty {

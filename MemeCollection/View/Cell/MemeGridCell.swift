@@ -95,7 +95,7 @@ extension MemeGridCell {
         buttonConfig.baseForegroundColor = .black
         favoriteButton.configuration = buttonConfig
         favoriteButton.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
-        
+    
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(favoriteButton)

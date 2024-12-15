@@ -30,7 +30,7 @@ class ImageManager {
     
     static let shared = ImageManager()
     private let fileManager = FileManager.default
-
+    
     func saveImage(imageData: Data, as identifier: String) -> Bool {
         guard let directoryPath = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.MemeCollection.Share") else {
             return false
@@ -62,12 +62,12 @@ class ImageManager {
             return false
         }
     }
-
+    
     func getSavedImage(of identifier: String) -> UIImage? {
         let encodedIdentifier = identifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
         guard let fileURL = getFileURL(of: encodedIdentifier) else {
             return nil }
-                
+        
         if fileManager.fileExists(atPath: fileURL.path()) {
             return UIImage(contentsOfFile: fileURL.path())
         } else {
@@ -75,21 +75,21 @@ class ImageManager {
         }
     }
     
-   func getCompleteIdentifier(of thumbnailData: Data, with title: String) -> CompressedImage? {
+    func getCompleteIdentifier(of thumbnailData: Data, with title: String) -> CompressedImage? {
         var imageIdentifierNumber = 0
         let thumbnailImage = UIImage(data: thumbnailData)!
         var imageExtension = ""
         var imageIdentifier = ""
         var compressedImageData: Data = Data()
-       
-       
-       if let data = thumbnailImage.pngData() {
-           imageExtension = "png"
-           compressedImageData = data
-       } else if let data = thumbnailImage.jpegData(compressionQuality: 1) {
-           imageExtension = "jpeg"
-           compressedImageData = data
-       } else {
+        
+        
+        if let data = thumbnailImage.pngData() {
+            imageExtension = "png"
+            compressedImageData = data
+        } else if let data = thumbnailImage.jpegData(compressionQuality: 1) {
+            imageExtension = "jpeg"
+            compressedImageData = data
+        } else {
             return nil
         }
         
@@ -99,9 +99,9 @@ class ImageManager {
             imageIdentifierNumber += 1
             imageIdentifier = "\(title) \(imageIdentifierNumber).\(imageExtension)"
         }
-       
-       return CompressedImage(imageIdentifier, compressedImageData)
-   }
+        
+        return CompressedImage(imageIdentifier, compressedImageData)
+    }
     
     func getErrorAlert(error: ImageError, action: UIAlertAction) -> UIAlertController {
         let alert = UIAlertController(
@@ -118,7 +118,7 @@ class ImageManager {
 extension ImageManager {
     private func isImageNameExist(identifier: String) -> Bool {
         guard let fileURL = getFileURL(of: identifier) else { return false }
-                
+        
         if fileManager.fileExists(atPath: fileURL.path()) {
             return true
         } else {
@@ -133,8 +133,7 @@ extension ImageManager {
         }
         else {
             return URL(string: "\(dir)/\(identifier)")
-//            return dir.appending(path: identifier) <- 이걸 사용하면 또 자동인코딩됨
         }
     }
-
+    
 }
